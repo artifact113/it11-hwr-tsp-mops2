@@ -31,6 +31,9 @@ public class AntProject extends APropertyChangeSupport {
 	/** Die Liste aller Edges */
 	private List<Edge> _edgeList;
 
+	/** Ein kleiner Statustext, der am unteren Bildschirmrand dargestellt wird */
+	private String _statusText;
+
 
 
 	/**
@@ -64,7 +67,6 @@ public class AntProject extends APropertyChangeSupport {
 	 *            the parameter to set
 	 */
 	public void setParameter(Parameter pParameter) {
-		_parameter.removeAllPropertyChangeListeners();
 		firePropertyChange(PropertyChangeTypes.PROJECT_PARAMETER, _parameter, _parameter = pParameter);
 	}
 
@@ -128,9 +130,6 @@ public class AntProject extends APropertyChangeSupport {
 	 * @see AntProject#initEdges()
 	 */
 	public void setNodeList(List<Node> pNodeList) {
-		for (Node node : _nodeList) {
-			node.removeAllPropertyChangeListeners();
-		}
 		firePropertyChange(PropertyChangeTypes.PROJECT_NODELIST, _nodeList, _nodeList = pNodeList);
 		_data.setNodeList(_nodeList);
 		initEdges();
@@ -156,7 +155,6 @@ public class AntProject extends APropertyChangeSupport {
 	 * @param pNode
 	 */
 	public void removeNode(Node pNode) {
-		pNode.removeAllPropertyChangeListeners();
 		_nodeList.remove(pNode);
 		firePropertyChange(PropertyChangeTypes.PROJECT_NODELIST_ADD, null, _nodeList);
 	}
@@ -172,6 +170,29 @@ public class AntProject extends APropertyChangeSupport {
 	 */
 	public List<Edge> getEdgeList() {
 		return _edgeList;
+	}
+
+
+
+	/**
+	 * Gibt den Statustext zurück.
+	 * 
+	 * @return the statusText
+	 */
+	public String getStatusText() {
+		return _statusText;
+	}
+
+
+
+	/**
+	 * Setzt den Statustext auf den angegebenen Statustext.
+	 * 
+	 * @param pStatusText
+	 *            the statusText to set
+	 */
+	public void setStatusText(String pStatusText) {
+		firePropertyChange(PropertyChangeTypes.PROJECT_STATUSTEXT, _statusText, _statusText = pStatusText);
 	}
 
 

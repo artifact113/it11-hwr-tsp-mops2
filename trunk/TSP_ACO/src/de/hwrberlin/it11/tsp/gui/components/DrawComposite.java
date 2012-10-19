@@ -7,12 +7,16 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
+import net.miginfocom.swt.MigLayout;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -21,6 +25,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 
 import de.hwrberlin.it11.tsp.constant.Colors;
@@ -60,6 +65,8 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 
 	/** Das ScrolledComposite scrollt den Canvas */
 	private ScrolledComposite scrolledComposite;
+
+	private Label _statusLabel;
 
 
 
@@ -142,13 +149,35 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 
 			@Override
 			public void mouseMove(MouseEvent pE) {
+				double zoomFactor = getController().getProject().getParameter().getZoomFactor();
 				if (_drag) {
-					double zoomFactor = getController().getProject().getParameter().getZoomFactor();
 					_selectedNode.setxCoordinate(pE.x >= BORDER_WIDTH ? (int) ((pE.x - BORDER_WIDTH) / zoomFactor) : 0);
 					_selectedNode.setyCoordinate(pE.y >= BORDER_WIDTH ? (int) ((pE.y - BORDER_WIDTH) / zoomFactor) : 0);
 				}
+				getController().getProject().setStatusText("X: " + (pE.x - BORDER_WIDTH) / zoomFactor + ", Y: " + (pE.y - BORDER_WIDTH) / zoomFactor);
 			}
 		});
+
+		_canvas.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent pE) {
+				if (pE.keyCode == SWT.DEL) {
+					if (_selectedNode != null) {
+						getController().getProject().removeNode(_selectedNode);
+						_selectedNode = null;
+					}
+				}
+			}
+
+		});
+
+		Composite statusComp = new Composite(this, SWT.NONE);
+		statusComp.setLayout(new MigLayout("fill"));
+		statusComp.setLayoutData("newline, hmin pref, wmin pref, spanx, growx");
+
+		_statusLabel = new Label(statusComp, SWT.NONE);
+		_statusLabel.setLayoutData("hmin pref, wmin pref, grow");
 
 		scrolledComposite.setContent(_canvas);
 
@@ -163,6 +192,9 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 		pDBC.bindValue(SWTObservables.observeSelection(_zoomFactor),
 				BeansObservables.observeValue(pRealm, getController().getProject().getParameter(), PropertyChangeTypes.PARAMETER_ZOOMFACTOR),
 				ZoomFactorTargetToModelUpdateStrategy.getInstance(), ZoomFactorModelToTargetUpdateStrategy.getInstance());
+		// Statustext binden
+		pDBC.bindValue(SWTObservables.observeText(_statusLabel),
+				BeansObservables.observeValue(pRealm, getController().getProject(), PropertyChangeTypes.PROJECT_STATUSTEXT));
 	}
 
 

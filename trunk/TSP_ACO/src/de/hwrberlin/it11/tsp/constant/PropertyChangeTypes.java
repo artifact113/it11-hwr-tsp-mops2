@@ -23,6 +23,8 @@ public class PropertyChangeTypes {
 
 	public static final String PROJECT_NODELIST_REMOVE = "nodeList_remove";
 
+	public static final String PROJECT_STATUSTEXT = "statusText";
+
 	// Parameter
 
 	public static final String PARAMETER_ANTCOUNT = "antCount";

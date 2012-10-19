@@ -16,9 +16,9 @@ public class Edge extends APropertyChangeSupport {
 	/** Der Pheromonwert, der auf dieser Edge liegt */
 	private double _pheromone;
 
-	private static final double PHEROMONE_MINIMUM = Math.pow(10, -10);
 
 
+	// private static final double PHEROMONE_MINIMUM = Math.pow(10, -10);
 
 	/**
 	 * Erzeugt eine Edge mit dem angegebenen Pheromonwert.
@@ -53,8 +53,9 @@ public class Edge extends APropertyChangeSupport {
 	 *            der neue Pheromonwert dieser Edge
 	 */
 	public void setPheromone(double pPheromone) {
-		firePropertyChange(PropertyChangeTypes.EDGE_PHEROMONE, _pheromone, pPheromone < PHEROMONE_MINIMUM ? (_pheromone = PHEROMONE_MINIMUM)
-				: (_pheromone = pPheromone));
+		firePropertyChange(PropertyChangeTypes.EDGE_PHEROMONE, _pheromone, _pheromone = pPheromone);
+		// firePropertyChange(PropertyChangeTypes.EDGE_PHEROMONE, _pheromone, pPheromone < PHEROMONE_MINIMUM ? (_pheromone = PHEROMONE_MINIMUM)
+		// : (_pheromone = pPheromone));
 	}
 
 }
