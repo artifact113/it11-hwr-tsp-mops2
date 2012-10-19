@@ -62,17 +62,6 @@ public class APropertyChangeSupport {
 
 
 	/**
-	 * Entfernt alle PropertyChangeListener, die an diesem Objet registriertwurden.
-	 */
-	public void removeAllPropertyChangeListeners() {
-		for (PropertyChangeListener listener : _propertyChangeSupport.getPropertyChangeListeners()) {
-			_propertyChangeSupport.removePropertyChangeListener(listener);
-		}
-	}
-
-
-
-	/**
 	 * @see PropertyChangeSupport#firePropertyChange(String, Object, Object)
 	 */
 	public void firePropertyChange(String pPropertyName, Object pOldValue, Object pNewValue) {
