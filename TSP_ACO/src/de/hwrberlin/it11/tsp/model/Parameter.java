@@ -6,7 +6,7 @@ package de.hwrberlin.it11.tsp.model;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 
 /**
- * 
+ * Die Parameter-Klasse dient zur Speicherung aller eingegebenen Parameter.
  * 
  * @author Patrick Szostack
  * 
@@ -14,33 +14,47 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 public class Parameter extends APropertyChangeSupport {
 
 	/** Anzahl der Ameisen */
-	private int _antCount = 50;
+	private int _antCount;
 
 	/** Anzahl der Iterationen */
-	private int _iterationCount = 5000;
+	private int _iterationCount;
 
 	/** Pheromonparameter */
-	private double _pheromonParameter = 1;
+	private double _pheromonParameter;
 
 	/** Heuristischer Parameter für die lokale Information */
-	private double _localInformation = 2;
+	private double _localInformation;
 
 	/** Verdunstungsfaktor */
-	private double _evaporationParameter = 0.2;
+	private double _evaporationParameter;
 
 	/** Initiale Pheromonwerte */
-	private double _initialPheromonParameter = 0.5;
+	private double _initialPheromonParameter;
 
 	/** Heuristischer Parameter für Pheromon-Update */
-	private double _pheromonUpdateParameter = 0.5;
+	private double _pheromonUpdateParameter;
 
 	/** Die maximale Länge einer Tour, damit sie als Lösung akzeptiert wird */
 	private double _maximumTourLength;
 
+	/** Der Zoom-Faktor, der die Städtedarstellung vergrößert/verkleinert, in Prozent */
+	private double _zoomFactor;
+
+
+
 	/**
-	 * Der Zoom-Faktor, der die Städtedarstellung vergrößert/verkleinert, in Prozent
+	 * Erstellt eine neue Parameter-Instanz mit default-Werten.
 	 */
-	private double _zoomFactor = 0.5;
+	public Parameter() {
+		_antCount = 50;
+		_iterationCount = 5000;
+		_pheromonParameter = 1;
+		_localInformation = 2;
+		_evaporationParameter = 0.2;
+		_initialPheromonParameter = 0.5;
+		_pheromonUpdateParameter = 0.5;
+		_zoomFactor = 0.5;
+	}
 
 
 

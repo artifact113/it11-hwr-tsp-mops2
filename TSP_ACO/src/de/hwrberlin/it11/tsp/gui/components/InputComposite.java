@@ -21,6 +21,7 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 import de.hwrberlin.it11.tsp.controller.AntController;
 import de.hwrberlin.it11.tsp.gui.listener.VerifyDoubleListener;
 import de.hwrberlin.it11.tsp.gui.listener.VerifyIntegerListener;
+import de.hwrberlin.it11.tsp.gui.widgets.AAntControl;
 import de.hwrberlin.it11.tsp.model.Parameter;
 
 /**
@@ -29,7 +30,7 @@ import de.hwrberlin.it11.tsp.model.Parameter;
  * @author Patrick Szostack
  * 
  */
-public class InputComposite extends ADataBindable implements PropertyChangeListener {
+public class InputComposite extends ADataBindableComposite implements PropertyChangeListener {
 
 	/** Textfeld zum Verändern der Anzahl der Ameisen */
 	private Text _tAntCount;
@@ -78,6 +79,9 @@ public class InputComposite extends ADataBindable implements PropertyChangeListe
 		_tAntCount.setLayoutData("hmin pref, wmin 50, growx");
 		_tAntCount.addVerifyListener(VerifyIntegerListener.getInstance());
 
+		new AAntControl(_tAntCount, getController().getProject(),
+				"Hier können Sie einstellen, wie viele Ameisen pro Iterationen den Weg suchen sollen.");
+
 		Label lPheromonParameter = new Label(comp, SWT.NONE);
 		lPheromonParameter.setLayoutData("hmin 0, wmin 0");
 		lPheromonParameter.setText("Pheromonparameter:");
@@ -85,6 +89,9 @@ public class InputComposite extends ADataBindable implements PropertyChangeListe
 		_tPheromonParameter = new Text(comp, SWT.BORDER);
 		_tPheromonParameter.setLayoutData("hmin pref, wmin 50, growx");
 		_tPheromonParameter.addVerifyListener(VerifyDoubleListener.getInstance());
+
+		new AAntControl(_tPheromonParameter, getController().getProject(),
+				"Hier können Sie einstellen, wie wichtig das Pheromon auf einer Kante bei der Auswahl des Weges ist.");
 
 		Label lLocalInformation = new Label(comp, SWT.NONE);
 		lLocalInformation.setLayoutData("hmin 0, wmin 0");
@@ -94,6 +101,9 @@ public class InputComposite extends ADataBindable implements PropertyChangeListe
 		_tLocalInformation.setLayoutData("hmin pref, wmin 50, growx");
 		_tLocalInformation.addVerifyListener(VerifyDoubleListener.getInstance());
 
+		new AAntControl(_tLocalInformation, getController().getProject(),
+				"Hier können Sie einstellen, wie wichtig kürzere Wege bei der Auswahl des Weges sind.");
+
 		Label lEvaporationParameter = new Label(comp, SWT.NONE);
 		lEvaporationParameter.setLayoutData("hmin 0, wmin 0");
 		lEvaporationParameter.setText("Verdunstungsparameter:");
@@ -101,6 +111,9 @@ public class InputComposite extends ADataBindable implements PropertyChangeListe
 		_tEvaporationParameter = new Text(comp, SWT.BORDER);
 		_tEvaporationParameter.setLayoutData("hmin pref, wmin 50, growx");
 		_tEvaporationParameter.addVerifyListener(VerifyDoubleListener.getInstance());
+
+		new AAntControl(_tEvaporationParameter, getController().getProject(),
+				"Hier können Sie einstellen, wie viele Pheromone nach einer Iteration verdunsten sollen.");
 
 		Label lInitialPheromonParameter = new Label(comp, SWT.NONE);
 		lInitialPheromonParameter.setLayoutData("hmin 0, wmin 0");
@@ -110,6 +123,9 @@ public class InputComposite extends ADataBindable implements PropertyChangeListe
 		_tInitialPheromonParameter.setLayoutData("hmin pref, wmin 50, growx");
 		_tInitialPheromonParameter.addVerifyListener(VerifyDoubleListener.getInstance());
 
+		new AAntControl(_tInitialPheromonParameter, getController().getProject(),
+				"Hier können Sie einstellen, wie viele Pheromone auf den Kanten beim Start des Suchvorganges liegen sollen.");
+
 		Label lPheromonUpdateParameter = new Label(comp, SWT.NONE);
 		lPheromonUpdateParameter.setLayoutData("hmin 0, wmin 0");
 		lPheromonUpdateParameter.setText("Pheromonupdateparameter:");
@@ -117,6 +133,9 @@ public class InputComposite extends ADataBindable implements PropertyChangeListe
 		_tPheromonUpdateParameter = new Text(comp, SWT.BORDER);
 		_tPheromonUpdateParameter.setLayoutData("hmin pref, wmin 50, growx");
 		_tPheromonUpdateParameter.addVerifyListener(VerifyDoubleListener.getInstance());
+
+		new AAntControl(_tPheromonUpdateParameter, getController().getProject(),
+				"Hier können Sie einstellen, wie viele Pheromone eine Ameise auf eine Kante legt, wenn sie darüber gelaufen ist.");
 
 		resetBinding();
 	}

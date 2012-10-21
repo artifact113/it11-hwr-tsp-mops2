@@ -5,6 +5,7 @@ package de.hwrberlin.it11.tsp.gui.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import net.miginfocom.swt.MigLayout;
@@ -34,7 +35,9 @@ import de.hwrberlin.it11.tsp.controller.AntController;
 import de.hwrberlin.it11.tsp.gui.dialog.NewNodeDialog;
 import de.hwrberlin.it11.tsp.gui.updatestrategy.ZoomFactorModelToTargetUpdateStrategy;
 import de.hwrberlin.it11.tsp.gui.updatestrategy.ZoomFactorTargetToModelUpdateStrategy;
+import de.hwrberlin.it11.tsp.gui.widgets.AAntControl;
 import de.hwrberlin.it11.tsp.model.Node;
+import de.hwrberlin.it11.tsp.model.Preferences;
 import de.hwrberlin.it11.tsp.model.Result;
 
 /**
@@ -43,13 +46,16 @@ import de.hwrberlin.it11.tsp.model.Result;
  * @author Patrick Szostack
  * 
  */
-public class DrawComposite extends ADataBindable implements PropertyChangeListener {
+public class DrawComposite extends ADataBindableComposite implements PropertyChangeListener {
 
 	/**
 	 * Die Breite des Randes, die zwischen dem Rand des Canvas und der Malfläche gelassen wird. So wird verhindert, dass der Punkt der Nodes, die sich
 	 * zum Beispiel an Koordinate 0 befinden, halb abgeschnitten wird.
 	 */
 	private static final int BORDER_WIDTH = 25;
+
+	/** Das benutzte DecimalFormat um Dezimalzahlen in einen String zu konvertieren */
+	private static final DecimalFormat FORMAT = new DecimalFormat("#.000");
 
 	/** Die momentan ausgewählte Node */
 	private Node _selectedNode;
@@ -66,6 +72,7 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 	/** Das ScrolledComposite scrollt den Canvas */
 	private ScrolledComposite scrolledComposite;
 
+	/** Hier werden verschiedene Statusmeldungen angezeigt */
 	private Label _statusLabel;
 
 
@@ -98,6 +105,9 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 		_zoomFactor.setLayoutData("hmin 0, wmin 0, growy");
 		_zoomFactor.setMinimum(25);
 		_zoomFactor.setMaximum(300);
+
+		new AAntControl(_zoomFactor, getController().getProject(),
+				"Hier können Sie den Zoom-Faktor einstellen, mit dem die Knoten und Kanten dargestellt werden.");
 
 		_canvas.addPaintListener(new AntPaintListener());
 		_canvas.addMouseListener(new MouseAdapter() {
@@ -154,7 +164,8 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 					_selectedNode.setxCoordinate(pE.x >= BORDER_WIDTH ? (int) ((pE.x - BORDER_WIDTH) / zoomFactor) : 0);
 					_selectedNode.setyCoordinate(pE.y >= BORDER_WIDTH ? (int) ((pE.y - BORDER_WIDTH) / zoomFactor) : 0);
 				}
-				getController().getProject().setStatusText("X: " + (pE.x - BORDER_WIDTH) / zoomFactor + ", Y: " + (pE.y - BORDER_WIDTH) / zoomFactor);
+				getController().getProject().setStatusText(
+						"X: " + FORMAT.format((pE.x - BORDER_WIDTH) / zoomFactor) + ", Y: " + FORMAT.format((pE.y - BORDER_WIDTH) / zoomFactor));
 			}
 		});
 
@@ -173,7 +184,7 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 		});
 
 		Composite statusComp = new Composite(this, SWT.NONE);
-		statusComp.setLayout(new MigLayout("fill"));
+		statusComp.setLayout(new MigLayout("fill, ins 0 5 0 0"));
 		statusComp.setLayoutData("newline, hmin pref, wmin pref, spanx, growx");
 
 		_statusLabel = new Label(statusComp, SWT.NONE);
@@ -238,7 +249,9 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 
 					@Override
 					public void run() {
-						_canvas.redraw();
+						if (!_canvas.isDisposed()) {
+							_canvas.redraw();
+						}
 					}
 				});
 			}
@@ -250,6 +263,8 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 			}
 		}
 	}
+
+
 
 	/**
 	 * Diese Klasse ist der Übersicht halber etwas ausgelagert. Sie übernimmt das Zeichnen der Nodes und Touren auf den Canvas.
@@ -265,9 +280,13 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 			double zoomFactor = getController().getProject().getParameter().getZoomFactor();
 
 			Result result = getController().getProject().getResult();
-			pE.gc.setAntialias(SWT.ON);
+			Preferences preferences = Preferences.getInstance();
+
+			if (preferences.isAntialias()) {
+				pE.gc.setAntialias(SWT.ON);
+			}
 			// Beste Tour Iteration
-			pE.gc.setForeground(Colors.DARK_GREY);
+			pE.gc.setForeground(preferences.getBestTourIterationColor());
 			for (int i = 0; i < result.getBestTourIteration().size() - 1; i++) {
 				Node node = result.getBestTourIteration().get(i);
 				Node otherNode = result.getBestTourIteration().get(i + 1);
@@ -276,7 +295,7 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 								+ BORDER_WIDTH);
 			}
 			// Beste Tour global
-			pE.gc.setForeground(Colors.BLUE);
+			pE.gc.setForeground(preferences.getBestTourGlobalColor());
 			for (int i = 0; i < result.getBestTourGlobal().size() - 1; i++) {
 				Node node = result.getBestTourGlobal().get(i);
 				Node otherNode = result.getBestTourGlobal().get(i + 1);
@@ -285,15 +304,15 @@ public class DrawComposite extends ADataBindable implements PropertyChangeListen
 								+ BORDER_WIDTH);
 			}
 			// Nodes
-			pE.gc.setBackground(Colors.RED);
+			pE.gc.setBackground(preferences.getNodeColor());
 			for (Node node : nodeList) {
 				if (node == _selectedNode) {
-					pE.gc.setBackground(Colors.GREEN);
+					pE.gc.setBackground(preferences.getCurrentNodeColor());
 				}
 				pE.gc.fillOval((int) (node.getxCoordinate() * zoomFactor) - 5 + BORDER_WIDTH, (int) (node.getyCoordinate() * zoomFactor) - 5
 						+ BORDER_WIDTH, 10, 10);
 				if (node == _selectedNode) {
-					pE.gc.setBackground(Colors.RED);
+					pE.gc.setBackground(preferences.getNodeColor());
 				}
 			}
 		}

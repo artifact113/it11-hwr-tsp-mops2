@@ -40,7 +40,7 @@ public class ZoomFactorModelToTargetUpdateStrategy extends UpdateValueStrategy {
 
 	@Override
 	public Object convert(Object pValue) {
-		double value = (double) pValue;
+		double value = (Double) pValue;
 		return (int) (value * 100);
 	}
 

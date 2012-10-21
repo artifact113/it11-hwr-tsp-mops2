@@ -24,6 +24,7 @@ import de.hwrberlin.it11.tsp.constant.IterationMode;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 import de.hwrberlin.it11.tsp.controller.AntController;
 import de.hwrberlin.it11.tsp.gui.listener.VerifyDoubleListener;
+import de.hwrberlin.it11.tsp.gui.widgets.AAntControl;
 import de.hwrberlin.it11.tsp.model.Parameter;
 
 /**
@@ -32,7 +33,7 @@ import de.hwrberlin.it11.tsp.model.Parameter;
  * @author Patrick Szostack
  * 
  */
-public class StopCriteriaComposite extends ADataBindable implements PropertyChangeListener {
+public class StopCriteriaComposite extends ADataBindableComposite implements PropertyChangeListener {
 
 	/** Button, um Iteration als Abbruchbedingung auszuwählen */
 	private Button _rIterationCount;
@@ -79,28 +80,47 @@ public class StopCriteriaComposite extends ADataBindable implements PropertyChan
 		_rIterationCount.setLayoutData("hmin 0, wmin 0");
 		_rIterationCount.setText("Iterationen:");
 
+		new AAntControl(_rIterationCount, getController().getProject(),
+				"Diese Option lässt den Suchvorgang stoppen, nachdem eine eingestellte Anzahl an Iterationen durchgeführt wurden.");
+
 		_tIterationCount = new Text(comp, SWT.BORDER);
 		_tIterationCount.setLayoutData("hmin pref, wmin 50, spanx 2, growx");
 		// _tIterationCount.addVerifyListener(VerifyIntegerListener.getInstance());
+
+		new AAntControl(_tIterationCount, getController().getProject(), "Hier können Sie einstellen, wie oft iteriert werden soll.");
 
 		_rMaximumTourLength = new Button(comp, SWT.RADIO);
 		_rMaximumTourLength.setLayoutData("hmin 0, wmin 0");
 		_rMaximumTourLength.setText("Tourlänge:");
 
+		new AAntControl(_rMaximumTourLength, getController().getProject(),
+				"Diese Option lässt den Suchvorgang stoppen, nachdem eine Tour gefunden wurde, die kürzer oder gleich lang als eine eingestellte Länge ist.");
+
 		_tMaximumTourLength = new Text(comp, SWT.BORDER);
 		_tMaximumTourLength.setLayoutData("hmin pref, wmin 50, spanx 2, growx");
 		_tMaximumTourLength.addVerifyListener(VerifyDoubleListener.getInstance());
+
+		new AAntControl(_tMaximumTourLength, getController().getProject(),
+				"Hier können Sie einstellen, bei welcher Tourlänge abegebrochen werden soll.");
 
 		_rOptTourFilePath = new Button(comp, SWT.RADIO);
 		_rOptTourFilePath.setLayoutData("hmin 0, wmin 0");
 		_rOptTourFilePath.setText("Optimale Tour:");
 
-		_tOptTourFilePath = new Text(comp, SWT.BORDER);
+		new AAntControl(_rOptTourFilePath, getController().getProject(),
+				"Diese Option lässt den Suchvorgang stoppen, wenn eine eingestellte Lösung gefunden wurde.");
+
+		_tOptTourFilePath = new Text(comp, SWT.BORDER | SWT.READ_ONLY);
 		_tOptTourFilePath.setLayoutData("hmin pref, wmin 50, growx, pushx");
+
+		new AAntControl(_tOptTourFilePath, getController().getProject(), "Hier steht der Dateipfad zu der Lösungsdatei.");
 
 		_bOptTourFilePath = new Button(comp, SWT.PUSH);
 		_bOptTourFilePath.setLayoutData("hmin 0, wmin 0");
 		_bOptTourFilePath.setImage(Images.FOLDER);
+
+		new AAntControl(_bOptTourFilePath, getController().getProject(),
+				"Ein Klick auf diesen Button öffnet den Datei-Browser, mit dem Sie eine Lösungsdatei aussuchen können.");
 
 		SelectionAdapter radioGroupListener = new SelectionAdapter() {
 
@@ -162,6 +182,8 @@ public class StopCriteriaComposite extends ADataBindable implements PropertyChan
 				}
 			}
 		});
+
+		new AAntControl(bStart, getController().getProject(), "Dieser Button startet und stoppt den Suchvorgang.");
 
 		resetBinding();
 	}
