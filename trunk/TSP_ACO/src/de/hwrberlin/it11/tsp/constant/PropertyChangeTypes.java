@@ -61,6 +61,18 @@ public class PropertyChangeTypes {
 
 	public static final String RESULT_ELAPSEDTIME = "elapsedTime";
 
+	// Preferences
+
+	public static final String PREFERENCES_ANTIALIAS = "antialias";
+
+	public static final String PREFERENCES_NODECOLOR = "nodeColor";
+
+	public static final String PREFERENCES_CURRENTNODECOLOR = "currentNodeColor";
+
+	public static final String PREFERENCES_BESTTOURGLOBALCOLOR = "bestTourGlobalColor";
+
+	public static final String PREFERENCES_BESTTOURITERATIONCOLOR = "bestTourIterationColor";
+
 	// Node
 
 	public static final String NODE_XCOORDINATE = "xCoordinate";

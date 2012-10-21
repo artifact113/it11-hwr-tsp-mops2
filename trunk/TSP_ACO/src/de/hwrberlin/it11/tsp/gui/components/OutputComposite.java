@@ -29,7 +29,7 @@ import de.hwrberlin.it11.tsp.model.Result;
  * @author Patrick Szostack
  * 
  */
-public class OutputComposite extends ADataBindable implements PropertyChangeListener {
+public class OutputComposite extends ADataBindableComposite implements PropertyChangeListener {
 
 	/** Label zum Anzeigen der Besten Tour der Iteration */
 	private Label _lBestTourIteration;
@@ -163,12 +163,12 @@ public class OutputComposite extends ADataBindable implements PropertyChangeList
 				public void run() {
 					// Auf folgende Events den Maximalwert der ProgressBar aktualisieren:
 					if (PropertyChangeTypes.PARAMETER_ITERATIONCOUNT.equals(propertyName)) { // Anzahl der Iterationen hat sich geändert
-						_progress.setMaximum((int) pEvt.getNewValue());
+						_progress.setMaximum((Integer) pEvt.getNewValue());
 					}
 
 					// Auf folgende Events den angezeigten Wert der ProgressBar aktualisieren:
 					if (PropertyChangeTypes.PROJECT_ITERATIONFINISHED.equals(propertyName)) { // Eine Iteration ist vorbei
-						_progress.setSelection((int) pEvt.getNewValue());
+						_progress.setSelection((Integer) pEvt.getNewValue());
 					}
 				}
 			});

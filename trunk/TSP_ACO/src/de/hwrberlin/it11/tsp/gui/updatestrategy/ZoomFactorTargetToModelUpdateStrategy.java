@@ -40,7 +40,7 @@ public class ZoomFactorTargetToModelUpdateStrategy extends UpdateValueStrategy {
 
 	@Override
 	public Object convert(Object pValue) {
-		int value = (int) pValue;
+		int value = (Integer) pValue;
 		return ((double) value) / 100;
 	}
 

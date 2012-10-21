@@ -17,7 +17,7 @@ import de.hwrberlin.it11.tsp.controller.AntController;
  * @author Patrick Szostack
  * 
  */
-public abstract class ADataBindable extends AAntComposite {
+public abstract class ADataBindableComposite extends AAntComposite {
 
 	/** Der DataBindingContext, der für das Databinding verwendet wird */
 	protected DataBindingContext _dbc;
@@ -37,7 +37,7 @@ public abstract class ADataBindable extends AAntComposite {
 	 * @param pProject
 	 *            das Ameisenprojekt
 	 */
-	public ADataBindable(Composite pParent, int pStyle, AntController pController) {
+	public ADataBindableComposite(Composite pParent, int pStyle, AntController pController) {
 		super(pParent, pStyle, pController);
 		_realm = SWTObservables.getRealm(Display.getDefault());
 		_dbc = new DataBindingContext(_realm);
@@ -49,7 +49,7 @@ public abstract class ADataBindable extends AAntComposite {
 	 * Vernichtet das bestehende Databinding. Ruft anschließend die bindValues()-Methode mit dem verwendeten DataBindingContext und Realm auf.
 	 * 
 	 * @see DataBindingContext#dispose()
-	 * @see ADataBindable#bindValues(DataBindingContext, Realm)
+	 * @see ADataBindableComposite#bindValues(DataBindingContext, Realm)
 	 */
 	protected void resetBinding() {
 		_dbc.dispose();

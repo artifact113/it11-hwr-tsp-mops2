@@ -27,6 +27,7 @@ import de.hwrberlin.it11.tsp.constant.FileDialogFilter;
 import de.hwrberlin.it11.tsp.constant.Images;
 import de.hwrberlin.it11.tsp.factories.FileDialogFactory;
 import de.hwrberlin.it11.tsp.gui.components.TabContent;
+import de.hwrberlin.it11.tsp.gui.dialog.PreferencesDialog;
 import de.hwrberlin.it11.tsp.gui.dialog.RandomProjectDialog;
 import de.hwrberlin.it11.tsp.model.Node;
 import de.hwrberlin.it11.tsp.model.Parameter;
@@ -168,6 +169,11 @@ public class GUI {
 		MenuItem editMenuItemCreateRandomParameter = new MenuItem(editMenuItemSubMenu, SWT.NONE);
 		editMenuItemCreateRandomParameter.setText("Zufallsparameter erstellen");
 
+		new MenuItem(editMenuItemSubMenu, SWT.SEPARATOR); // Separator
+
+		MenuItem editMenuItemEditPreferences = new MenuItem(editMenuItemSubMenu, SWT.NONE);
+		editMenuItemEditPreferences.setText("Eigenschaften");
+
 		editMenuItem.setMenu(editMenuItemSubMenu);
 
 		// Hilfe MenuItem
@@ -178,8 +184,6 @@ public class GUI {
 
 		MenuItem helpMenuItemHelp = new MenuItem(helpMenuItemSubMenu, SWT.NONE);
 		helpMenuItemHelp.setText("Hilfe");
-
-		new MenuItem(fileMenuItemSubMenu, SWT.SEPARATOR); // Separator
 
 		MenuItem helpMenuItemAbout = new MenuItem(helpMenuItemSubMenu, SWT.NONE);
 		helpMenuItemAbout.setText("Über");
@@ -323,6 +327,14 @@ public class GUI {
 				param.setEvaporationParameter(evaporationParameter);
 				param.setInitialPheromonParameter(initialPheromonParameter);
 				param.setPheromonUpdateParameter(pheromonUpdateParameter);
+			}
+		});
+
+		editMenuItemEditPreferences.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent pE) {
+				new PreferencesDialog(pParent).open();
 			}
 		});
 	}
