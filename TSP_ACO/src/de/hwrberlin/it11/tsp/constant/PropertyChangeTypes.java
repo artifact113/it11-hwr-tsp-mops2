@@ -4,7 +4,7 @@
 package de.hwrberlin.it11.tsp.constant;
 
 /**
- * Diese Klasse hält nur Konstanten für den PropertyChangeSupport.
+ * Diese Klasse hält die Feldernamen der Modellklassen als Konstanten für den PropertyChangeSupport.
  * 
  * @author Patrick Szostack
  * 
@@ -17,6 +17,8 @@ public class PropertyChangeTypes {
 
 	public static final String PROJECT_PARAMETER = "parameter";
 
+	public static final String PROJECT_TSPDATA = "tspData";
+
 	public static final String PROJECT_NODELIST = "nodeList";
 
 	public static final String PROJECT_NODELIST_ADD = "nodeList_add";
@@ -24,6 +26,8 @@ public class PropertyChangeTypes {
 	public static final String PROJECT_NODELIST_REMOVE = "nodeList_remove";
 
 	public static final String PROJECT_STATUSTEXT = "statusText";
+
+	public static final String PROJECT_OPTIMALTOURLENGTH = "optimalTourLength";
 
 	// Parameter
 
@@ -44,6 +48,18 @@ public class PropertyChangeTypes {
 	public static final String PARAMETER_MAXIMUMTOURLENGTH = "maximumTourLength";
 
 	public static final String PARAMETER_ZOOMFACTOR = "zoomFactor";
+
+	// TSPData
+
+	public static final String TSPDATA_NAME = "name";
+
+	public static final String TSPDATA_TYPE = "type";
+
+	public static final String TSPDATA_COMMENT = "comment";
+
+	public static final String TSPDATA_EDGEWEIGHTTYPE = "edgeWeightType";
+
+	public static final String TSPDATA_NODELIST = "nodeList";
 
 	// Result
 

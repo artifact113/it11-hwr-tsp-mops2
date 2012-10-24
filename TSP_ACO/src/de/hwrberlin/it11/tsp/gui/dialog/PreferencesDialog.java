@@ -90,7 +90,7 @@ public class PreferencesDialog extends Dialog {
 		cBestTourIterationColor.setLayoutData("height 20!, wmin 50");
 
 		Composite buttonComp = new Composite(shell, SWT.NONE);
-		buttonComp.setLayout(new MigLayout("wrap 2", "[50%][50%]"));
+		buttonComp.setLayout(new MigLayout("wrap 2, ins 0", "[50%][50%]"));
 		buttonComp.setLayoutData("hmin 0, wmin 0, growx, spanx");
 
 		Button confirm = new Button(buttonComp, SWT.PUSH);

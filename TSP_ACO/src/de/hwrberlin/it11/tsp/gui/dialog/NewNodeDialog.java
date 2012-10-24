@@ -10,13 +10,13 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import de.hwrberlin.it11.tsp.gui.listener.VerifyIntegerListener;
-import de.hwrberlin.it11.tsp.model.AntProject;
 import de.hwrberlin.it11.tsp.model.Node;
 
 /**
@@ -25,7 +25,7 @@ import de.hwrberlin.it11.tsp.model.Node;
  * @author Patrick Szostack
  * 
  */
-public class NewNodeDialog extends AAntDialog {
+public class NewNodeDialog extends Dialog {
 
 	/** Rückgabewert dieses Dialogs */
 	private Node _result;
@@ -50,8 +50,8 @@ public class NewNodeDialog extends AAntDialog {
 	 * @param pProject
 	 *            das AntProject des zu erstellenden Dialoges
 	 */
-	public NewNodeDialog(Shell pParent, int pXCoordinate, int pYCoordinate, AntProject pProject) {
-		super(pParent, pProject);
+	public NewNodeDialog(Shell pParent, int pXCoordinate, int pYCoordinate) {
+		super(pParent);
 		_xCoordinate = pXCoordinate;
 		_yCoordinate = pYCoordinate;
 	}
@@ -89,7 +89,7 @@ public class NewNodeDialog extends AAntDialog {
 		tYCoordinate.addVerifyListener(VerifyIntegerListener.getInstance());
 
 		Composite buttonComp = new Composite(shell, SWT.NONE);
-		buttonComp.setLayout(new MigLayout("wrap 2", "[50%][50%]"));
+		buttonComp.setLayout(new MigLayout("wrap 2, ins 0", "[50%][50%]"));
 		buttonComp.setLayoutData("hmin 0, wmin 0, growx, spanx");
 
 		Button confirm = new Button(buttonComp, SWT.PUSH);
@@ -99,7 +99,7 @@ public class NewNodeDialog extends AAntDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				_result = new Node(getProject().getUnusedNodeID(), Integer.valueOf(tXCoordinate.getText()), Integer.valueOf(tYCoordinate.getText()));
+				_result = new Node(Integer.valueOf(tXCoordinate.getText()), Integer.valueOf(tYCoordinate.getText()));
 				shell.dispose();
 			}
 		});

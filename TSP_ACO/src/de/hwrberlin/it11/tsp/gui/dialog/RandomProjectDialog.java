@@ -13,14 +13,15 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import de.hwrberlin.it11.tsp.gui.listener.VerifyIntegerListener;
-import de.hwrberlin.it11.tsp.model.AntProject;
 import de.hwrberlin.it11.tsp.model.Node;
+import de.hwrberlin.it11.tsp.model.TSPData;
 
 /**
  * Dialog zum generieren eines zufälligen Projektes.
@@ -28,23 +29,23 @@ import de.hwrberlin.it11.tsp.model.Node;
  * @author Patrick Szostack
  * 
  */
-public class RandomProjectDialog extends AAntDialog {
+public class RandomProjectDialog extends Dialog {
 
 	/** Rückgabewert dieses Dialoges */
-	private List<Node> _result;
+	private TSPData _result;
 
 
 
 	/**
-	 * Erstellt einen neuen NewNodeDialog.
+	 * Erstellt einen neuen RandomProjectDialog.
 	 * 
 	 * @param pParent
 	 *            die Parent-Shell des Dialoges
 	 * @param pProject
 	 *            das AntProject des zu erstellenden Dialoges
 	 */
-	public RandomProjectDialog(Shell pParent, AntProject pProject) {
-		super(pParent, pProject);
+	public RandomProjectDialog(Shell pParent) {
+		super(pParent);
 	}
 
 
@@ -52,9 +53,9 @@ public class RandomProjectDialog extends AAntDialog {
 	/**
 	 * Öffnet diesen Dialog und bingt ihn in den Vordergrund.
 	 * 
-	 * @return eine Liste mit zufällig platzierten Nodes, je nach eingegebenen Parametern
+	 * @return eine TSPData Instanz mit einer Liste bstehend aus zufällig erzeugten Nodes, oder null falls abgebrochen wurde
 	 */
-	public List<Node> open() {
+	public TSPData open() {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Zufallsprojekt");
@@ -94,7 +95,7 @@ public class RandomProjectDialog extends AAntDialog {
 		tMaxYCoordinate.addVerifyListener(VerifyIntegerListener.getInstance());
 
 		Composite buttonComp = new Composite(shell, SWT.NONE);
-		buttonComp.setLayout(new MigLayout("wrap 2", "[50%][50%]"));
+		buttonComp.setLayout(new MigLayout("wrap 2, ins 0", "[50%][50%]"));
 		buttonComp.setLayoutData("hmin 0, wmin 0, growx, spanx");
 
 		Button confirm = new Button(buttonComp, SWT.PUSH);
@@ -104,7 +105,7 @@ public class RandomProjectDialog extends AAntDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				_result = new ArrayList<Node>();
+				List<Node> nodeList = new ArrayList<Node>();
 				int nodeCount = Integer.valueOf(tNodeCount.getText());
 				int maxX = Integer.valueOf(tMaxXCoordinate.getText());
 				int maxY = Integer.valueOf(tMaxYCoordinate.getText());
@@ -118,9 +119,17 @@ public class RandomProjectDialog extends AAntDialog {
 					maxY = (int) (Math.random() * 4999) + 1;
 				}
 				for (int i = 0; i < nodeCount; i++) {
-					Node node = new Node(getProject().getUnusedNodeID(), (int) (Math.random() * maxX), (int) (Math.random() * maxY));
-					_result.add(node);
+					Node node = new Node((int) (Math.random() * maxX), (int) (Math.random() * maxY));
+					nodeList.add(node);
 				}
+
+				_result = new TSPData();
+				_result.setName("Zufallsprojekt");
+				_result.setComment("Zufallsgeneriertes Projekt");
+				_result.setEdgeWeightType("EUC_2D");
+				_result.setNodeList(nodeList);
+				_result.setType("TSP");
+
 				shell.dispose();
 			}
 		});

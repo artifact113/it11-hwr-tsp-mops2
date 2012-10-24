@@ -12,7 +12,7 @@ import java.beans.PropertyChangeSupport;
  * @author Patrick Szostack
  * 
  */
-public class APropertyChangeSupport {
+public abstract class APropertyChangeSupport {
 
 	/** Der PropertyChangeSupport, der für diese Instanz genutzt wird */
 	private PropertyChangeSupport _propertyChangeSupport;

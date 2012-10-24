@@ -70,7 +70,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 	private boolean _drag;
 
 	/** Das ScrolledComposite scrollt den Canvas */
-	private ScrolledComposite scrolledComposite;
+	private ScrolledComposite _scrolledComposite;
 
 	/** Hier werden verschiedene Statusmeldungen angezeigt */
 	private Label _statusLabel;
@@ -93,17 +93,17 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 		getController().getProject().addPropertyChangeListener(this);
 		getController().getProject().getParameter().addPropertyChangeListener(this);
 
-		scrolledComposite = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setLayoutData("hmin 0, wmin 0, grow, push");
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
+		_scrolledComposite = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
+		_scrolledComposite.setLayoutData("hmin 0, wmin 0, grow, push, growprio 99, shrinkprio 101");
+		_scrolledComposite.setExpandHorizontal(true);
+		_scrolledComposite.setExpandVertical(true);
 
-		_canvas = new Canvas(scrolledComposite, SWT.DOUBLE_BUFFERED);
+		_canvas = new Canvas(_scrolledComposite, SWT.DOUBLE_BUFFERED);
 		_canvas.setBackground(Colors.WHITE);
 
 		_zoomFactor = new Scale(this, SWT.VERTICAL);
 		_zoomFactor.setLayoutData("hmin 0, wmin 0, growy");
-		_zoomFactor.setMinimum(25);
+		_zoomFactor.setMinimum(5);
 		_zoomFactor.setMaximum(300);
 
 		new AAntControl(_zoomFactor, getController().getProject(),
@@ -144,12 +144,14 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			@Override
 			public void mouseDoubleClick(MouseEvent pE) {
 				if (pE.button == 1) {
-					double zoomFactor = getController().getProject().getParameter().getZoomFactor();
-					NewNodeDialog newNodeDialog = new NewNodeDialog(getShell(), (int) ((pE.x - BORDER_WIDTH) / zoomFactor),
-							(int) ((pE.y - BORDER_WIDTH) / zoomFactor), getController().getProject());
-					Node newNode = newNodeDialog.open();
-					if (newNode != null) {
-						getController().getProject().addNode(newNode);
+					if (pE.x - BORDER_WIDTH >= 0 && pE.y - BORDER_WIDTH >= 0) {
+						double zoomFactor = getController().getProject().getParameter().getZoomFactor();
+						NewNodeDialog newNodeDialog = new NewNodeDialog(getShell(), (int) ((pE.x - BORDER_WIDTH) / zoomFactor),
+								(int) ((pE.y - BORDER_WIDTH) / zoomFactor));
+						Node newNode = newNodeDialog.open();
+						if (newNode != null) {
+							getController().getProject().addNode(newNode);
+						}
 					}
 				}
 			}
@@ -190,7 +192,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 		_statusLabel = new Label(statusComp, SWT.NONE);
 		_statusLabel.setLayoutData("hmin pref, wmin pref, grow");
 
-		scrolledComposite.setContent(_canvas);
+		_scrolledComposite.setContent(_canvas);
 
 		resetBinding();
 	}
@@ -237,7 +239,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 				int preferredWidth = (int) (maxX * zoomFactor) + BORDER_WIDTH * 2;
 				int preferredHeight = (int) (maxY * zoomFactor) + BORDER_WIDTH * 2;
 
-				scrolledComposite.setMinSize(preferredWidth, preferredHeight);
+				_scrolledComposite.setMinSize(preferredWidth, preferredHeight);
 
 				_canvas.redraw();
 			}
@@ -263,8 +265,6 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			}
 		}
 	}
-
-
 
 	/**
 	 * Diese Klasse ist der Übersicht halber etwas ausgelagert. Sie übernimmt das Zeichnen der Nodes und Touren auf den Canvas.
