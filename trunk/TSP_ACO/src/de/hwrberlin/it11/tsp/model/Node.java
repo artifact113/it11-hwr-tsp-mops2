@@ -16,9 +16,6 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
  */
 public class Node extends APropertyChangeSupport {
 
-	/** Eine eindeutige ID-Nummer */
-	private int _id;
-
 	/** Die X Koordinate auf der Karte */
 	private int _xCoordinate;
 
@@ -43,20 +40,10 @@ public class Node extends APropertyChangeSupport {
 	 *            die Y Koordinate des Node
 	 * @see AntProject#getUnusedNodeID()
 	 */
-	public Node(int pId, int pXCoordinate, int pYCoordinate) {
-		_id = pId;
+	public Node(int pXCoordinate, int pYCoordinate) {
 		_xCoordinate = pXCoordinate;
 		_yCoordinate = pYCoordinate;
 		_edgeMap = new HashMap<Node, Edge>();
-	}
-
-
-
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return _id;
 	}
 
 

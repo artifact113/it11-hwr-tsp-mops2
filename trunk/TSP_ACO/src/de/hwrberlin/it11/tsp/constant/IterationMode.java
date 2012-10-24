@@ -4,7 +4,7 @@
 package de.hwrberlin.it11.tsp.constant;
 
 /**
- * 
+ * Eine Auflistung der verschiedenen Iterationsmodi.
  * 
  * @author Patrick Szostack
  * 

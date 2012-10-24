@@ -20,13 +20,20 @@ import de.hwrberlin.it11.tsp.model.Parameter;
 import de.hwrberlin.it11.tsp.model.TSPData;
 
 /**
- * 
+ * Diese Klasse stellt Methoden zum Öffnen und Speichern von Dateien bereit.
  * 
  * @author Patrick Szostack
  * 
  */
 public class Persister {
 
+	/**
+	 * Lädt eine .tsp Datei.
+	 * 
+	 * @param pFile
+	 *            die File-Instanz der zu ladenden Datei
+	 * @return eine TSPData Instanz mit Werten, so wie sie in der Datei angegeben waren
+	 */
 	public static TSPData loadTSPFile(File pFile) {
 		TSPData data = new TSPData();
 		BufferedReader reader = null;
@@ -36,6 +43,7 @@ public class Persister {
 			String line = "";
 			boolean nodeSection = false;
 			while (!(line = reader.readLine()).equals("EOF")) {
+				line = line.trim();
 				if (line.contains("NAME:")) {
 					data.setName(line.split(" ")[1]);
 				}
@@ -49,8 +57,8 @@ public class Persister {
 					data.setEdgeWeightType(line.split(" ")[1]);
 				}
 				if (nodeSection) {
-					String[] nodeData = line.split(" ");
-					Node node = new Node(Integer.valueOf(nodeData[0]), (int) Double.parseDouble(nodeData[1]), (int) Double.parseDouble(nodeData[2]));
+					String[] nodeData = line.split("\\s+");
+					Node node = new Node((int) Double.parseDouble(nodeData[1]), (int) Double.parseDouble(nodeData[2]));
 					nodeList.add(node);
 				}
 				if (line.contains("NODE_COORD_SECTION")) {
@@ -80,6 +88,14 @@ public class Persister {
 
 
 
+	/**
+	 * Speichert eine .tsp Datei an den Ort, der in der Parameter-File spezifiziert ist.
+	 * 
+	 * @param pFile
+	 *            die File der zu speichernden Datei
+	 * @param pData
+	 *            die zu speichernden TSP Daten
+	 */
 	public static void saveTSPFile(File pFile, TSPData pData) {
 		BufferedWriter writer = null;
 		try {
@@ -90,8 +106,9 @@ public class Persister {
 			writer.write("DIMENSION: " + pData.getNodeList().size() + "\r\n");
 			writer.write("EDGE_WEIGHT_TYPE: " + pData.getEdgeWeightType() + "\r\n");
 			writer.write("NODE_COORD_SECTION\r\n");
-			for (Node node : pData.getNodeList()) {
-				writer.write(node.getId() + " " + (double) node.getxCoordinate() + " " + (double) node.getyCoordinate() + "\r\n");
+			for (int i = 0; i < pData.getNodeList().size(); i++) {
+				Node node = pData.getNodeList().get(i);
+				writer.write((i + 1) + " " + (double) node.getxCoordinate() + " " + (double) node.getyCoordinate() + "\r\n");
 			}
 			writer.write("EOF");
 		}
@@ -112,6 +129,13 @@ public class Persister {
 
 
 
+	/**
+	 * Lädt eine Konfigurationsdatei.
+	 * 
+	 * @param pFile
+	 *            die File-Instanz der zu ladenden Datei
+	 * @return eine Parameter-Instanz mit Werten, wie sie in der Datei gespeichert waren
+	 */
 	public static Parameter loadParameterFile(File pFile) {
 		Parameter parameter = new Parameter();
 		BufferedReader reader = null;
@@ -141,6 +165,14 @@ public class Persister {
 
 
 
+	/**
+	 * Speichert eine Konfigurationsdatei an den Ort, der in der Parameter-File spezifiziert ist.
+	 * 
+	 * @param pFile
+	 *            die File der zu speichernden Datei
+	 * @param pParameter
+	 *            die zu speichernden Parameter
+	 */
 	public static void saveParameterFile(File pFile, Parameter pParameter) {
 		Properties properties = new Properties();
 		properties.setProperty(PropertyChangeTypes.PARAMETER_ANTCOUNT, String.valueOf(pParameter.getAntCount()));
@@ -171,5 +203,56 @@ public class Persister {
 				}
 			}
 		}
+	}
+
+
+
+	/**
+	 * Liest eine .opttour Datei ein und gibt eine Liste an Indeces zurück. Jeder Index beschreibt dabei die Position einer Node in der Liste der
+	 * TSPData-Instanz. Die Reihenfolge der Indeces beschreibt somit die Reihenfolge der Nodes in der optimalen Tour.
+	 * <p>
+	 * ACHTUNG: Auf diese Liste darf keine strukturverändernde Methode (sort(), add(), remove()) aufgerufen werden!
+	 * 
+	 * @param pFile
+	 *            die File Instanz der .opttour Datei
+	 * @return eine Liste an Indeces, in der Reihenfolge der besten Tour
+	 */
+	public static List<Integer> loadOptTourFile(File pFile) {
+		List<Integer> indexList = new ArrayList<Integer>();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(pFile));
+			String line = "";
+			boolean nodeSection = false;
+			while (!(line = reader.readLine()).equals("EOF")) {
+				line = line.trim();
+				if (nodeSection) {
+					int index = Integer.valueOf(line);
+					if (index != -1) {
+						indexList.add(index);
+					}
+				}
+				if (line.contains("TOUR_SECTION")) {
+					nodeSection = true;
+				}
+			}
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return indexList;
 	}
 }

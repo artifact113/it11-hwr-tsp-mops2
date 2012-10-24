@@ -5,6 +5,8 @@ package de.hwrberlin.it11.tsp.gui.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.List;
 
 import net.miginfocom.swt.MigLayout;
 
@@ -12,6 +14,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,13 +22,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import de.hwrberlin.it11.tsp.constant.FileDialogFilter;
 import de.hwrberlin.it11.tsp.constant.Images;
 import de.hwrberlin.it11.tsp.constant.IterationMode;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 import de.hwrberlin.it11.tsp.controller.AntController;
+import de.hwrberlin.it11.tsp.factories.FileDialogFactory;
 import de.hwrberlin.it11.tsp.gui.listener.VerifyDoubleListener;
 import de.hwrberlin.it11.tsp.gui.widgets.AAntControl;
 import de.hwrberlin.it11.tsp.model.Parameter;
+import de.hwrberlin.it11.tsp.persistence.Persister;
 
 /**
  * Das StopCriteriaComposite lässt das Abbruchkriterium festlegen und den Algrotihmus starten.
@@ -118,6 +124,26 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 		_bOptTourFilePath = new Button(comp, SWT.PUSH);
 		_bOptTourFilePath.setLayoutData("hmin 0, wmin 0");
 		_bOptTourFilePath.setImage(Images.FOLDER);
+		_bOptTourFilePath.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent pE) {
+				String path = new FileDialogFactory().setParent(getShell()).setFilter(FileDialogFilter.OPTTOUR).setStyle(SWT.OPEN).open();
+				if (path != null) {
+					List<Integer> indexList = Persister.loadOptTourFile(new File(path));
+					if (indexList.size() != getController().getProject().getTSPData().getNodeList().size()) {
+						MessageDialog
+								.openError(getShell(), "Ungültige optimale Tour",
+										"Die Liste der Knoten und die Liste der optimalen Tour weisen eine unterschiedliche Länge auf, somit kann die optimale Tour nicht geladen werden.");
+					}
+					else {
+						_tOptTourFilePath.setText(path);
+						getController().getProject().setOptimalTourIndeces(indexList);
+					}
+				}
+			}
+
+		});
 
 		new AAntControl(_bOptTourFilePath, getController().getProject(),
 				"Ein Klick auf diesen Button öffnet den Datei-Browser, mit dem Sie eine Lösungsdatei aussuchen können.");

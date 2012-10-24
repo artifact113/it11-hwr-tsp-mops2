@@ -3,10 +3,12 @@
  */
 package de.hwrberlin.it11.tsp.gui;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.List;
 
 import net.miginfocom.swt.MigLayout;
+import net.miginfocom.swt.SwtComponentWrapper;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -25,11 +27,12 @@ import org.eclipse.swt.widgets.Shell;
 import de.hwrberlin.it11.tsp.constant.Colors;
 import de.hwrberlin.it11.tsp.constant.FileDialogFilter;
 import de.hwrberlin.it11.tsp.constant.Images;
+import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 import de.hwrberlin.it11.tsp.factories.FileDialogFactory;
 import de.hwrberlin.it11.tsp.gui.components.TabContent;
 import de.hwrberlin.it11.tsp.gui.dialog.PreferencesDialog;
 import de.hwrberlin.it11.tsp.gui.dialog.RandomProjectDialog;
-import de.hwrberlin.it11.tsp.model.Node;
+import de.hwrberlin.it11.tsp.gui.dialog.TSPDataDialog;
 import de.hwrberlin.it11.tsp.model.Parameter;
 import de.hwrberlin.it11.tsp.model.TSPData;
 import de.hwrberlin.it11.tsp.persistence.Persister;
@@ -40,7 +43,7 @@ import de.hwrberlin.it11.tsp.persistence.Persister;
  * @author Patrick Szostack
  * 
  */
-public class GUI {
+public class GUI implements PropertyChangeListener {
 
 	/** Der CTabFolder, der die CTabItems mit den verschiedenen Projekten hält */
 	private CTabFolder _tabFolder;
@@ -55,6 +58,8 @@ public class GUI {
 	 */
 	public void layout() {
 		Display display = new Display();
+
+		SwtComponentWrapper.setMinimumSizeZero(true);
 
 		Shell shell = new Shell(display);
 		shell.setText("Ants on Fire");
@@ -77,7 +82,10 @@ public class GUI {
 				if (!(control instanceof TabContent)) {
 					throw new IllegalArgumentException("Das Control des CTabItems muss ein TabContent sein.");
 				}
+				_currentTabContent.getController().getProject().getTSPData().removePropertyChangeListener(GUI.this);
 				_currentTabContent = (TabContent) control;
+				_currentTabContent.getController().getProject().getTSPData().addPropertyChangeListener(GUI.this);
+				System.out.println("BLAH");
 			}
 		});
 		_tabFolder.addFocusListener(new FocusAdapter() {
@@ -171,6 +179,11 @@ public class GUI {
 
 		new MenuItem(editMenuItemSubMenu, SWT.SEPARATOR); // Separator
 
+		MenuItem editMenuItemEditTSPData = new MenuItem(editMenuItemSubMenu, SWT.NONE);
+		editMenuItemEditTSPData.setText("TSP Daten bearbeiten");
+
+		new MenuItem(editMenuItemSubMenu, SWT.SEPARATOR); // Separator
+
 		MenuItem editMenuItemEditPreferences = new MenuItem(editMenuItemSubMenu, SWT.NONE);
 		editMenuItemEditPreferences.setText("Eigenschaften");
 
@@ -211,7 +224,7 @@ public class GUI {
 					_currentTabContent.setTSPFile(new File(path));
 					TSPData data = Persister.loadTSPFile(_currentTabContent.getTSPFile());
 					_tabFolder.getSelection().setText(data.getName());
-					_currentTabContent.getController().getProject().setData(data);
+					_currentTabContent.getController().getProject().setTSPData(data);
 				}
 			}
 		});
@@ -224,11 +237,11 @@ public class GUI {
 					String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.SAVE).setFilter(FileDialogFilter.TSP).open();
 					if (path != null) {
 						_currentTabContent.setTSPFile(new File(path));
-						Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getData());
+						Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getTSPData());
 					}
 				}
 				else {
-					Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getData());
+					Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getTSPData());
 				}
 			}
 		});
@@ -240,7 +253,7 @@ public class GUI {
 				String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.SAVE).setFilter(FileDialogFilter.TSP).open();
 				if (path != null) {
 					_currentTabContent.setTSPFile(new File(path));
-					Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getData());
+					Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getTSPData());
 				}
 			}
 		});
@@ -299,10 +312,10 @@ public class GUI {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				RandomProjectDialog randomProjectDialog = new RandomProjectDialog(pParent, _currentTabContent.getController().getProject());
-				List<Node> nodeList = randomProjectDialog.open();
-				if (nodeList != null) {
-					_currentTabContent.getController().getProject().setNodeList(nodeList);
+				RandomProjectDialog randomProjectDialog = new RandomProjectDialog(pParent);
+				TSPData data = randomProjectDialog.open();
+				if (data != null) {
+					_currentTabContent.getController().getProject().setTSPData(data);
 				}
 			}
 		});
@@ -330,6 +343,14 @@ public class GUI {
 			}
 		});
 
+		editMenuItemEditTSPData.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent pE) {
+				new TSPDataDialog(pParent, _currentTabContent.getController().getProject().getTSPData()).open();
+			}
+		});
+
 		editMenuItemEditPreferences.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -352,11 +373,28 @@ public class GUI {
 		content.createComponent();
 
 		CTabItem tabItem = new CTabItem(_tabFolder, SWT.NONE);
-		tabItem.setText("Neuer Tab");
+		tabItem.setText(content.getController().getProject().getTSPData().getName());
 		tabItem.setControl(content);
 
 		_tabFolder.setSelection(tabItem);
+		if (_currentTabContent != null) {
+			_currentTabContent.getController().getProject().getTSPData().removePropertyChangeListener(this);
+		}
 		_currentTabContent = content;
+		_currentTabContent.getController().getProject().getTSPData().addPropertyChangeListener(this);
+	}
+
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent pEvt) {
+		if (pEvt != null) {
+			String propertyName = pEvt.getPropertyName();
+
+			if (PropertyChangeTypes.TSPDATA_NAME.equals(propertyName)) {
+				_tabFolder.getSelection().setText((String) pEvt.getNewValue());
+			}
+		}
 	}
 
 }

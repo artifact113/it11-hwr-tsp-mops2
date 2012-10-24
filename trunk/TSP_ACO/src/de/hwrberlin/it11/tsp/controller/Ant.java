@@ -81,9 +81,9 @@ public class Ant {
 
 
 	/**
-	 * Ermittelt die Summe der Transitionswahrscheinlichkeiten der noch zu besuchenden Städte.
+	 * Ermittelt die Summe der Transitionswahrscheinlichkeiten der noch zu besuchenden Nodes.
 	 * 
-	 * @return die Summ der Transitionswahrscheinlichkeiten der noch zu besuchenden Städte.
+	 * @return die Summ der Transitionswahrscheinlichkeiten der noch zu besuchenden Nodes.
 	 */
 	public double getProbabilitySum() {
 		double returnValue = 0;
@@ -110,7 +110,7 @@ public class Ant {
 		}
 		List<Node> nodesToVisit = new ArrayList<Node>();
 		List<Double> probabilities = new ArrayList<Double>();
-		double probabilitySum = 0.0d;
+		double probabilitySum = 0;
 		double dividerSum = getProbabilitySum();
 		for (Node node : _project.getNodeList()) {
 			if (!_visitedNodes.contains(node)) {
@@ -166,7 +166,8 @@ public class Ant {
 	 * @return true, wenn diese Ant alle Nodes besucht hat und wieder an ihrer Start-Node steht, andernfalls false
 	 */
 	public boolean isFinished() {
-		return _visitedNodes.get(0) == _visitedNodes.get(_visitedNodes.size() - 1) && _visitedNodes.size() != 1;
+		// return _visitedNodes.get(0) == _visitedNodes.get(_visitedNodes.size() - 1) && _visitedNodes.size() != 1;
+		return _visitedNodes.size() == _project.getTSPData().getNodeList().size() + 1;
 	}
 
 }

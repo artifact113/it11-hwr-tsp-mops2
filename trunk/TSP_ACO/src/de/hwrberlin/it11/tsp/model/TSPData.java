@@ -3,25 +3,46 @@
  */
 package de.hwrberlin.it11.tsp.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
+
 /**
- * 
+ * Diese Klasse speichert Daten, die in eine .tsp Datei gespeichert oder aus einer .tsp Datei gelesen werden.
  * 
  * @author Patrick Szostack
  * 
  */
 public class TSPData extends APropertyChangeSupport {
 
+	/** Name des TSP */
 	private String _name;
 
+	/** Typ des TSP (normalerweise "TSP", wird trotzdem extra zwischengespeichert, da es in der .tsp Datei vorkommt) */
 	private String _type;
 
+	/** Kommentar des TSP */
 	private String _comment;
 
+	/** Der EdgeWeightType des TSP */
 	private String _edgeWeightType;
 
+	/** Die NodeList des TSP */
 	private List<Node> _nodeList;
+
+
+
+	/**
+	 * Erstellt eine neue TSPData-Instanz mit default Werten.
+	 */
+	public TSPData() {
+		_name = "Neues Projekt";
+		_type = "TSP";
+		_comment = "Neu erstelltes Projekt";
+		_edgeWeightType = "EUC_2D";
+		_nodeList = new ArrayList<Node>();
+	}
 
 
 
@@ -39,7 +60,7 @@ public class TSPData extends APropertyChangeSupport {
 	 *            the name to set
 	 */
 	public void setName(String pName) {
-		_name = pName;
+		firePropertyChange(PropertyChangeTypes.TSPDATA_NAME, _name, _name = pName);
 	}
 
 
@@ -58,7 +79,7 @@ public class TSPData extends APropertyChangeSupport {
 	 *            the type to set
 	 */
 	public void setType(String pType) {
-		_type = pType;
+		firePropertyChange(PropertyChangeTypes.TSPDATA_TYPE, _type, _type = pType);
 	}
 
 
@@ -77,7 +98,7 @@ public class TSPData extends APropertyChangeSupport {
 	 *            the comment to set
 	 */
 	public void setComment(String pComment) {
-		_comment = pComment;
+		firePropertyChange(PropertyChangeTypes.TSPDATA_COMMENT, _comment, _comment = pComment);
 	}
 
 
@@ -96,12 +117,17 @@ public class TSPData extends APropertyChangeSupport {
 	 *            the edgeWeightType to set
 	 */
 	public void setEdgeWeightType(String pEdgeWeightType) {
-		_edgeWeightType = pEdgeWeightType;
+		firePropertyChange(PropertyChangeTypes.TSPDATA_EDGEWEIGHTTYPE, _edgeWeightType, _edgeWeightType = pEdgeWeightType);
 	}
 
 
 
 	/**
+	 * Gibt die Liste der Nodes zurück.
+	 * <p>
+	 * ACHTUNG: Auf diese Liste dürfen keine Methoden aufgerufen werden, die dessen Struktur verändern (add, remove, usw.). Hierzu sollen die addNode
+	 * und removeNode Methoden des AntProject benutzt werden.
+	 * 
 	 * @return the nodeList
 	 */
 	public List<Node> getNodeList() {
@@ -112,10 +138,9 @@ public class TSPData extends APropertyChangeSupport {
 
 	/**
 	 * @param pNodeList
-	 *            the nodeList to set
 	 */
 	public void setNodeList(List<Node> pNodeList) {
-		_nodeList = pNodeList;
+		firePropertyChange(PropertyChangeTypes.TSPDATA_NODELIST, _nodeList, _nodeList = pNodeList);
 	}
 
 }

@@ -20,7 +20,7 @@ public class AntProject extends APropertyChangeSupport {
 	private Parameter _parameter;
 
 	/** Die momentan benutzten TSP Daten */
-	private TSPData _data;
+	private TSPData _tspData;
 
 	/** Die errechneten Touren */
 	private Result _result;
@@ -34,6 +34,9 @@ public class AntProject extends APropertyChangeSupport {
 	/** Ein kleiner Statustext, der am unteren Bildschirmrand dargestellt wird */
 	private String _statusText;
 
+	/** Die Indeces der optimalen Tour */
+	private List<Integer> _optimalTourIndeces;
+
 
 
 	/**
@@ -41,6 +44,7 @@ public class AntProject extends APropertyChangeSupport {
 	 */
 	public AntProject() {
 		_parameter = new Parameter();
+		_tspData = new TSPData();
 		_result = new Result();
 		_nodeList = new ArrayList<Node>();
 		_edgeList = new ArrayList<Edge>();
@@ -77,8 +81,8 @@ public class AntProject extends APropertyChangeSupport {
 	 * 
 	 * @return the data
 	 */
-	public TSPData getData() {
-		return _data;
+	public TSPData getTSPData() {
+		return _tspData;
 	}
 
 
@@ -86,12 +90,12 @@ public class AntProject extends APropertyChangeSupport {
 	/**
 	 * Setzt die TSP Daten auf die angegebenen TSP Daten.
 	 * 
-	 * @param pData
+	 * @param pTSPData
 	 *            the data to set
 	 */
-	public void setData(TSPData pData) {
-		_data = pData;
-		setNodeList(pData.getNodeList());
+	public void setTSPData(TSPData pTSPData) {
+		firePropertyChange(PropertyChangeTypes.PROJECT_TSPDATA, _tspData, _tspData = pTSPData);
+		setNodeList(pTSPData.getNodeList());
 	}
 
 
@@ -122,8 +126,8 @@ public class AntProject extends APropertyChangeSupport {
 
 
 	/**
-	 * Setzt die NodeList auf die angegebene NodeList und löst ein PropertyChangeEvent aus. Alle PropertyChangeListener aller alten Nodes werden
-	 * entfernt. Ein Setzen der NodeList führt zum Initialisieren der Egdes.
+	 * Setzt die NodeList auf die angegebene NodeList und löst ein PropertyChangeEvent aus. Ein Setzen der NodeList führt zum Initialisieren der
+	 * Egdes.
 	 * 
 	 * @param pNodeList
 	 *            the nodeList to set
@@ -131,7 +135,7 @@ public class AntProject extends APropertyChangeSupport {
 	 */
 	public void setNodeList(List<Node> pNodeList) {
 		firePropertyChange(PropertyChangeTypes.PROJECT_NODELIST, _nodeList, _nodeList = pNodeList);
-		_data.setNodeList(_nodeList);
+		// _tspData.setNodeList(_nodeList);
 		initEdges();
 	}
 
@@ -198,21 +202,42 @@ public class AntProject extends APropertyChangeSupport {
 
 
 	/**
+	 * Gibt die Indeces der optimalen Tour zurück.
+	 * 
+	 * @return the optimalTourLength
+	 */
+	public List<Integer> getOptimalTourIndeces() {
+		return _optimalTourIndeces;
+	}
+
+
+
+	/**
+	 * Setzt die Indeces der optimalen Tour auf die angegebenen Indeces.
+	 * 
+	 * @param pOptimalTourIndeces
+	 *            the optimalTourLength to set
+	 */
+	public void setOptimalTourIndeces(List<Integer> pOptimalTourIndeces) {
+		firePropertyChange(PropertyChangeTypes.PROJECT_OPTIMALTOURLENGTH, _optimalTourIndeces, _optimalTourIndeces = pOptimalTourIndeces);
+	}
+
+
+
+	/**
 	 * Gibt eine unbenutzte (das heißt eine um 1 größere Nummer als die größte ID-Nummer in der NodeList) ID-Nummer wieder.
 	 * 
 	 * @return eine unbenutzte ID-Nummer
 	 */
-	public int getUnusedNodeID() {
-		int id = 0;
-		for (Node node : _nodeList) {
-			if (node.getId() > id) {
-				id = node.getId();
-			}
-		}
-		return id + 1;
-	}
-
-
+	// public int getUnusedNodeID() {
+	// int id = 0;
+	// for (Node node : _nodeList) {
+	// if (node.getId() > id) {
+	// id = node.getId();
+	// }
+	// }
+	// return id + 1;
+	// }
 
 	/**
 	 * Ermittelt anhand der angegebenen X und Y Koordinaten eine Node. Dabei wird eine Toleranz von 5 Pixeln gewährt.
