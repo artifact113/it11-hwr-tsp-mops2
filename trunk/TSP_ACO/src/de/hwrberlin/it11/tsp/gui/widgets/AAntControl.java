@@ -15,7 +15,7 @@ import de.hwrberlin.it11.tsp.model.AntProject;
  * @author Patrick Szostack
  * 
  */
-public class AAntControl {
+public abstract class AAntControl {
 
 	/** Das AntProject, für das dieser Dialog erstellt wird */
 	private AntProject _project;
@@ -26,20 +26,40 @@ public class AAntControl {
 
 
 	/**
-	 * Erzeugt ein neues AAntControl. Der angegebene Tooltip Text wird im DrawComposite angezeigt, wenn sich der Mauszeiger über dem Control befindet
-	 * und wieder ausgeblendet wenn er es nicht tut.
+	 * Erzeugt ein neues AAntControl.
 	 * 
 	 * @param pControl
 	 *            das zu wrappende Control
 	 * @param pProject
 	 *            das benutzte AntProject
-	 * @param pTooltipText
-	 *            der anzuzeigende Tooltip Text
 	 */
-	public AAntControl(Control pControl, AntProject pProject, final String pTooltipText) {
+	public AAntControl(Control pControl, AntProject pProject) {
 		_control = pControl;
 		_project = pProject;
+	}
 
+
+
+	/**
+	 * Gibt das gewrappte Control zurück.
+	 * 
+	 * @return das gewrappte Control
+	 */
+	protected Control getControl() {
+		return _control;
+	}
+
+
+
+	/**
+	 * Setzt den Tooltip Text des Controls auf den angegebenen Tooltip. Dabei handelt es sich nicht um einen normalen Tooltip Text. Am Control wird
+	 * ein MouseTrackListener registriert, der, wenn sich der Mauszeiger über das Control bewegt, den Tooltip Text ins Datenmodell schreibt. Per
+	 * PropertyChengeEvent kann dieser Text dann an beliebiger Stelle angezeigt werden.
+	 * 
+	 * @param pTooltipText
+	 *            der zu setzende Tooltip Text
+	 */
+	public void setTooltipText(final String pTooltipText) {
 		_control.addMouseTrackListener(new MouseTrackAdapter() {
 
 			@Override
