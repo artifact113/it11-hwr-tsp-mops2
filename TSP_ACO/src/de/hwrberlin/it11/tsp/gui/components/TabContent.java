@@ -67,6 +67,8 @@ public class TabContent extends AAntComposite {
 		OutputComposite output = new OutputComposite(right, SWT.BORDER, getController());
 		output.setLayout(new MigLayout("fill"));
 		output.setLayoutData("hmin pref, wmin pref, grow");
+
+		input.addAllInputValidListener(criteria);
 	}
 
 

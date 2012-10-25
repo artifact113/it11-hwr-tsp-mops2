@@ -35,7 +35,7 @@ import de.hwrberlin.it11.tsp.controller.AntController;
 import de.hwrberlin.it11.tsp.gui.dialog.NewNodeDialog;
 import de.hwrberlin.it11.tsp.gui.updatestrategy.ZoomFactorModelToTargetUpdateStrategy;
 import de.hwrberlin.it11.tsp.gui.updatestrategy.ZoomFactorTargetToModelUpdateStrategy;
-import de.hwrberlin.it11.tsp.gui.widgets.AAntControl;
+import de.hwrberlin.it11.tsp.gui.widgets.AntScale;
 import de.hwrberlin.it11.tsp.model.Node;
 import de.hwrberlin.it11.tsp.model.Preferences;
 import de.hwrberlin.it11.tsp.model.Result;
@@ -64,7 +64,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 	private Canvas _canvas;
 
 	/** Die Scale, mit der sich der Zoomfaktor einstellen lässt */
-	private Scale _zoomFactor;
+	private AntScale _zoomFactor;
 
 	/** Gibt an, ob die Maus gedrückt ist, während sie sich bewegt */
 	private boolean _drag;
@@ -101,13 +101,11 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 		_canvas = new Canvas(_scrolledComposite, SWT.DOUBLE_BUFFERED);
 		_canvas.setBackground(Colors.WHITE);
 
-		_zoomFactor = new Scale(this, SWT.VERTICAL);
-		_zoomFactor.setLayoutData("hmin 0, wmin 0, growy");
-		_zoomFactor.setMinimum(5);
-		_zoomFactor.setMaximum(300);
-
-		new AAntControl(_zoomFactor, getController().getProject(),
-				"Hier können Sie den Zoom-Faktor einstellen, mit dem die Knoten und Kanten dargestellt werden.");
+		_zoomFactor = new AntScale(new Scale(this, SWT.VERTICAL), getController().getProject());
+		_zoomFactor.getScale().setLayoutData("hmin 0, wmin 0, growy");
+		_zoomFactor.getScale().setMinimum(5);
+		_zoomFactor.getScale().setMaximum(300);
+		_zoomFactor.setTooltipText("Hier können Sie den Zoom-Faktor einstellen, mit dem die Knoten und Kanten dargestellt werden.");
 
 		_canvas.addPaintListener(new AntPaintListener());
 		_canvas.addMouseListener(new MouseAdapter() {
@@ -146,8 +144,8 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 				if (pE.button == 1) {
 					if (pE.x - BORDER_WIDTH >= 0 && pE.y - BORDER_WIDTH >= 0) {
 						double zoomFactor = getController().getProject().getParameter().getZoomFactor();
-						NewNodeDialog newNodeDialog = new NewNodeDialog(getShell(), (int) ((pE.x - BORDER_WIDTH) / zoomFactor),
-								(int) ((pE.y - BORDER_WIDTH) / zoomFactor));
+						NewNodeDialog newNodeDialog = new NewNodeDialog(getShell(), getController().getProject(), (pE.x - BORDER_WIDTH) / zoomFactor,
+								(pE.y - BORDER_WIDTH) / zoomFactor);
 						Node newNode = newNodeDialog.open();
 						if (newNode != null) {
 							getController().getProject().addNode(newNode);
@@ -202,7 +200,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 	@Override
 	protected void bindValues(DataBindingContext pDBC, Realm pRealm) {
 		// ZoomFactor-Scale binden
-		pDBC.bindValue(SWTObservables.observeSelection(_zoomFactor),
+		pDBC.bindValue(SWTObservables.observeSelection(_zoomFactor.getScale()),
 				BeansObservables.observeValue(pRealm, getController().getProject().getParameter(), PropertyChangeTypes.PARAMETER_ZOOMFACTOR),
 				ZoomFactorTargetToModelUpdateStrategy.getInstance(), ZoomFactorModelToTargetUpdateStrategy.getInstance());
 		// Statustext binden
@@ -224,8 +222,8 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 					|| PropertyChangeTypes.PROJECT_NODELIST_ADD.equals(propertyName) // Es wurde eine Node zur Städteliste hinzugefügt
 					|| PropertyChangeTypes.PROJECT_NODELIST_REMOVE.equals(propertyName) // Es wurde eine Node von der Städteliste entfernt
 					|| PropertyChangeTypes.PARAMETER_ZOOMFACTOR.equals(propertyName)) { // Der Zoom-Faktor hat sich verändert
-				int maxX = 0;
-				int maxY = 0;
+				double maxX = 0;
+				double maxY = 0;
 				for (Node node : getController().getProject().getNodeList()) {
 					if (node.getxCoordinate() > maxX) {
 						maxX = node.getxCoordinate();
@@ -265,6 +263,8 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			}
 		}
 	}
+
+
 
 	/**
 	 * Diese Klasse ist der Übersicht halber etwas ausgelagert. Sie übernimmt das Zeichnen der Nodes und Touren auf den Canvas.

@@ -54,6 +54,7 @@ public class Parameter extends APropertyChangeSupport {
 		_initialPheromonParameter = 0.5;
 		_pheromonUpdateParameter = 0.5;
 		_zoomFactor = 0.5;
+		_maximumTourLength = 1;
 	}
 
 
@@ -72,7 +73,9 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the antCount to set
 	 */
 	public void setAntCount(int pAntCount) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_ANTCOUNT, _antCount, _antCount = pAntCount);
+		if (pAntCount > 0) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_ANTCOUNT, _antCount, _antCount = pAntCount);
+		}
 	}
 
 
@@ -91,7 +94,9 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the iterationCount to set
 	 */
 	public void setIterationCount(int pIterationCount) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_ITERATIONCOUNT, _iterationCount, _iterationCount = pIterationCount);
+		if (pIterationCount > 0) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_ITERATIONCOUNT, _iterationCount, _iterationCount = pIterationCount);
+		}
 	}
 
 
@@ -110,7 +115,9 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the pheromonParameter to set
 	 */
 	public void setPheromonParameter(double pPheromonParameter) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_PHEROMONPARAMETER, _pheromonParameter, _pheromonParameter = pPheromonParameter);
+		if (pPheromonParameter > 0 && pPheromonParameter <= 5) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_PHEROMONPARAMETER, _pheromonParameter, _pheromonParameter = pPheromonParameter);
+		}
 	}
 
 
@@ -129,7 +136,9 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the localInformation to set
 	 */
 	public void setLocalInformation(double pLocalInformation) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_LOCALINFORMATION, _localInformation, _localInformation = pLocalInformation);
+		if (pLocalInformation > 0 && pLocalInformation <= 5) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_LOCALINFORMATION, _localInformation, _localInformation = pLocalInformation);
+		}
 	}
 
 
@@ -148,7 +157,10 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the evaporationParameter to set
 	 */
 	public void setEvaporationParameter(double pEvaporationParameter) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_EVAPORATIONPARAMETER, _evaporationParameter, _evaporationParameter = pEvaporationParameter);
+		if (pEvaporationParameter > 0 && pEvaporationParameter <= 1) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_EVAPORATIONPARAMETER, _evaporationParameter,
+					_evaporationParameter = pEvaporationParameter);
+		}
 	}
 
 
@@ -167,8 +179,10 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the initialPheromonParameter to set
 	 */
 	public void setInitialPheromonParameter(double pInitialPheromonParameter) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_INITIALPHEROMONPARAMETER, _initialPheromonParameter,
-				_initialPheromonParameter = pInitialPheromonParameter);
+		if (pInitialPheromonParameter > 0) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_INITIALPHEROMONPARAMETER, _initialPheromonParameter,
+					_initialPheromonParameter = pInitialPheromonParameter);
+		}
 	}
 
 
@@ -187,8 +201,10 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the pheromonUpdateParameter to set
 	 */
 	public void setPheromonUpdateParameter(double pPheromonUpdateParameter) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_PHEROMONUPDATEPARAMETER, _pheromonUpdateParameter,
-				_pheromonUpdateParameter = pPheromonUpdateParameter);
+		if (pPheromonUpdateParameter > 0) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_PHEROMONUPDATEPARAMETER, _pheromonUpdateParameter,
+					_pheromonUpdateParameter = pPheromonUpdateParameter);
+		}
 	}
 
 
@@ -207,7 +223,9 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the maximumTourLength to set
 	 */
 	public void setMaximumTourLength(double pMaximumTourLength) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_MAXIMUMTOURLENGTH, _maximumTourLength, _maximumTourLength = pMaximumTourLength);
+		if (pMaximumTourLength > 0) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_MAXIMUMTOURLENGTH, _maximumTourLength, _maximumTourLength = pMaximumTourLength);
+		}
 	}
 
 

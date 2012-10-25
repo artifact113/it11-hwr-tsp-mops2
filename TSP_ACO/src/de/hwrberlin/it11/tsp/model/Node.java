@@ -17,10 +17,10 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 public class Node extends APropertyChangeSupport {
 
 	/** Die X Koordinate auf der Karte */
-	private int _xCoordinate;
+	private double _xCoordinate;
 
 	/** Die Y Koordinate auf der Karte */
-	private int _yCoordinate;
+	private double _yCoordinate;
 
 	/**
 	 * Eine Map der Edges, die von diesem Node zu allen anderen Nodes verlaufen. Key ist dabei der Node, zu dem die Edge verläuft, Value ist die Edge
@@ -40,7 +40,7 @@ public class Node extends APropertyChangeSupport {
 	 *            die Y Koordinate des Node
 	 * @see AntProject#getUnusedNodeID()
 	 */
-	public Node(int pXCoordinate, int pYCoordinate) {
+	public Node(double pXCoordinate, double pYCoordinate) {
 		_xCoordinate = pXCoordinate;
 		_yCoordinate = pYCoordinate;
 		_edgeMap = new HashMap<Node, Edge>();
@@ -51,7 +51,7 @@ public class Node extends APropertyChangeSupport {
 	/**
 	 * @return the xCoordinate
 	 */
-	public int getxCoordinate() {
+	public double getxCoordinate() {
 		return _xCoordinate;
 	}
 
@@ -61,7 +61,7 @@ public class Node extends APropertyChangeSupport {
 	 * @param pXCoordinate
 	 *            the xCoordinate to set
 	 */
-	public void setxCoordinate(int pXCoordinate) {
+	public void setxCoordinate(double pXCoordinate) {
 		firePropertyChange(PropertyChangeTypes.NODE_XCOORDINATE, _xCoordinate, _xCoordinate = pXCoordinate);
 	}
 
@@ -70,7 +70,7 @@ public class Node extends APropertyChangeSupport {
 	/**
 	 * @return the yCoordinate
 	 */
-	public int getyCoordinate() {
+	public double getyCoordinate() {
 		return _yCoordinate;
 	}
 
@@ -80,7 +80,7 @@ public class Node extends APropertyChangeSupport {
 	 * @param pYCoordinate
 	 *            the yCoordinate to set
 	 */
-	public void setyCoordinate(int pYCoordinate) {
+	public void setyCoordinate(double pYCoordinate) {
 		firePropertyChange(PropertyChangeTypes.NODE_YCOORDINATE, _yCoordinate, _yCoordinate = pYCoordinate);
 	}
 
@@ -131,8 +131,8 @@ public class Node extends APropertyChangeSupport {
 	 * @return die Distanz zu der angegebenen Node
 	 */
 	public double getDistanceToNode(Node pNode) {
-		int dX = Math.abs(_xCoordinate - pNode.getxCoordinate());
-		int dY = Math.abs(_yCoordinate - pNode.getyCoordinate());
+		double dX = Math.abs(_xCoordinate - pNode.getxCoordinate());
+		double dY = Math.abs(_yCoordinate - pNode.getyCoordinate());
 		return Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 	}
 

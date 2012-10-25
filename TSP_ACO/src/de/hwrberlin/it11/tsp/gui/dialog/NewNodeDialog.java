@@ -3,20 +3,25 @@
  */
 package de.hwrberlin.it11.tsp.gui.dialog;
 
+import java.text.ParseException;
+
 import net.miginfocom.swt.MigLayout;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import de.hwrberlin.it11.tsp.gui.listener.VerifyIntegerListener;
+import de.hwrberlin.it11.tsp.constant.Utility;
+import de.hwrberlin.it11.tsp.gui.widgets.AntButton;
+import de.hwrberlin.it11.tsp.gui.widgets.AntText;
+import de.hwrberlin.it11.tsp.model.AntProject;
 import de.hwrberlin.it11.tsp.model.Node;
 
 /**
@@ -25,16 +30,16 @@ import de.hwrberlin.it11.tsp.model.Node;
  * @author Patrick Szostack
  * 
  */
-public class NewNodeDialog extends Dialog {
+public class NewNodeDialog extends AAntDialog {
 
 	/** Rückgabewert dieses Dialogs */
 	private Node _result;
 
 	/** Initiale X Koordinate */
-	private int _xCoordinate;
+	private double _xCoordinate;
 
 	/** Initiale Y Koordinate */
-	private int _yCoordinate;
+	private double _yCoordinate;
 
 
 
@@ -50,8 +55,8 @@ public class NewNodeDialog extends Dialog {
 	 * @param pProject
 	 *            das AntProject des zu erstellenden Dialoges
 	 */
-	public NewNodeDialog(Shell pParent, int pXCoordinate, int pYCoordinate) {
-		super(pParent);
+	public NewNodeDialog(Shell pParent, AntProject pProject, double pXCoordinate, double pYCoordinate) {
+		super(pParent, pProject);
 		_xCoordinate = pXCoordinate;
 		_yCoordinate = pYCoordinate;
 	}
@@ -74,40 +79,60 @@ public class NewNodeDialog extends Dialog {
 		lXCoordinate.setText("X Koordinate:");
 		lXCoordinate.setLayoutData("hmin pref, wmin pref");
 
-		final Text tXCoordinate = new Text(shell, SWT.BORDER);
-		tXCoordinate.setText(String.valueOf(_xCoordinate));
-		tXCoordinate.setLayoutData("hmin pref, wmin 50, growx");
-		tXCoordinate.addVerifyListener(VerifyIntegerListener.getInstance());
+		final AntText tXCoordinate = new AntText(new Text(shell, SWT.BORDER), getProject());
+		tXCoordinate.getText().setText(Utility.FORMAT.format(_xCoordinate));
+		tXCoordinate.getText().setLayoutData("hmin pref, wmin 50, growx");
+		tXCoordinate.setTooltipText("Die X Koordinate für den neuen Knoten.");
+		tXCoordinate.setInputMode(AntText.DOUBLE_ONLY);
+		tXCoordinate.setNumberRange(0, Double.POSITIVE_INFINITY, false, true);
 
 		Label lYCoordinate = new Label(shell, SWT.NONE);
 		lYCoordinate.setText("Y Koordinate:");
 		lYCoordinate.setLayoutData("hmin pref, wmin pref");
 
-		final Text tYCoordinate = new Text(shell, SWT.BORDER);
-		tYCoordinate.setText(String.valueOf(_yCoordinate));
-		tYCoordinate.setLayoutData("hmin pref, wmin 50, growx");
-		tYCoordinate.addVerifyListener(VerifyIntegerListener.getInstance());
+		final AntText tYCoordinate = new AntText(new Text(shell, SWT.BORDER), getProject());
+		tYCoordinate.getText().setText(Utility.FORMAT.format(_yCoordinate));
+		tYCoordinate.getText().setLayoutData("hmin pref, wmin 50, growx");
+		tYCoordinate.setTooltipText("Die Y Koordinate für den neuen Knoten.");
+		tYCoordinate.setInputMode(AntText.DOUBLE_ONLY);
+		tYCoordinate.setNumberRange(0, Double.POSITIVE_INFINITY, false, true);
 
 		Composite buttonComp = new Composite(shell, SWT.NONE);
 		buttonComp.setLayout(new MigLayout("wrap 2, ins 0", "[50%][50%]"));
 		buttonComp.setLayoutData("hmin 0, wmin 0, growx, spanx");
 
-		Button confirm = new Button(buttonComp, SWT.PUSH);
-		confirm.setText("Erstellen");
-		confirm.setLayoutData("hmin pref, wmin pref, grow");
-		confirm.addSelectionListener(new SelectionAdapter() {
+		AntButton confirm = new AntButton(new Button(buttonComp, SWT.PUSH), getProject());
+		confirm.getButton().setText("Erstellen");
+		confirm.getButton().setLayoutData("hmin pref, wmin pref, grow");
+		confirm.setTooltipText("Erstellt einen neuen Knoten mit den angegebenen Koordinaten und schließt den Dialog.");
+		confirm.getButton().addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				_result = new Node(Integer.valueOf(tXCoordinate.getText()), Integer.valueOf(tYCoordinate.getText()));
-				shell.dispose();
+				if (tXCoordinate.isValidInput() && tYCoordinate.isValidInput()) {
+					try {
+						_result = new Node(Utility.FORMAT.parse(tXCoordinate.getText().getText()).doubleValue(), Utility.FORMAT.parse(
+								tYCoordinate.getText().getText()).doubleValue());
+					}
+					catch (ParseException e) {
+						MessageDialog.openError(shell, "Fehler beim umwandeln der Koordinaten",
+								"Beim Umwandeln der Koordinaten von Text in eine Zahl ist ein Fehler aufgetreten.");
+					}
+					shell.dispose();
+				}
+				else {
+					MessageDialog
+							.openError(shell, "Ungültiger Wert",
+									"Eines der Textfelder hat einen ungültigen Eingabewert (rot unterlegt). Um fortzufahren geben Sie bitte einen gültigen Wert ein.");
+				}
 			}
 		});
 
-		Button cancel = new Button(buttonComp, SWT.PUSH);
-		cancel.setText("Abbrechen");
-		cancel.setLayoutData("hmin pref, wmin pref, grow");
-		cancel.addSelectionListener(new SelectionAdapter() {
+		AntButton cancel = new AntButton(new Button(buttonComp, SWT.PUSH), getProject());
+		cancel.getButton().setText("Abbrechen");
+		cancel.getButton().setLayoutData("hmin pref, wmin pref, grow");
+		cancel.setTooltipText("Schließt den Dialog ohne Erstellung eines Knotens.");
+		cancel.getButton().addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {

@@ -312,7 +312,7 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				RandomProjectDialog randomProjectDialog = new RandomProjectDialog(pParent);
+				RandomProjectDialog randomProjectDialog = new RandomProjectDialog(pParent, _currentTabContent.getController().getProject());
 				TSPData data = randomProjectDialog.open();
 				if (data != null) {
 					_currentTabContent.getController().getProject().setTSPData(data);
@@ -347,7 +347,8 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				new TSPDataDialog(pParent, _currentTabContent.getController().getProject().getTSPData()).open();
+				new TSPDataDialog(pParent, _currentTabContent.getController().getProject().getTSPData(), _currentTabContent.getController()
+						.getProject()).open();
 			}
 		});
 
