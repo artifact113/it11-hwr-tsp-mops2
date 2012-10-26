@@ -8,7 +8,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import net.miginfocom.swt.MigLayout;
-import net.miginfocom.swt.SwtComponentWrapper;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -59,8 +58,6 @@ public class GUI implements PropertyChangeListener {
 	public void layout() {
 		Display display = new Display();
 
-		SwtComponentWrapper.setMinimumSizeZero(true);
-
 		Shell shell = new Shell(display);
 		shell.setText("Ants on Fire");
 		shell.setImage(Images.JEA);
@@ -85,7 +82,6 @@ public class GUI implements PropertyChangeListener {
 				_currentTabContent.getController().getProject().getTSPData().removePropertyChangeListener(GUI.this);
 				_currentTabContent = (TabContent) control;
 				_currentTabContent.getController().getProject().getTSPData().addPropertyChangeListener(GUI.this);
-				System.out.println("BLAH");
 			}
 		});
 		_tabFolder.addFocusListener(new FocusAdapter() {
@@ -103,7 +99,6 @@ public class GUI implements PropertyChangeListener {
 		shell.pack();
 		shell.open();
 		shell.setMinimumSize(shell.getSize());
-		// shell.setMaximized(true);
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -161,7 +156,7 @@ public class GUI implements PropertyChangeListener {
 
 		MenuItem fileMenuItemClose = new MenuItem(fileMenuItemSubMenu, SWT.NONE);
 		fileMenuItemClose.setText("Beenden");
-		fileMenuItemClose.setImage(Images.CLOSE);
+		fileMenuItemClose.setImage(Images.CROSS);
 
 		fileMenuItem.setMenu(fileMenuItemSubMenu);
 
@@ -356,7 +351,7 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				new PreferencesDialog(pParent).open();
+				new PreferencesDialog(pParent, _currentTabContent.getController().getProject()).open();
 			}
 		});
 	}

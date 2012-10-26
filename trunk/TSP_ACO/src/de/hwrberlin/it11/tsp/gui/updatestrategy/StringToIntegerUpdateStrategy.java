@@ -17,31 +17,6 @@ import de.hwrberlin.it11.tsp.constant.Utility;
  */
 public class StringToIntegerUpdateStrategy extends UpdateValueStrategy {
 
-	/** Die einzige Instanz dieser Klasse */
-	private static StringToIntegerUpdateStrategy _instance;
-
-
-
-	/**
-	 * Überschreibt den public default Konstruktor. Es soll nur eine Instanz dieser Klasse geben, die über die Methode getInstance() referenzierbar
-	 * ist.
-	 */
-	private StringToIntegerUpdateStrategy() {
-	}
-
-
-
-	/**
-	 * Gibt die einzige Instanz dieser Klasse zurück.
-	 * 
-	 * @return die einzige Instanz dieser Klasse
-	 */
-	public static StringToIntegerUpdateStrategy getInstance() {
-		return _instance == null ? new StringToIntegerUpdateStrategy() : _instance;
-	}
-
-
-
 	@Override
 	public Object convert(Object pValue) {
 		try {

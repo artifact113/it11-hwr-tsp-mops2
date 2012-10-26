@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 
-import de.hwrberlin.it11.tsp.constant.Colors;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 import de.hwrberlin.it11.tsp.controller.AntController;
 import de.hwrberlin.it11.tsp.gui.dialog.NewNodeDialog;
@@ -92,6 +91,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 
 		getController().getProject().addPropertyChangeListener(this);
 		getController().getProject().getParameter().addPropertyChangeListener(this);
+		Preferences.getInstance().addPropertyChangeListener(this);
 
 		_scrolledComposite = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
 		_scrolledComposite.setLayoutData("hmin 0, wmin 0, grow, push, growprio 99, shrinkprio 101");
@@ -99,7 +99,6 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 		_scrolledComposite.setExpandVertical(true);
 
 		_canvas = new Canvas(_scrolledComposite, SWT.DOUBLE_BUFFERED);
-		_canvas.setBackground(Colors.WHITE);
 
 		_zoomFactor = new AntScale(new Scale(this, SWT.VERTICAL), getController().getProject());
 		_zoomFactor.getScale().setLayoutData("hmin 0, wmin 0, growy");
@@ -142,7 +141,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			@Override
 			public void mouseDoubleClick(MouseEvent pE) {
 				if (pE.button == 1) {
-					if (pE.x - BORDER_WIDTH >= 0 && pE.y - BORDER_WIDTH >= 0) {
+					if (pE.x - BORDER_WIDTH >= 0 && pE.y - BORDER_WIDTH >= 0 && !getController().isRunning()) {
 						double zoomFactor = getController().getProject().getParameter().getZoomFactor();
 						NewNodeDialog newNodeDialog = new NewNodeDialog(getShell(), getController().getProject(), (pE.x - BORDER_WIDTH) / zoomFactor,
 								(pE.y - BORDER_WIDTH) / zoomFactor);
@@ -160,7 +159,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			@Override
 			public void mouseMove(MouseEvent pE) {
 				double zoomFactor = getController().getProject().getParameter().getZoomFactor();
-				if (_drag) {
+				if (_drag && !getController().isRunning()) {
 					_selectedNode.setxCoordinate(pE.x >= BORDER_WIDTH ? (int) ((pE.x - BORDER_WIDTH) / zoomFactor) : 0);
 					_selectedNode.setyCoordinate(pE.y >= BORDER_WIDTH ? (int) ((pE.y - BORDER_WIDTH) / zoomFactor) : 0);
 				}
@@ -174,7 +173,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			@Override
 			public void keyPressed(KeyEvent pE) {
 				if (pE.keyCode == SWT.DEL) {
-					if (_selectedNode != null) {
+					if (_selectedNode != null && !getController().isRunning()) {
 						getController().getProject().removeNode(_selectedNode);
 						_selectedNode = null;
 					}
@@ -202,7 +201,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 		// ZoomFactor-Scale binden
 		pDBC.bindValue(SWTObservables.observeSelection(_zoomFactor.getScale()),
 				BeansObservables.observeValue(pRealm, getController().getProject().getParameter(), PropertyChangeTypes.PARAMETER_ZOOMFACTOR),
-				ZoomFactorTargetToModelUpdateStrategy.getInstance(), ZoomFactorModelToTargetUpdateStrategy.getInstance());
+				new ZoomFactorTargetToModelUpdateStrategy(), new ZoomFactorModelToTargetUpdateStrategy());
 		// Statustext binden
 		pDBC.bindValue(SWTObservables.observeText(_statusLabel),
 				BeansObservables.observeValue(pRealm, getController().getProject(), PropertyChangeTypes.PROJECT_STATUSTEXT));
@@ -242,18 +241,33 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 				_canvas.redraw();
 			}
 
-			// Einen redraw auf folgende Events ausführen
+			// Einen gesyncten redraw auf folgende Events ausführen:
 			if (PropertyChangeTypes.PROJECT_ITERATIONFINISHED.equals(propertyName)) { // Eine Iteration ist vorbei
-				// Dieses Event kommt nicht aus dem UI-Thread, deswegen muss der Redraw mit Display.syncExec() ausgeführt werden
-				Display.getDefault().syncExec(new Runnable() {
+				if (((Integer) pEvt.getNewValue()).intValue() % Preferences.getInstance().getRedrawInterval() == 0) {
+					// Dieses Event kommt nicht aus dem UI-Thread, deswegen muss der Redraw mit Display.syncExec() ausgeführt werden
+					Display.getDefault().syncExec(new Runnable() {
 
-					@Override
-					public void run() {
-						if (!_canvas.isDisposed()) {
-							_canvas.redraw();
+						@Override
+						public void run() {
+							if (!_canvas.isDisposed()) {
+								_canvas.redraw();
+							}
 						}
-					}
-				});
+					});
+				}
+			}
+
+			// Einen normalen redraw auf folgende Events ausführen:
+			if (PropertyChangeTypes.PREFERENCES_ANTIALIAS.equals(propertyName) // Die Antialiasingeinstellung hat sich verändert
+					|| PropertyChangeTypes.PREFERENCES_BACKGROUNDCOLOR.equals(propertyName) // Die Hintergrundfarbeneinstellung hat sich verändert
+					|| PropertyChangeTypes.PREFERENCES_BESTTOURGLOBALCOLOR.equals(propertyName) // Die Farbeinstellung der globalen besten Tour hat
+																								// sich verändert
+					|| PropertyChangeTypes.PREFERENCES_BESTTOURITERATIONCOLOR.equals(propertyName) // die Farbeinstellung der besten Tour der
+																									// Iteration hat sich verändert
+					|| PropertyChangeTypes.PREFERENCES_CURRENTNODECOLOR.equals(propertyName) // Die Farbeinstellung der ausgewählten Knoten hat sich
+																								// verändert
+					|| PropertyChangeTypes.PREFERENCES_NODECOLOR.equals(propertyName)) { // Die farbeinstellung der Knoten hat sich verändert
+				_canvas.redraw();
 			}
 
 			// Auf folgende Events das Databinding erneuern:
@@ -285,6 +299,9 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			if (preferences.isAntialias()) {
 				pE.gc.setAntialias(SWT.ON);
 			}
+
+			_canvas.setBackground(preferences.getBackgroundColor());
+
 			// Beste Tour Iteration
 			pE.gc.setForeground(preferences.getBestTourIterationColor());
 			for (int i = 0; i < result.getBestTourIteration().size() - 1; i++) {

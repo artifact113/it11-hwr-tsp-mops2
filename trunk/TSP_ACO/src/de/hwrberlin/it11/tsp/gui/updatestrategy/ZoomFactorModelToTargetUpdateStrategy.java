@@ -13,31 +13,6 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
  */
 public class ZoomFactorModelToTargetUpdateStrategy extends UpdateValueStrategy {
 
-	/** Die einzige Instanz dieser Klasse */
-	private static ZoomFactorModelToTargetUpdateStrategy _instance;
-
-
-
-	/**
-	 * Überschreibt den public default Konstruktor. Es soll nur eine Instanz dieser Klasse geben, die über die Methode getInstance() referenzierbar
-	 * ist.
-	 */
-	private ZoomFactorModelToTargetUpdateStrategy() {
-	}
-
-
-
-	/**
-	 * Gibt die einzige Instanz dieser Klasse zurück.
-	 * 
-	 * @return die einzige Instanz dieser Klasse
-	 */
-	public static ZoomFactorModelToTargetUpdateStrategy getInstance() {
-		return _instance == null ? new ZoomFactorModelToTargetUpdateStrategy() : _instance;
-	}
-
-
-
 	@Override
 	public Object convert(Object pValue) {
 		double value = (Double) pValue;
