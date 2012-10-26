@@ -26,7 +26,12 @@ public class Images {
 	public static final Image FOLDER = getImageFromResource("/img/folder.png");
 
 	/** Rotes Kreuz */
-	public static final Image CLOSE = getImageFromResource("/img/cross.png");
+	public static final Image CROSS = getImageFromResource("/img/cross.png");
+
+	/** Grüner Haken */
+	public static final Image ACCEPT = getImageFromResource("/img/accept.png");
+
+	public static final Image TICK = getImageFromResource("/img/tick.png");
 
 
 

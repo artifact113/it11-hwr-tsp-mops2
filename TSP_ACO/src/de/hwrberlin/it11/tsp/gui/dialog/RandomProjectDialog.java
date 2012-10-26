@@ -142,8 +142,8 @@ public class RandomProjectDialog extends AAntDialog {
 						_result.setType("TSP");
 					}
 					catch (ParseException e) {
-						MessageDialog.openError(shell, "Fehler beim umwandeln der Koordinaten",
-								"Beim Umwandeln der Koordinaten von Text in eine Zahl ist ein Fehler aufgetreten.");
+						MessageDialog.openError(shell, "Fehler beim umwandeln der Werte",
+								"Beim Umwandeln der Werte von Text in eine Zahl ist ein Fehler aufgetreten.");
 					}
 
 					shell.dispose();

@@ -23,6 +23,9 @@ public class Preferences extends APropertyChangeSupport {
 	/** Indiziert das Anwenden von Antialiasing */
 	private boolean _antialias;
 
+	/** Gibt an, nach wie vielen Iterationen ein Redraw stattfinden soll */
+	private int _redrawInterval;
+
 	/** Farbe, mit der nicht ausgewählte Nodes gezeichnet werden sollen */
 	private Color _nodeColor;
 
@@ -35,6 +38,9 @@ public class Preferences extends APropertyChangeSupport {
 	/** Farbe, mit der die Strecke der besten Tour der Iteration gezeichnet werden soll */
 	private Color _bestTourIterationColor;
 
+	/** Hintergrundfarbe der Malfläche */
+	private Color _backgroundColor;
+
 
 
 	/**
@@ -42,10 +48,12 @@ public class Preferences extends APropertyChangeSupport {
 	 */
 	private Preferences() {
 		_antialias = false;
+		_redrawInterval = 1;
 		_nodeColor = Colors.RED;
 		_currentNodeColor = Colors.GREEN;
 		_bestTourGlobalColor = Colors.BLUE;
 		_bestTourIterationColor = Colors.DARK_GREY;
+		_backgroundColor = Colors.WHITE;
 	}
 
 
@@ -56,7 +64,7 @@ public class Preferences extends APropertyChangeSupport {
 	 * @return
 	 */
 	public static Preferences getInstance() {
-		return _instance == null ? new Preferences() : _instance;
+		return _instance == null ? _instance = new Preferences() : _instance;
 	}
 
 
@@ -75,6 +83,24 @@ public class Preferences extends APropertyChangeSupport {
 	 */
 	public void setAntialias(boolean pAntialias) {
 		firePropertyChange(PropertyChangeTypes.PREFERENCES_ANTIALIAS, _antialias, _antialias = pAntialias);
+	}
+
+
+
+	/**
+	 * @return
+	 */
+	public int getRedrawInterval() {
+		return _redrawInterval;
+	}
+
+
+
+	/**
+	 * @param pRedrawInterval
+	 */
+	public void setRedrawInterval(int pRedrawInterval) {
+		firePropertyChange(PropertyChangeTypes.PREFERENCES_REDRAWINTERVAL, _redrawInterval, _redrawInterval = pRedrawInterval);
 	}
 
 
@@ -148,6 +174,24 @@ public class Preferences extends APropertyChangeSupport {
 	public void setBestTourIterationColor(Color pBestTourIterationColor) {
 		firePropertyChange(PropertyChangeTypes.PREFERENCES_BESTTOURITERATIONCOLOR, _bestTourIterationColor,
 				_bestTourIterationColor = pBestTourIterationColor);
+	}
+
+
+
+	/**
+	 * @return
+	 */
+	public Color getBackgroundColor() {
+		return _backgroundColor;
+	}
+
+
+
+	/**
+	 * @param pBackgroundColor
+	 */
+	public void setBackgroundColor(Color pBackgroundColor) {
+		firePropertyChange(PropertyChangeTypes.PREFERENCES_BACKGROUNDCOLOR, _backgroundColor, _backgroundColor = pBackgroundColor);
 	}
 
 }

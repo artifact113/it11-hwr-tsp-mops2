@@ -20,6 +20,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import de.hwrberlin.it11.tsp.constant.FileDialogFilter;
@@ -32,9 +34,12 @@ import de.hwrberlin.it11.tsp.gui.updatestrategy.NumberToStringUpdateStrategy;
 import de.hwrberlin.it11.tsp.gui.updatestrategy.StringToDoubleUpdateStrategy;
 import de.hwrberlin.it11.tsp.gui.updatestrategy.StringToIntegerUpdateStrategy;
 import de.hwrberlin.it11.tsp.gui.widgets.AntButton;
+import de.hwrberlin.it11.tsp.gui.widgets.AntLabel;
 import de.hwrberlin.it11.tsp.gui.widgets.AntText;
+import de.hwrberlin.it11.tsp.interfaces.AlgorithmListener;
 import de.hwrberlin.it11.tsp.interfaces.AllInputValidListener;
 import de.hwrberlin.it11.tsp.interfaces.ValidInputListener;
+import de.hwrberlin.it11.tsp.model.AntProject;
 import de.hwrberlin.it11.tsp.model.Parameter;
 import de.hwrberlin.it11.tsp.persistence.Persister;
 
@@ -44,7 +49,8 @@ import de.hwrberlin.it11.tsp.persistence.Persister;
  * @author Patrick Szostack
  * 
  */
-public class StopCriteriaComposite extends ADataBindableComposite implements PropertyChangeListener, AllInputValidListener, ValidInputListener {
+public class StopCriteriaComposite extends ADataBindableComposite implements PropertyChangeListener, AllInputValidListener, ValidInputListener,
+		AlgorithmListener {
 
 	/** Button, um Iteration als Abbruchbedingung auszuwählen */
 	private AntButton _rIterationCount;
@@ -61,14 +67,17 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	/** Button, um eine Lösungsdatei als Abbruchbedingung auszuwählen */
 	private AntButton _rOptTourFilePath;
 
-	/** Textfeld zum Anzeigen des Dateipfades der Lösungsdatei */
-	private AntText _tOptTourFilePath;
-
 	/** Button zum Auswählen der Lösungsdatei */
 	private AntButton _bOptTourFilePath;
 
+	/** Zeigt den Status der ausgewählten Lösungsdatei an */
+	private AntLabel _lAccept;
+
 	/** Button zum Starten und Stoppen des Algorithmus */
 	private AntButton _bStart;
+
+	/** Status des Start-Buttons - false: ein Klick startet den Algorithmus, true: ein Klick stoppt den Algorithmus */
+	private boolean _buttonState;
 
 	/** Speichert den Wert des AllInputValidListener */
 	private boolean _allInputValid;
@@ -87,7 +96,9 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	 */
 	public StopCriteriaComposite(Composite pParent, int pStyle, AntController pController) {
 		super(pParent, pStyle, pController);
+
 		getController().getProject().addPropertyChangeListener(this);
+		getController().addAlgorithmListener(this);
 
 		Composite comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new MigLayout("fill, wrap 3", "[pref!][]"));
@@ -124,10 +135,6 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 		_rOptTourFilePath.getButton().setText("Optimale Tour:");
 		_rOptTourFilePath.setTooltipText("Diese Option lässt den Suchvorgang stoppen, wenn eine eingestellte Lösung gefunden wurde.");
 
-		_tOptTourFilePath = new AntText(new Text(comp, SWT.BORDER | SWT.READ_ONLY), getController().getProject());
-		_tOptTourFilePath.getText().setLayoutData("hmin pref, wmin 50, growx, pushx");
-		_tOptTourFilePath.setTooltipText("Hier steht der Dateipfad zu der Lösungsdatei.");
-
 		_bOptTourFilePath = new AntButton(new Button(comp, SWT.PUSH), getController().getProject());
 		_bOptTourFilePath.getButton().setLayoutData("hmin 0, wmin 0");
 		_bOptTourFilePath.getButton().setImage(Images.FOLDER);
@@ -145,14 +152,19 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 										"Die Liste der Knoten und die Liste der optimalen Tour weisen eine unterschiedliche Länge auf, somit kann die optimale Tour nicht geladen werden.");
 					}
 					else {
-						_tOptTourFilePath.getText().setText(path);
 						getController().getProject().setOptimalTourIndeces(indexList);
 					}
 				}
+				evaluateSolutionAccept();
 				evaluateStartEnabled();
 			}
 
 		});
+
+		_lAccept = new AntLabel(new Label(comp, SWT.NONE), getController().getProject());
+		_lAccept.getLabel().setLayoutData("hmin 0, wmin 0, push");
+		_lAccept.getLabel().setImage(Images.CROSS);
+		_lAccept.setTooltipText("Zeigt den Status der Lösungsdatei an.");
 
 		SelectionAdapter radioGroupListener = new SelectionAdapter() {
 
@@ -162,22 +174,22 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 				if (source == _rIterationCount.getButton()) {
 					_tIterationCount.getText().setEnabled(true);
 					_tMaximumTourLength.getText().setEnabled(false);
-					_tOptTourFilePath.getText().setEnabled(false);
 					_bOptTourFilePath.getButton().setEnabled(false);
+					_lAccept.getLabel().setEnabled(false);
 					getController().setIterationMode(IterationMode.COUNT);
 				}
 				if (source == _rMaximumTourLength.getButton()) {
 					_tIterationCount.getText().setEnabled(false);
 					_tMaximumTourLength.getText().setEnabled(true);
-					_tOptTourFilePath.getText().setEnabled(false);
 					_bOptTourFilePath.getButton().setEnabled(false);
+					_lAccept.getLabel().setEnabled(false);
 					getController().setIterationMode(IterationMode.LENGTH);
 				}
 				if (source == _rOptTourFilePath.getButton()) {
 					_tIterationCount.getText().setEnabled(false);
 					_tMaximumTourLength.getText().setEnabled(false);
-					_tOptTourFilePath.getText().setEnabled(true);
 					_bOptTourFilePath.getButton().setEnabled(true);
+					_lAccept.getLabel().setEnabled(true);
 					getController().setIterationMode(IterationMode.SOLUTION);
 				}
 				evaluateStartEnabled();
@@ -189,7 +201,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 		_rOptTourFilePath.getButton().addSelectionListener(radioGroupListener);
 		_rIterationCount.getButton().setSelection(true);
 		_tMaximumTourLength.getText().setEnabled(false);
-		_tOptTourFilePath.getText().setEnabled(false);
+		_lAccept.getLabel().setEnabled(false);
 		_bOptTourFilePath.getButton().setEnabled(false);
 
 		_bStart = new AntButton(new Button(comp, SWT.PUSH), getController().getProject());
@@ -198,21 +210,13 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 		_bStart.setTooltipText("Dieser Button startet und stoppt den Suchvorgang.");
 		_bStart.getButton().addSelectionListener(new SelectionAdapter() {
 
-			boolean _isRunning;
-
-
-
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				if (!_isRunning) {
-					_bStart.getButton().setText("STOP");
+				if (!_buttonState) {
 					getController().start();
-					_isRunning = true;
 				}
 				else {
-					_bStart.getButton().setText("START");
 					getController().stop();
-					_isRunning = false;
 				}
 			}
 		});
@@ -230,12 +234,12 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 
 		// Zahl der Iterationen binden
 		pDBC.bindValue(SWTObservables.observeText(_tIterationCount.getText(), SWT.Modify),
-				BeansObservables.observeValue(pRealm, parameter, PropertyChangeTypes.PARAMETER_ITERATIONCOUNT),
-				StringToIntegerUpdateStrategy.getInstance(), NumberToStringUpdateStrategy.getInstance());
+				BeansObservables.observeValue(pRealm, parameter, PropertyChangeTypes.PARAMETER_ITERATIONCOUNT), new StringToIntegerUpdateStrategy(),
+				new NumberToStringUpdateStrategy());
 		// Schwellenwert der Tourlänge binden
 		pDBC.bindValue(SWTObservables.observeText(_tMaximumTourLength.getText(), SWT.Modify),
 				BeansObservables.observeValue(pRealm, parameter, PropertyChangeTypes.PARAMETER_MAXIMUMTOURLENGTH),
-				StringToDoubleUpdateStrategy.getInstance(), NumberToStringUpdateStrategy.getInstance());
+				new StringToDoubleUpdateStrategy(), new NumberToStringUpdateStrategy());
 	}
 
 
@@ -248,6 +252,14 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 			// Auf folgende Events das Databinding erneuern:
 			if (PropertyChangeTypes.PROJECT_PARAMETER.equals(propertyName)) { // Parameter des Projektes wurden neu gesetzt
 				resetBinding();
+			}
+
+			// Auf folgende Events die Validität der Lösungsdatei überprüfen:
+			if (PropertyChangeTypes.PROJECT_NODELIST.equals(propertyName) // Knotenliste wurde neu gesetzt
+					|| PropertyChangeTypes.PROJECT_NODELIST_ADD.equals(propertyName) // Ein Knoten wurde hinzugefügt
+					|| PropertyChangeTypes.PROJECT_NODELIST_REMOVE.equals(propertyName)) { // Ein Knoten wurde entfernt
+				evaluateSolutionAccept();
+				evaluateStartEnabled();
 			}
 		}
 	}
@@ -276,12 +288,83 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	private void evaluateStartEnabled() {
 		boolean enable = _allInputValid && _tIterationCount.isValidInput() && _tMaximumTourLength.isValidInput();
 		if (_rOptTourFilePath.getButton().getSelection()) {
-			if (getController().getProject().getOptimalTourIndeces() == null
-					|| getController().getProject().getTSPData().getNodeList().size() != getController().getProject().getOptimalTourIndeces().size()) {
+			AntProject project = getController().getProject();
+
+			if (project.getOptimalTourIndeces() == null || (project.getTSPData().getNodeList().size() != project.getOptimalTourIndeces().size())) {
 				enable = false;
 			}
 		}
 		_bStart.getButton().setEnabled(enable);
+	}
+
+
+
+	/**
+	 * Setzte das Bild des Lösungsdateiakzeptanz-Labels entsprechend der Validität der Lösungsdatei. Die Lösungsdatei ist genau dann valide, wenn sie
+	 * die gleiche Länge wie die Liste der Knoten aufweist.
+	 */
+	private void evaluateSolutionAccept() {
+		AntProject project = getController().getProject();
+		if (project.getOptimalTourIndeces() == null || (project.getOptimalTourIndeces().size() != project.getTSPData().getNodeList().size())) {
+			_lAccept.getLabel().setImage(Images.CROSS);
+		}
+		else {
+			_lAccept.getLabel().setImage(Images.TICK);
+		}
+	}
+
+
+
+	@Override
+	public void algorithmStarted() {
+		_buttonState = true;
+		// Dieses Event kommt unter Umständen nicht aus dem UI-Thread, deswegen müssen Operationen am Widget mit Display.syncExec() ausgeführt werden
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				_bStart.getButton().setText("STOP");
+				_rIterationCount.getButton().setEnabled(false);
+				_rMaximumTourLength.getButton().setEnabled(false);
+				_rOptTourFilePath.getButton().setEnabled(false);
+				if (_rIterationCount.getButton().getSelection()) {
+					_tIterationCount.getText().setEnabled(false);
+				}
+				if (_rMaximumTourLength.getButton().getSelection()) {
+					_tMaximumTourLength.getText().setEnabled(false);
+				}
+				if (_rOptTourFilePath.getButton().getSelection()) {
+					_bOptTourFilePath.getButton().setEnabled(false);
+				}
+			}
+		});
+	}
+
+
+
+	@Override
+	public void algorithmStopped() {
+		_buttonState = false;
+		// Dieses Event kommt unter Umständen nicht aus dem UI-Thread, deswegen müssen Operationen am Widget mit Display.syncExec() ausgeführt werden
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				_bStart.getButton().setText("START");
+				_rIterationCount.getButton().setEnabled(true);
+				_rMaximumTourLength.getButton().setEnabled(true);
+				_rOptTourFilePath.getButton().setEnabled(true);
+				if (_rIterationCount.getButton().getSelection()) {
+					_tIterationCount.getText().setEnabled(true);
+				}
+				if (_rMaximumTourLength.getButton().getSelection()) {
+					_tMaximumTourLength.getText().setEnabled(true);
+				}
+				if (_rOptTourFilePath.getButton().getSelection()) {
+					_bOptTourFilePath.getButton().setEnabled(true);
+				}
+			}
+		});
 	}
 
 }

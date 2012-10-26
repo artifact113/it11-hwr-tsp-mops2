@@ -135,8 +135,6 @@ public class AntProject extends APropertyChangeSupport {
 	 */
 	public void setNodeList(List<Node> pNodeList) {
 		firePropertyChange(PropertyChangeTypes.PROJECT_NODELIST, _nodeList, _nodeList = pNodeList);
-		// _tspData.setNodeList(_nodeList);
-		initEdges();
 	}
 
 

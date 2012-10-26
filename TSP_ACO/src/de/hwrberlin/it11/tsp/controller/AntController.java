@@ -9,6 +9,7 @@ import java.util.List;
 
 import de.hwrberlin.it11.tsp.constant.IterationMode;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
+import de.hwrberlin.it11.tsp.interfaces.AlgorithmListener;
 import de.hwrberlin.it11.tsp.model.AntProject;
 import de.hwrberlin.it11.tsp.model.Edge;
 import de.hwrberlin.it11.tsp.model.Node;
@@ -34,6 +35,9 @@ public class AntController {
 	/** Referenz auf den Thread, der momentan den Algorithmus bearbeitet */
 	private volatile Thread _algorithm;
 
+	/** Die Liste an AlgorithmListener */
+	private List<AlgorithmListener> _listenerList;
+
 
 
 	/**
@@ -45,6 +49,7 @@ public class AntController {
 	public AntController(AntProject pProject) {
 		_project = pProject;
 		_iterationMode = IterationMode.COUNT;
+		_listenerList = new ArrayList<AlgorithmListener>();
 	}
 
 
@@ -134,6 +139,10 @@ public class AntController {
 	 * Startet den Algorithmus. Ein neuer Thread wird erstellt, der diesen Algorithmus abarbeitet.
 	 */
 	public void start() {
+		for (AlgorithmListener listener : _listenerList) {
+			listener.algorithmStarted();
+		}
+
 		_algorithm = new Thread() {
 
 			@Override
@@ -228,6 +237,45 @@ public class AntController {
 	 */
 	public void stop() {
 		_algorithm = null;
+
+		for (AlgorithmListener listener : _listenerList) {
+			listener.algorithmStopped();
+		}
+	}
+
+
+
+	/**
+	 * Gibt an, ob der Algorithmus gerade läuft.
+	 * 
+	 * @return true wenn der Algorithmus läuft, andernfalls false
+	 */
+	public boolean isRunning() {
+		return _algorithm != null;
+	}
+
+
+
+	/**
+	 * Fügt den angegebenen AlgorithmListener der ListenerList hinzu.
+	 * 
+	 * @param pListener
+	 *            der hinzuzufügende AlgorithmListener
+	 */
+	public void addAlgorithmListener(AlgorithmListener pListener) {
+		_listenerList.add(pListener);
+	}
+
+
+
+	/**
+	 * Entfernt den angegebenen AlgorithmListener aus der ListenerList.
+	 * 
+	 * @param pListener
+	 *            der zu entfernende AlgorithmListener
+	 */
+	public void removeAlgorithmListener(AlgorithmListener pListener) {
+		_listenerList.remove(pListener);
 	}
 
 }

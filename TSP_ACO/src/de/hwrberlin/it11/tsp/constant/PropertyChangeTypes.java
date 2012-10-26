@@ -81,6 +81,8 @@ public class PropertyChangeTypes {
 
 	public static final String PREFERENCES_ANTIALIAS = "antialias";
 
+	public static final String PREFERENCES_REDRAWINTERVAL = "redrawInterval";
+
 	public static final String PREFERENCES_NODECOLOR = "nodeColor";
 
 	public static final String PREFERENCES_CURRENTNODECOLOR = "currentNodeColor";
@@ -88,6 +90,8 @@ public class PropertyChangeTypes {
 	public static final String PREFERENCES_BESTTOURGLOBALCOLOR = "bestTourGlobalColor";
 
 	public static final String PREFERENCES_BESTTOURITERATIONCOLOR = "bestTourIterationColor";
+
+	public static final String PREFERENCES_BACKGROUNDCOLOR = "backgroundColor";
 
 	// Node
 
