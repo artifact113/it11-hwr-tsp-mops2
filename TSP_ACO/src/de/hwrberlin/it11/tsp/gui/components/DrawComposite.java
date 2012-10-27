@@ -35,6 +35,7 @@ import de.hwrberlin.it11.tsp.gui.dialog.NewNodeDialog;
 import de.hwrberlin.it11.tsp.gui.updatestrategy.ZoomFactorModelToTargetUpdateStrategy;
 import de.hwrberlin.it11.tsp.gui.updatestrategy.ZoomFactorTargetToModelUpdateStrategy;
 import de.hwrberlin.it11.tsp.gui.widgets.AntScale;
+import de.hwrberlin.it11.tsp.model.AntProject;
 import de.hwrberlin.it11.tsp.model.Node;
 import de.hwrberlin.it11.tsp.model.Preferences;
 import de.hwrberlin.it11.tsp.model.Result;
@@ -89,8 +90,10 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 	public DrawComposite(Composite pParent, int pStyle, AntController pController) {
 		super(pParent, pStyle, pController);
 
-		getController().getProject().addPropertyChangeListener(this);
-		getController().getProject().getParameter().addPropertyChangeListener(this);
+		AntProject project = getController().getProject();
+		project.addPropertyChangeListener(this);
+		project.getParameter().addPropertyChangeListener(this);
+		project.getTSPData().addPropertyChangeListener(this);
 		Preferences.getInstance().addPropertyChangeListener(this);
 
 		_scrolledComposite = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
@@ -142,12 +145,13 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			public void mouseDoubleClick(MouseEvent pE) {
 				if (pE.button == 1) {
 					if (pE.x - BORDER_WIDTH >= 0 && pE.y - BORDER_WIDTH >= 0 && !getController().isRunning()) {
-						double zoomFactor = getController().getProject().getParameter().getZoomFactor();
-						NewNodeDialog newNodeDialog = new NewNodeDialog(getShell(), getController().getProject(), (pE.x - BORDER_WIDTH) / zoomFactor,
+						AntProject project = getController().getProject();
+						double zoomFactor = project.getParameter().getZoomFactor();
+						NewNodeDialog newNodeDialog = new NewNodeDialog(getShell(), project, (pE.x - BORDER_WIDTH) / zoomFactor,
 								(pE.y - BORDER_WIDTH) / zoomFactor);
 						Node newNode = newNodeDialog.open();
 						if (newNode != null) {
-							getController().getProject().addNode(newNode);
+							project.getTSPData().addNode(newNode);
 						}
 					}
 				}
@@ -174,7 +178,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			public void keyPressed(KeyEvent pE) {
 				if (pE.keyCode == SWT.DEL) {
 					if (_selectedNode != null && !getController().isRunning()) {
-						getController().getProject().removeNode(_selectedNode);
+						getController().getProject().getTSPData().removeNode(_selectedNode);
 						_selectedNode = null;
 					}
 				}
@@ -215,15 +219,17 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			String propertyName = pEvt.getPropertyName();
 
 			// Auf folgende Events eine Neuberechnung der größten Koordinaten mit anschließendem redraw asuführen:
-			if (PropertyChangeTypes.PROJECT_NODELIST.equals(propertyName) // Die NodeList des Projektes wurde neu gesetzt
+			if (PropertyChangeTypes.TSPDATA_NODELIST.equals(propertyName) // Die NodeList des Projektes wurde neu gesetzt
+					|| PropertyChangeTypes.PROJECT_TSPDATA.equals(propertyName) // TSP Daten des Projektes wurden neu gesetzt
 					|| PropertyChangeTypes.NODE_XCOORDINATE.equals(propertyName) // Es wurde die X Koordinate einer Node verändert
 					|| PropertyChangeTypes.NODE_YCOORDINATE.equals(propertyName) // Es wurde die Y Koordinate einer Node verändert
-					|| PropertyChangeTypes.PROJECT_NODELIST_ADD.equals(propertyName) // Es wurde eine Node zur Städteliste hinzugefügt
-					|| PropertyChangeTypes.PROJECT_NODELIST_REMOVE.equals(propertyName) // Es wurde eine Node von der Städteliste entfernt
+					|| PropertyChangeTypes.TSPDATA_NODELIST_ADD.equals(propertyName) // Es wurde eine Node zur Knotenliste hinzugefügt
+					|| PropertyChangeTypes.TSPDATA_NODELIST_REMOVE.equals(propertyName) // Es wurde eine Node von der Knotenliste entfernt
 					|| PropertyChangeTypes.PARAMETER_ZOOMFACTOR.equals(propertyName)) { // Der Zoom-Faktor hat sich verändert
 				double maxX = 0;
 				double maxY = 0;
-				for (Node node : getController().getProject().getNodeList()) {
+				AntProject project = getController().getProject();
+				for (Node node : project.getTSPData().getNodeList()) {
 					if (node.getxCoordinate() > maxX) {
 						maxX = node.getxCoordinate();
 					}
@@ -232,7 +238,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 					}
 				}
 
-				double zoomFactor = getController().getProject().getParameter().getZoomFactor();
+				double zoomFactor = project.getParameter().getZoomFactor();
 				int preferredWidth = (int) (maxX * zoomFactor) + BORDER_WIDTH * 2;
 				int preferredHeight = (int) (maxY * zoomFactor) + BORDER_WIDTH * 2;
 
@@ -275,6 +281,10 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 				getController().getProject().getParameter().addPropertyChangeListener(this);
 				resetBinding();
 			}
+
+			if (PropertyChangeTypes.PROJECT_TSPDATA.equals(propertyName)) {
+				getController().getProject().getTSPData().addPropertyChangeListener(this);
+			}
 		}
 	}
 
@@ -290,10 +300,11 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 
 		@Override
 		public void paintControl(PaintEvent pE) {
-			List<Node> nodeList = getController().getProject().getNodeList();
-			double zoomFactor = getController().getProject().getParameter().getZoomFactor();
+			AntProject project = getController().getProject();
+			List<Node> nodeList = project.getTSPData().getNodeList();
+			double zoomFactor = project.getParameter().getZoomFactor();
 
-			Result result = getController().getProject().getResult();
+			Result result = project.getResult();
 			Preferences preferences = Preferences.getInstance();
 
 			if (preferences.isAntialias()) {

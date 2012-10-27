@@ -78,7 +78,7 @@ public class PreferencesDialog extends AAntDialog {
 		final AntText tRedrawInterval = new AntText(new Text(shell, SWT.BORDER), getProject());
 		tRedrawInterval.getText().setText(Utility.FORMAT.format(preferences.getRedrawInterval()));
 		tRedrawInterval.getText().setLayoutData("hmin pref, wmin pref, grow");
-		tRedrawInterval.setTooltipText("Mit dieser Optionen können Sie Antialiasing an- und ausschalten.");
+		tRedrawInterval.setTooltipText("Hier können Sie einstellen, nach wie vielen Iterationen neu gezeichnet werden soll.");
 		tRedrawInterval.setInputMode(AntText.INTEGER_ONLY);
 		tRedrawInterval.setNumberRange(1, Double.POSITIVE_INFINITY, true, true);
 
@@ -124,7 +124,7 @@ public class PreferencesDialog extends AAntDialog {
 		cBestTourIterationColor.getComposite().addMouseListener(new ChooseColorListener(cBestTourIterationColor));
 
 		Label lBackgroundColor = new Label(shell, SWT.NONE);
-		lBackgroundColor.setText("Farbe der besten Tour der Iteration:");
+		lBackgroundColor.setText("Farbe des Malflächenhintergrundes:");
 		lBackgroundColor.setLayoutData("hmin pref, wmin pref");
 
 		final AntComposite cBackgroundColor = new AntComposite(new Composite(shell, SWT.BORDER), getProject());

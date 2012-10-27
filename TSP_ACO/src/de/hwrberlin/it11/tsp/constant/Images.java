@@ -3,6 +3,11 @@
  */
 package de.hwrberlin.it11.tsp.constant;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -13,14 +18,16 @@ import org.eclipse.swt.graphics.Image;
  */
 public class Images {
 
-	/** Das Titelbild des Programms */
-	public static final Image ANTS_ON_FIRE = getImageFromResource("/img/armeise.png");
+	/** Größe des momentan benutzten Bildschirms */
+	public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
-	public static final Image COWBOY = getScaledImageFromResource("/img/Ameise_Cowboy.png", 250, 300);
+	/** Titelbild des Programms */
+	public static final Image COWBOY = getScaledImageFromResource("/img/Ameise_Cowboy.png", (int) (SCREEN_SIZE.height / 4.5 / 6 * 5),
+			(int) (SCREEN_SIZE.height / 4.5));
 
-	public static final Image JEA = getImageFromResource("/img/jea.png");
-
-	public static final Image AMEISE = getScaledImageFromResource("/img/Ameise.png", 300, 300);
+	/** MOPS² Firmenlogo */
+	public static final Image MOPSS = getScaledImageFromResource("/img/Mops.png", (int) (SCREEN_SIZE.height / 3.6 * 1.35),
+			(int) (SCREEN_SIZE.height / 3.6));
 
 	/** Ordner */
 	public static final Image FOLDER = getImageFromResource("/img/folder.png");
@@ -29,9 +36,37 @@ public class Images {
 	public static final Image CROSS = getImageFromResource("/img/cross.png");
 
 	/** Grüner Haken */
-	public static final Image ACCEPT = getImageFromResource("/img/accept.png");
-
 	public static final Image TICK = getImageFromResource("/img/tick.png");
+
+	/** Graph bearbeiten */
+	public static final Image CHART_LINE_EDIT = getImageFromResource("/img/chart_line_edit.png");
+
+	/** Graph */
+	public static final Image CHART_LINE = getImageFromResource("/img/chart_line.png");
+
+	/** Zahnrad */
+	public static final Image COG = getImageFromResource("/img/cog.png");
+
+	/** Diskette */
+	public static final Image DISK = getImageFromResource("/img/disk.png");
+
+	/** Hilfe */
+	public static final Image HELP = getImageFromResource("/img/help.png");
+
+	/** Information */
+	public static final Image INFORMATION = getImageFromResource("/img/information.png");
+
+	/** Weiße Seite bearbeiten */
+	public static final Image PAGE_WHITE_EDIT = getImageFromResource("/img/page_white_edit.png");
+
+	/** Tab hinzufügen */
+	public static final Image TAB_ADD = getImageFromResource("/img/tab_add.png");
+
+	/** Tabelle bearbeiten */
+	public static final Image TABLE_EDIT = getImageFromResource("/img/table_edit.png");
+
+	/** Tabelle */
+	public static final Image TABLE = getImageFromResource("/img/table.png");
 
 
 
@@ -43,7 +78,15 @@ public class Images {
 	 * @return das erzeugte Image
 	 */
 	private static Image getImageFromResource(String pPath) {
-		return new Image(null, Images.class.getResourceAsStream(pPath));
+		InputStream stream = Image.class.getResourceAsStream(pPath);
+		Image image = new Image(null, stream);
+		try {
+			stream.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return image;
 	}
 
 

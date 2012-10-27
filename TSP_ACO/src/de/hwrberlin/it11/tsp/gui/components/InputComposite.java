@@ -16,12 +16,15 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import de.hwrberlin.it11.tsp.constant.IterationMode;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 import de.hwrberlin.it11.tsp.controller.AntController;
 import de.hwrberlin.it11.tsp.gui.widgets.AntText;
+import de.hwrberlin.it11.tsp.interfaces.AlgorithmListener;
 import de.hwrberlin.it11.tsp.interfaces.AllInputValidListener;
 import de.hwrberlin.it11.tsp.interfaces.AllInputValidValidator;
 import de.hwrberlin.it11.tsp.model.Parameter;
@@ -32,7 +35,7 @@ import de.hwrberlin.it11.tsp.model.Parameter;
  * @author Patrick Szostack
  * 
  */
-public class InputComposite extends ADataBindableComposite implements PropertyChangeListener {
+public class InputComposite extends ADataBindableComposite implements PropertyChangeListener, AlgorithmListener {
 
 	/** Textfeld zum Verändern der Anzahl der Ameisen */
 	private AntText _tAntCount;
@@ -70,9 +73,10 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 		super(pParent, pStyle, pController);
 
 		getController().getProject().addPropertyChangeListener(this);
+		getController().addAlgorithmListener(this);
 
 		Composite comp = new Composite(this, SWT.NONE);
-		comp.setLayout(new MigLayout("fill, wrap 2", "[pref!][]"));
+		comp.setLayout(new MigLayout("fill, wrap 2, ins 0", "[pref!][]"));
 		comp.setLayoutData("hmin pref, wmin pref, growx, pushx");
 
 		Label lAntCount = new Label(comp, SWT.NONE);
@@ -187,14 +191,65 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 
 
 
+	/**
+	 * Fügt einen einen AllInputValidListener der Kollektion an Listenern hinzu, der den Validierungszustand aller AntText dieses Composites
+	 * überwacht.
+	 * 
+	 * @param pListener
+	 *            der hinzuzufügende AllInputValidListener
+	 */
 	public void addAllInputValidListener(AllInputValidListener pListener) {
 		_allInputValidListenerList.add(pListener);
 	}
 
 
 
+	/**
+	 * Entfernt den angegebenen AllInputValidListener aus der Kollektion der Listener.
+	 * 
+	 * @param pListener
+	 *            der zu entfernende AllInputValidListener
+	 */
 	public void removeAllInputValidListener(AllInputValidListener pListener) {
 		_allInputValidListenerList.remove(pListener);
+	}
+
+
+
+	@Override
+	public void algorithmStarted() {
+		_tAntCount.getText().setEnabled(false);
+		_tEvaporationParameter.getText().setEnabled(false);
+		_tInitialPheromonParameter.getText().setEnabled(false);
+		_tLocalInformation.getText().setEnabled(false);
+		_tPheromonParameter.getText().setEnabled(false);
+		_tPheromonUpdateParameter.getText().setEnabled(false);
+	}
+
+
+
+	@Override
+	public void algorithmStopped() {
+		// Dieses Event kommt unter Umständen nicht aus dem UI-Thread, deswegen müssen Operationen am Widget mit Display.syncExec() ausgeführt werden
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				_tAntCount.getText().setEnabled(true);
+				_tEvaporationParameter.getText().setEnabled(true);
+				_tInitialPheromonParameter.getText().setEnabled(true);
+				_tLocalInformation.getText().setEnabled(true);
+				_tPheromonParameter.getText().setEnabled(true);
+				_tPheromonUpdateParameter.getText().setEnabled(true);
+			}
+		});
+	}
+
+
+
+	@Override
+	public void iterationModeChanged(IterationMode pMode) {
+		// NO-OP
 	}
 
 }

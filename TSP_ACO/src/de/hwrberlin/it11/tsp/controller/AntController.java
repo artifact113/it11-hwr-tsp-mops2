@@ -82,7 +82,7 @@ public class AntController {
 	 * des Results, Setzen des Iterationszählers auf 0.
 	 */
 	public void init() {
-		_project.resetEdges();
+		_project.initEdges();
 		_project.getResult().init();
 		_iterationCounter = 0;
 	}
@@ -119,10 +119,15 @@ public class AntController {
 				Node startNode = nodeList.get(indexList.get(0) - 1);
 				int startNodeIndex = bestTourGlobalCopy.indexOf(startNode);
 				Collections.rotate(bestTourGlobalCopy, startNodeIndex * -1);
+				System.out.println("LIST CHECK");
 
 				for (int i = 0; i < bestTourGlobalCopy.size(); i++) {
 					Node node = bestTourGlobalCopy.get(i);
 					Node otherNode = nodeList.get(indexList.get(i) - 1);
+					System.out.println(i);
+					System.out.println(node);
+					System.out.println(otherNode);
+					System.out.println();
 					if (node != otherNode) {
 						return false;
 					}
@@ -161,7 +166,8 @@ public class AntController {
 					// Ameisen erzeugen
 					List<Ant> antList = new ArrayList<Ant>();
 					for (int j = 0; j < _project.getParameter().getAntCount(); j++) {
-						antList.add(new Ant(_project.getNodeList().get((int) (Math.random() * _project.getNodeList().size())), _project));
+						antList.add(new Ant(_project.getTSPData().getNodeList()
+								.get((int) (Math.random() * _project.getTSPData().getNodeList().size())), _project));
 					}
 
 					double bestTourLengthIteration = -1;
