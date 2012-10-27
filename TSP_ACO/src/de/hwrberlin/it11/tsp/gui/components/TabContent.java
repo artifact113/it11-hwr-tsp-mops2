@@ -23,23 +23,25 @@ import de.hwrberlin.it11.tsp.model.AntProject;
  */
 public class TabContent extends AAntComposite {
 
+	/** Die .tsp Datei, die diesem TabContent momentan zugeordnet ist */
 	private File _tspFile;
 
+	/** Die .tspconfig Datei, die diesem TabContent momentan zugeordnet ist */
 	private File _tspConfigFile;
 
 
 
 	/**
+	 * Erstellt einen neuen TabContent mit neuem AntController und neuem AntProject.
+	 * 
 	 * @param pParent
+	 *            das Eltern Composite
 	 * @param pStyle
+	 *            die SWT Stylebits dieses Composite
 	 */
 	public TabContent(Composite pParent, int pStyle) {
 		super(pParent, pStyle, new AntController(new AntProject()));
-	}
 
-
-
-	public void createComponent() {
 		Composite comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new MigLayout("fill, ins 0", "[][pref!]"));
 		comp.setLayoutData("hmin pref, wmin pref, grow");
@@ -73,24 +75,38 @@ public class TabContent extends AAntComposite {
 
 
 
+	/**
+	 * @return die .tsp Datei, die diesem TabContent momentan zugeordnet ist
+	 */
 	public File getTSPFile() {
 		return _tspFile;
 	}
 
 
 
+	/**
+	 * @param pFile
+	 *            Die .tsp Datei, die diesem TabContent zugeordnet werden soll
+	 */
 	public void setTSPFile(File pFile) {
 		_tspFile = pFile;
 	}
 
 
 
+	/**
+	 * @return die .tspconfig Datei, die diesem TabContent momentan zugeordnet ist
+	 */
 	public File getTSPConfigFile() {
 		return _tspConfigFile;
 	}
 
 
 
+	/**
+	 * @param pFile
+	 *            Die .tspconfig Datei, die diesem TabContent zugeordnet werden soll
+	 */
 	public void setTSPConfigFile(File pFile) {
 		_tspConfigFile = pFile;
 	}

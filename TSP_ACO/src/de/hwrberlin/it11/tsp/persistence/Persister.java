@@ -33,38 +33,60 @@ public class Persister {
 	 * @param pFile
 	 *            die File-Instanz der zu ladenden Datei
 	 * @return eine TSPData Instanz mit Werten, so wie sie in der Datei angegeben waren
+	 * @throws IllegalArgumentException
+	 *             wenn die angegebene Datei nicht der .tsp Norm entspricht
 	 */
-	public static TSPData loadTSPFile(File pFile) {
+	public static TSPData loadTSPFile(File pFile) throws IllegalArgumentException {
+		if (!pFile.exists()) {
+			throw new IllegalArgumentException("Die angegebene Datei existiert nicht.");
+		}
+
 		TSPData data = new TSPData();
 		BufferedReader reader = null;
 		try {
 			List<Node> nodeList = new ArrayList<Node>();
 			reader = new BufferedReader(new FileReader(pFile));
+			String name = null;
+			String type = null;
+			String comment = null;
+			String edgeWeightType = null;
 			String line = "";
 			boolean nodeSection = false;
-			while (!(line = reader.readLine()).equals("EOF")) {
-				line = line.trim();
-				if (line.contains("NAME:")) {
-					data.setName(line.split(" ")[1]);
+			while (!"EOF".equals(line = reader.readLine())) {
+				try {
+					line = line.trim();
+					if (line.contains("NAME:")) {
+						name = line.split(":")[1].trim();
+					}
+					if (line.contains("TYPE:")) {
+						type = line.split(":")[1].trim();
+					}
+					if (line.contains("COMMENT:")) {
+						comment = line.split(":")[1].trim();
+					}
+					if (line.contains("EDGE_WEIGHT_TYPE:")) {
+						edgeWeightType = line.split(":")[1].trim();
+					}
+					if (nodeSection) {
+						String[] nodeData = line.split("\\s+");
+						Node node = new Node((int) Double.parseDouble(nodeData[1]), (int) Double.parseDouble(nodeData[2]));
+						nodeList.add(node);
+					}
+					if (line.contains("NODE_COORD_SECTION")) {
+						nodeSection = true;
+					}
 				}
-				if (line.contains("TYPE:")) {
-					data.setType(line.split(" ")[1]);
-				}
-				if (line.contains("COMMENT:")) {
-					data.setComment(line.split(" ")[1]);
-				}
-				if (line.contains("EDGE_WEIGHT_TYPE:")) {
-					data.setEdgeWeightType(line.split(" ")[1]);
-				}
-				if (nodeSection) {
-					String[] nodeData = line.split("\\s+");
-					Node node = new Node((int) Double.parseDouble(nodeData[1]), (int) Double.parseDouble(nodeData[2]));
-					nodeList.add(node);
-				}
-				if (line.contains("NODE_COORD_SECTION")) {
-					nodeSection = true;
+				catch (ArrayIndexOutOfBoundsException pEx) {
+					throw new IllegalArgumentException("Die angegebene Datei entspricht nicht der Norm. Die Norm können Sie in der Hilfe nachlesen.");
 				}
 			}
+			if (name == null || type == null || comment == null || edgeWeightType == null) {
+				throw new IllegalArgumentException("Die angegebene Datei entspricht nicht der Norm. Die Norm können Sie in der Hilfe nachlesen.");
+			}
+			data.setName(name);
+			data.setType(type);
+			data.setComment(comment);
+			data.setEdgeWeightType(edgeWeightType);
 			data.setNodeList(nodeList);
 		}
 		catch (FileNotFoundException e) {
@@ -135,8 +157,14 @@ public class Persister {
 	 * @param pFile
 	 *            die File-Instanz der zu ladenden Datei
 	 * @return eine Parameter-Instanz mit Werten, wie sie in der Datei gespeichert waren
+	 * @throws IllegalArgumentException
+	 *             wenn die Datei nicht der .tspconfig Norm entspricht
 	 */
-	public static Parameter loadParameterFile(File pFile) {
+	public static Parameter loadParameterFile(File pFile) throws IllegalArgumentException {
+		if (!pFile.exists()) {
+			throw new IllegalArgumentException("Die angegebene Datei existiert nicht.");
+		}
+
 		Parameter parameter = new Parameter();
 		BufferedReader reader = null;
 		try {
@@ -216,15 +244,21 @@ public class Persister {
 	 * @param pFile
 	 *            die File Instanz der .opttour Datei
 	 * @return eine Liste an Indeces, in der Reihenfolge der besten Tour
+	 * @throws IllegalArgumentException
+	 *             wenn die Datei nicht der .opt.tour Norm entspricht
 	 */
-	public static List<Integer> loadOptTourFile(File pFile) {
+	public static List<Integer> loadOptTourFile(File pFile) throws IllegalArgumentException {
+		if (!pFile.exists()) {
+			throw new IllegalArgumentException("Die angegebene Datei existiert nicht.");
+		}
+
 		List<Integer> indexList = new ArrayList<Integer>();
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(pFile));
 			String line = "";
 			boolean nodeSection = false;
-			while (!(line = reader.readLine()).equals("EOF")) {
+			while (!"EOF".equals(line = reader.readLine())) {
 				line = line.trim();
 				if (nodeSection) {
 					int index = Integer.valueOf(line);

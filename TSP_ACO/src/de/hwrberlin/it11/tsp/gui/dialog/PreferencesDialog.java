@@ -159,13 +159,13 @@ public class PreferencesDialog extends AAntDialog {
 						MessageDialog.openError(shell, "Fehler beim umwandeln der Werte",
 								"Beim Umwandeln der Werte von Text in eine Zahl ist ein Fehler aufgetreten.");
 					}
+					shell.close();
 				}
 				else {
 					MessageDialog
 							.openError(shell, "Ungültiger Wert",
 									"Eines der Textfelder hat einen ungültigen Eingabewert (rot unterlegt). Um fortzufahren geben Sie bitte einen gültigen Wert ein.");
 				}
-				shell.dispose();
 			}
 		});
 
@@ -177,7 +177,7 @@ public class PreferencesDialog extends AAntDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				shell.dispose();
+				shell.close();
 			}
 		});
 
@@ -224,7 +224,6 @@ public class PreferencesDialog extends AAntDialog {
 			if (pE.button == 1) {
 				Color color = new ColorDialog(getParent(), getProject()).open();
 				if (color != null) {
-					_composite.getComposite().setBackground(color);
 					_composite.setBackground(color);
 				}
 			}
