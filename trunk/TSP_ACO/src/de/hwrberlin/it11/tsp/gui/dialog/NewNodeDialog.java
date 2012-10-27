@@ -118,7 +118,7 @@ public class NewNodeDialog extends AAntDialog {
 						MessageDialog.openError(shell, "Fehler beim umwandeln der Werte",
 								"Beim Umwandeln der Werte von Text in eine Zahl ist ein Fehler aufgetreten.");
 					}
-					shell.dispose();
+					shell.close();
 				}
 				else {
 					MessageDialog
@@ -136,7 +136,7 @@ public class NewNodeDialog extends AAntDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				shell.dispose();
+				shell.close();
 			}
 		});
 

@@ -73,6 +73,9 @@ public class AntController {
 	 */
 	public void setIterationMode(IterationMode pMode) {
 		_iterationMode = pMode;
+		for (AlgorithmListener listener : _listenerList) {
+			listener.iterationModeChanged(pMode);
+		}
 	}
 
 
@@ -227,7 +230,9 @@ public class AntController {
 					result.setElapsedTime(System.currentTimeMillis() - startTime);
 
 					// Eine Iteration ist vorüber, Event am AntProject feuern
-					_project.firePropertyChange(PropertyChangeTypes.PROJECT_ITERATIONFINISHED, null, ++_iterationCounter);
+					if (Thread.currentThread() == _algorithm) {
+						_project.firePropertyChange(PropertyChangeTypes.PROJECT_ITERATIONFINISHED, null, ++_iterationCounter);
+					}
 				}
 				AntController.this.stop();
 			}

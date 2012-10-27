@@ -159,7 +159,7 @@ public class RandomProjectDialog extends AAntDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				shell.dispose();
+				shell.close();
 			}
 		});
 

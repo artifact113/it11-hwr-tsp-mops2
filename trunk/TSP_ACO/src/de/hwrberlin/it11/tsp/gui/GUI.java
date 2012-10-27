@@ -231,10 +231,16 @@ public class GUI implements PropertyChangeListener {
 				if (!_currentTabContent.getController().isRunning()) {
 					String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.OPEN).setFilter(FileDialogFilter.TSP).open();
 					if (path != null) {
-						_currentTabContent.setTSPFile(new File(path));
-						TSPData data = Persister.loadTSPFile(_currentTabContent.getTSPFile());
-						_tabFolder.getSelection().setText(data.getName());
-						_currentTabContent.getController().getProject().setTSPData(data);
+						try {
+							File file = new File(path);
+							TSPData data = Persister.loadTSPFile(file);
+							_currentTabContent.setTSPFile(file);
+							_tabFolder.getSelection().setText(data.getName());
+							_currentTabContent.getController().getProject().setTSPData(data);
+						}
+						catch (IllegalArgumentException pEx) {
+							MessageDialog.openError(pParent, "Ungültige Datei", pEx.getMessage());
+						}
 					}
 				}
 				else {
@@ -247,15 +253,16 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				if (_currentTabContent.getTSPFile() == null) {
+				File file = _currentTabContent.getTSPFile();
+				if (file == null) {
 					String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.SAVE).setFilter(FileDialogFilter.TSP).open();
 					if (path != null) {
-						_currentTabContent.setTSPFile(new File(path));
-						Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getTSPData());
+						file = new File(path);
+						_currentTabContent.setTSPFile(file);
 					}
 				}
-				else {
-					Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getTSPData());
+				if (file != null) {
+					Persister.saveTSPFile(file, _currentTabContent.getController().getProject().getTSPData());
 				}
 			}
 		});
@@ -266,8 +273,9 @@ public class GUI implements PropertyChangeListener {
 			public void widgetSelected(SelectionEvent pE) {
 				String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.SAVE).setFilter(FileDialogFilter.TSP).open();
 				if (path != null) {
-					_currentTabContent.setTSPFile(new File(path));
-					Persister.saveTSPFile(_currentTabContent.getTSPFile(), _currentTabContent.getController().getProject().getTSPData());
+					File file = new File(path);
+					_currentTabContent.setTSPFile(file);
+					Persister.saveTSPFile(file, _currentTabContent.getController().getProject().getTSPData());
 				}
 			}
 		});
@@ -279,9 +287,15 @@ public class GUI implements PropertyChangeListener {
 				if (!_currentTabContent.getController().isRunning()) {
 					String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.OPEN).setFilter(FileDialogFilter.TSPCONFIG).open();
 					if (path != null) {
-						_currentTabContent.setTSPConfigFile(new File(path));
-						_currentTabContent.getController().getProject()
-								.setParameter(Persister.loadParameterFile(_currentTabContent.getTSPConfigFile()));
+						try {
+							File file = new File(path);
+							Parameter parameter = Persister.loadParameterFile(file);
+							_currentTabContent.setTSPConfigFile(file);
+							_currentTabContent.getController().getProject().setParameter(parameter);
+						}
+						catch (IllegalArgumentException pEx) {
+							MessageDialog.openError(pParent, "Ungültige Datei", pEx.getMessage());
+						}
 					}
 				}
 				else {
@@ -295,16 +309,16 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				if (_currentTabContent.getTSPConfigFile() == null) {
+				File file = _currentTabContent.getTSPConfigFile();
+				if (file == null) {
 					String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.SAVE).setFilter(FileDialogFilter.TSPCONFIG).open();
 					if (path != null) {
-						_currentTabContent.setTSPConfigFile(new File(path));
-						Persister.saveParameterFile(_currentTabContent.getTSPConfigFile(), _currentTabContent.getController().getProject()
-								.getParameter());
+						file = new File(path);
+						_currentTabContent.setTSPConfigFile(file);
 					}
 				}
-				else {
-					Persister.saveParameterFile(_currentTabContent.getTSPConfigFile(), _currentTabContent.getController().getProject().getParameter());
+				if (file != null) {
+					Persister.saveParameterFile(file, _currentTabContent.getController().getProject().getParameter());
 				}
 			}
 		});
@@ -315,8 +329,9 @@ public class GUI implements PropertyChangeListener {
 			public void widgetSelected(SelectionEvent pE) {
 				String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.SAVE).setFilter(FileDialogFilter.TSPCONFIG).open();
 				if (path != null) {
-					_currentTabContent.setTSPConfigFile(new File(path));
-					Persister.saveParameterFile(_currentTabContent.getTSPConfigFile(), _currentTabContent.getController().getProject().getParameter());
+					File file = new File(path);
+					_currentTabContent.setTSPConfigFile(file);
+					Persister.saveParameterFile(file, _currentTabContent.getController().getProject().getParameter());
 				}
 			}
 		});
@@ -325,7 +340,7 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				pParent.dispose();
+				pParent.close();
 			}
 		});
 
@@ -354,8 +369,8 @@ public class GUI implements PropertyChangeListener {
 				if (!_currentTabContent.getController().isRunning()) {
 					int antCount = (int) (Math.random() * 99) + 1;
 					int iterationCount = (int) (Math.random() * 9999) + 1;
-					double pheromonParameter = 10 - Math.random() * 10;
-					double localInformation = 10 - Math.random() * 10;
+					double pheromonParameter = 5 - Math.random() * 5;
+					double localInformation = 5 - Math.random() * 5;
 					double evaporationParameter = 1 - Math.random();
 					double initialPheromonParameter = 10 - Math.random() * 10;
 					double pheromonUpdateParameter = 10 - Math.random() * 10;
@@ -420,7 +435,6 @@ public class GUI implements PropertyChangeListener {
 		TabContent content = new TabContent(_tabFolder, SWT.NONE);
 		content.setLayout(new MigLayout("fill"));
 		content.setLayoutData("hmin 0, wmin 0");
-		content.createComponent();
 
 		CTabItem tabItem = new CTabItem(_tabFolder, SWT.NONE);
 		tabItem.setText(content.getController().getProject().getTSPData().getName());

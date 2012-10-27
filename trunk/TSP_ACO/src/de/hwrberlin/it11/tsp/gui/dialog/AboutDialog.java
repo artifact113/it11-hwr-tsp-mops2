@@ -24,19 +24,30 @@ import de.hwrberlin.it11.tsp.gui.widgets.AntLabel;
 import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
- * 
+ * Dieser Dialog präsentiert Informationen über MOPS² Productions.
  * 
  * @author Patrick Szostack
  * 
  */
 public class AboutDialog extends AAntDialog {
 
+	/**
+	 * Erstellt einen neuen AboutDialog.
+	 * 
+	 * @param pParent
+	 *            die Parent-Shell
+	 * @param pProject
+	 *            das AntProject des zu erstellenden Dialoges
+	 */
 	public AboutDialog(Shell pParent, AntProject pProject) {
 		super(pParent, pProject);
 	}
 
 
 
+	/**
+	 * Öffnet diesen Dialog und bingt ihn in den Vordergrund.
+	 */
 	public void open() {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
@@ -142,7 +153,7 @@ public class AboutDialog extends AAntDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				shell.dispose();
+				shell.close();
 			}
 		});
 

@@ -11,23 +11,34 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * 
+ * Dieser Dialog zeigt die Hilfe-HTML-Datei an.
  * 
  * @author Patrick Szostack
  * 
  */
 public class HelpDialog extends Dialog {
 
+	/**
+	 * Erstellt einen neuen HelpDialog.
+	 * 
+	 * @param pParent
+	 *            die Parent-Shell
+	 * @param pProject
+	 *            das AntProject des zu erstellenden Dialoges
+	 */
 	public HelpDialog(Shell pParent) {
 		super(pParent);
 	}
 
 
 
+	/**
+	 * Öffnet diesen Dialog und bingt ihn in den Vordergrund.
+	 */
 	public void open() {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.RESIZE);
-		shell.setText("Über");
+		shell.setText("Hilfe");
 		shell.setLayout(new MigLayout("fill, wrap"));
 		shell.setLayoutData("hmin pref, wmin pref");
 

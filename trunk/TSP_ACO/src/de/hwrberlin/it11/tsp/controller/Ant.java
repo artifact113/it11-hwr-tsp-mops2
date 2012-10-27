@@ -166,7 +166,6 @@ public class Ant {
 	 * @return true, wenn diese Ant alle Nodes besucht hat und wieder an ihrer Start-Node steht, andernfalls false
 	 */
 	public boolean isFinished() {
-		// return _visitedNodes.get(0) == _visitedNodes.get(_visitedNodes.size() - 1) && _visitedNodes.size() != 1;
 		return _visitedNodes.size() == _project.getTSPData().getNodeList().size() + 1;
 	}
 

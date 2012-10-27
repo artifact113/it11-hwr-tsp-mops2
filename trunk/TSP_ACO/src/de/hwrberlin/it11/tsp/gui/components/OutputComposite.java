@@ -19,8 +19,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 
+import de.hwrberlin.it11.tsp.constant.IterationMode;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 import de.hwrberlin.it11.tsp.controller.AntController;
+import de.hwrberlin.it11.tsp.interfaces.AlgorithmListener;
 import de.hwrberlin.it11.tsp.model.Result;
 
 /**
@@ -29,7 +31,7 @@ import de.hwrberlin.it11.tsp.model.Result;
  * @author Patrick Szostack
  * 
  */
-public class OutputComposite extends ADataBindableComposite implements PropertyChangeListener {
+public class OutputComposite extends ADataBindableComposite implements PropertyChangeListener, AlgorithmListener {
 
 	/** Label zum Anzeigen der Besten Tour der Iteration */
 	private Label _lBestTourIteration;
@@ -49,6 +51,9 @@ public class OutputComposite extends ADataBindableComposite implements PropertyC
 	/** ProgressBar zur Anzeige des Fortschritts */
 	private ProgressBar _progress;
 
+	/** Gibt an, ob die ProgressBar einen unbekannten Zustand anzeigen soll */
+	private boolean _undeterminedProgress;
+
 
 
 	/**
@@ -66,6 +71,7 @@ public class OutputComposite extends ADataBindableComposite implements PropertyC
 
 		getController().getProject().addPropertyChangeListener(this);
 		getController().getProject().getParameter().addPropertyChangeListener(this);
+		getController().addAlgorithmListener(this);
 
 		Composite comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new MigLayout("fill, wrap, ins 0"));
@@ -169,7 +175,12 @@ public class OutputComposite extends ADataBindableComposite implements PropertyC
 
 					// Auf folgende Events den angezeigten Wert der ProgressBar aktualisieren:
 					if (PropertyChangeTypes.PROJECT_ITERATIONFINISHED.equals(propertyName)) { // Eine Iteration ist vorbei
-						_progress.setSelection((Integer) pEvt.getNewValue());
+						if (!_undeterminedProgress) {
+							_progress.setSelection((Integer) pEvt.getNewValue());
+						}
+						else {
+							_progress.setSelection(_progress.getMaximum() / 2);
+						}
 					}
 				}
 			});
@@ -178,6 +189,38 @@ public class OutputComposite extends ADataBindableComposite implements PropertyC
 			if (PropertyChangeTypes.PROJECT_PARAMETER.equals(propertyName)) { // Parameter des Projektes wurden neu gesetzt
 				getController().getProject().getParameter().addPropertyChangeListener(this);
 			}
+		}
+	}
+
+
+
+	@Override
+	public void algorithmStarted() {
+		// NO-OP
+	}
+
+
+
+	@Override
+	public void algorithmStopped() {
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				_progress.setSelection(0);
+			}
+		});
+	}
+
+
+
+	@Override
+	public void iterationModeChanged(IterationMode pMode) {
+		if (pMode == IterationMode.COUNT) {
+			_undeterminedProgress = false;
+		}
+		else {
+			_undeterminedProgress = true;
 		}
 	}
 }

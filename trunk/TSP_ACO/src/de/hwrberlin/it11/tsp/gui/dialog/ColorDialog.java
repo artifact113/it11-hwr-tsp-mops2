@@ -22,7 +22,7 @@ import de.hwrberlin.it11.tsp.gui.widgets.AntComposite;
 import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
- * Dieser Dialog wählt zum Auswählen einer Farbe. Als Farben werden dabei alle Basisfarben der Colors Klasse angeboten.
+ * Dieser Dialog dient zum Auswählen einer Farbe. Als Farben werden dabei alle Basisfarben der Colors Klasse angeboten.
  * 
  * @author Patrick Szostack
  * 
@@ -56,7 +56,7 @@ public class ColorDialog extends AAntDialog {
 	public Color open() {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		shell.setText("Eigenschaften");
+		shell.setText("Farbe wählen");
 		shell.setLayout(new MigLayout("fill, wrap 4", "[50!][50!][50!][50!]", "[20!][20!][20!][20!][]"));
 		shell.setLayoutData("hmin pref, wmin pref");
 
@@ -136,7 +136,7 @@ public class ColorDialog extends AAntDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				shell.dispose();
+				shell.close();
 			}
 		});
 
@@ -149,7 +149,7 @@ public class ColorDialog extends AAntDialog {
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
 				_result = null;
-				shell.dispose();
+				shell.close();
 			}
 		});
 
