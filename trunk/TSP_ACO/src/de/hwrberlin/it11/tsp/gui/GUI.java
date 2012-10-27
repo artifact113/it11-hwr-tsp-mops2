@@ -9,6 +9,7 @@ import java.io.File;
 
 import net.miginfocom.swt.MigLayout;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -29,6 +30,8 @@ import de.hwrberlin.it11.tsp.constant.Images;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 import de.hwrberlin.it11.tsp.factories.FileDialogFactory;
 import de.hwrberlin.it11.tsp.gui.components.TabContent;
+import de.hwrberlin.it11.tsp.gui.dialog.AboutDialog;
+import de.hwrberlin.it11.tsp.gui.dialog.HelpDialog;
 import de.hwrberlin.it11.tsp.gui.dialog.PreferencesDialog;
 import de.hwrberlin.it11.tsp.gui.dialog.RandomProjectDialog;
 import de.hwrberlin.it11.tsp.gui.dialog.TSPDataDialog;
@@ -60,7 +63,7 @@ public class GUI implements PropertyChangeListener {
 
 		Shell shell = new Shell(display);
 		shell.setText("Ants on Fire");
-		shell.setImage(Images.JEA);
+		shell.setImage(Images.COWBOY);
 		shell.setLayout(new MigLayout("fill, ins 0 5 5 5"));
 		shell.setLayoutData("hmin pref, wmin pref, hmax pref, wmax pref");
 
@@ -127,30 +130,35 @@ public class GUI implements PropertyChangeListener {
 
 		MenuItem fileMenuItemNewTab = new MenuItem(fileMenuItemSubMenu, SWT.NONE);
 		fileMenuItemNewTab.setText("Neuer Tab");
+		fileMenuItemNewTab.setImage(Images.TAB_ADD);
 
 		new MenuItem(fileMenuItemSubMenu, SWT.SEPARATOR); // Separator
 
 		MenuItem fileMenuItemOpenTSPFile = new MenuItem(fileMenuItemSubMenu, SWT.NONE);
 		fileMenuItemOpenTSPFile.setText("TSP Datei öffnen");
+		fileMenuItemOpenTSPFile.setImage(Images.CHART_LINE);
 
 		MenuItem fileMenuItemSaveTSPFile = new MenuItem(fileMenuItemSubMenu, SWT.NONE);
 		fileMenuItemSaveTSPFile.setText("TSP Datei speichern");
-		fileMenuItemSaveTSPFile.setEnabled(false);
+		fileMenuItemSaveTSPFile.setImage(Images.DISK);
 
 		MenuItem fileMenuItemSaveTSPFileAs = new MenuItem(fileMenuItemSubMenu, SWT.NONE);
 		fileMenuItemSaveTSPFileAs.setText("TSP Datei speichern unter...");
-		fileMenuItemSaveTSPFileAs.setEnabled(false);
+		fileMenuItemSaveTSPFileAs.setImage(Images.DISK);
 
 		new MenuItem(fileMenuItemSubMenu, SWT.SEPARATOR); // Separator
 
 		MenuItem fileMenuItemOpenConfigFile = new MenuItem(fileMenuItemSubMenu, SWT.NONE);
 		fileMenuItemOpenConfigFile.setText("Konfigurationsdatei öffnen");
+		fileMenuItemOpenConfigFile.setImage(Images.TABLE);
 
 		MenuItem fileMenuItemSaveConfigFile = new MenuItem(fileMenuItemSubMenu, SWT.NONE);
 		fileMenuItemSaveConfigFile.setText("Konfigurationsdatei speichern");
+		fileMenuItemSaveConfigFile.setImage(Images.DISK);
 
 		MenuItem fileMenuItemSaveConfigFileAs = new MenuItem(fileMenuItemSubMenu, SWT.NONE);
 		fileMenuItemSaveConfigFileAs.setText("Konfigurationsdatei speichern unter...");
+		fileMenuItemSaveConfigFileAs.setImage(Images.DISK);
 
 		new MenuItem(fileMenuItemSubMenu, SWT.SEPARATOR); // Separator
 
@@ -168,19 +176,23 @@ public class GUI implements PropertyChangeListener {
 
 		MenuItem editMenuItemCreateRandomProject = new MenuItem(editMenuItemSubMenu, SWT.NONE);
 		editMenuItemCreateRandomProject.setText("Zufallsprojekt erstellen");
+		editMenuItemCreateRandomProject.setImage(Images.CHART_LINE_EDIT);
 
 		MenuItem editMenuItemCreateRandomParameter = new MenuItem(editMenuItemSubMenu, SWT.NONE);
 		editMenuItemCreateRandomParameter.setText("Zufallsparameter erstellen");
+		editMenuItemCreateRandomParameter.setImage(Images.TABLE_EDIT);
 
 		new MenuItem(editMenuItemSubMenu, SWT.SEPARATOR); // Separator
 
 		MenuItem editMenuItemEditTSPData = new MenuItem(editMenuItemSubMenu, SWT.NONE);
 		editMenuItemEditTSPData.setText("TSP Daten bearbeiten");
+		editMenuItemEditTSPData.setImage(Images.PAGE_WHITE_EDIT);
 
 		new MenuItem(editMenuItemSubMenu, SWT.SEPARATOR); // Separator
 
 		MenuItem editMenuItemEditPreferences = new MenuItem(editMenuItemSubMenu, SWT.NONE);
 		editMenuItemEditPreferences.setText("Eigenschaften");
+		editMenuItemEditPreferences.setImage(Images.COG);
 
 		editMenuItem.setMenu(editMenuItemSubMenu);
 
@@ -192,9 +204,11 @@ public class GUI implements PropertyChangeListener {
 
 		MenuItem helpMenuItemHelp = new MenuItem(helpMenuItemSubMenu, SWT.NONE);
 		helpMenuItemHelp.setText("Hilfe");
+		helpMenuItemHelp.setImage(Images.HELP);
 
 		MenuItem helpMenuItemAbout = new MenuItem(helpMenuItemSubMenu, SWT.NONE);
 		helpMenuItemAbout.setText("Über");
+		helpMenuItemAbout.setImage(Images.INFORMATION);
 
 		helpMenuItem.setMenu(helpMenuItemSubMenu);
 
@@ -214,12 +228,17 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.OPEN).setFilter(FileDialogFilter.TSP).open();
-				if (path != null) {
-					_currentTabContent.setTSPFile(new File(path));
-					TSPData data = Persister.loadTSPFile(_currentTabContent.getTSPFile());
-					_tabFolder.getSelection().setText(data.getName());
-					_currentTabContent.getController().getProject().setTSPData(data);
+				if (!_currentTabContent.getController().isRunning()) {
+					String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.OPEN).setFilter(FileDialogFilter.TSP).open();
+					if (path != null) {
+						_currentTabContent.setTSPFile(new File(path));
+						TSPData data = Persister.loadTSPFile(_currentTabContent.getTSPFile());
+						_tabFolder.getSelection().setText(data.getName());
+						_currentTabContent.getController().getProject().setTSPData(data);
+					}
+				}
+				else {
+					MessageDialog.openError(pParent, "TSP Datei öffnen", "Es kann keine TSP Datei geöffnet werden, wenn der Algorithmus läuft.");
 				}
 			}
 		});
@@ -257,10 +276,17 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.OPEN).setFilter(FileDialogFilter.TSPCONFIG).open();
-				if (path != null) {
-					_currentTabContent.setTSPConfigFile(new File(path));
-					_currentTabContent.getController().getProject().setParameter(Persister.loadParameterFile(_currentTabContent.getTSPConfigFile()));
+				if (!_currentTabContent.getController().isRunning()) {
+					String path = new FileDialogFactory().setParent(pParent).setStyle(SWT.OPEN).setFilter(FileDialogFilter.TSPCONFIG).open();
+					if (path != null) {
+						_currentTabContent.setTSPConfigFile(new File(path));
+						_currentTabContent.getController().getProject()
+								.setParameter(Persister.loadParameterFile(_currentTabContent.getTSPConfigFile()));
+					}
+				}
+				else {
+					MessageDialog.openError(pParent, "Konfigurationsdatei öffnen",
+							"Es kann keine Konfigurationsdatei geöffnet werden, wenn der Algorithmus läuft.");
 				}
 			}
 		});
@@ -307,10 +333,16 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				RandomProjectDialog randomProjectDialog = new RandomProjectDialog(pParent, _currentTabContent.getController().getProject());
-				TSPData data = randomProjectDialog.open();
-				if (data != null) {
-					_currentTabContent.getController().getProject().setTSPData(data);
+				if (!_currentTabContent.getController().isRunning()) {
+					RandomProjectDialog randomProjectDialog = new RandomProjectDialog(pParent, _currentTabContent.getController().getProject());
+					TSPData data = randomProjectDialog.open();
+					if (data != null) {
+						_currentTabContent.getController().getProject().setTSPData(data);
+					}
+				}
+				else {
+					MessageDialog.openError(pParent, "Zufallsprojekt erstellen",
+							"Es kann kein Zufallsprojekt erstellt werden, wenn der Algorithmus läuft.");
 				}
 			}
 		});
@@ -319,22 +351,28 @@ public class GUI implements PropertyChangeListener {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				int antCount = (int) (Math.random() * 99) + 1;
-				int iterationCount = (int) (Math.random() * 9999) + 1;
-				double pheromonParameter = 10 - Math.random() * 10;
-				double localInformation = 10 - Math.random() * 10;
-				double evaporationParameter = 1 - Math.random();
-				double initialPheromonParameter = 10 - Math.random() * 10;
-				double pheromonUpdateParameter = 10 - Math.random() * 10;
+				if (!_currentTabContent.getController().isRunning()) {
+					int antCount = (int) (Math.random() * 99) + 1;
+					int iterationCount = (int) (Math.random() * 9999) + 1;
+					double pheromonParameter = 10 - Math.random() * 10;
+					double localInformation = 10 - Math.random() * 10;
+					double evaporationParameter = 1 - Math.random();
+					double initialPheromonParameter = 10 - Math.random() * 10;
+					double pheromonUpdateParameter = 10 - Math.random() * 10;
 
-				Parameter param = _currentTabContent.getController().getProject().getParameter();
-				param.setAntCount(antCount);
-				param.setIterationCount(iterationCount);
-				param.setPheromonParameter(pheromonParameter);
-				param.setLocalInformation(localInformation);
-				param.setEvaporationParameter(evaporationParameter);
-				param.setInitialPheromonParameter(initialPheromonParameter);
-				param.setPheromonUpdateParameter(pheromonUpdateParameter);
+					Parameter param = _currentTabContent.getController().getProject().getParameter();
+					param.setAntCount(antCount);
+					param.setIterationCount(iterationCount);
+					param.setPheromonParameter(pheromonParameter);
+					param.setLocalInformation(localInformation);
+					param.setEvaporationParameter(evaporationParameter);
+					param.setInitialPheromonParameter(initialPheromonParameter);
+					param.setPheromonUpdateParameter(pheromonUpdateParameter);
+				}
+				else {
+					MessageDialog.openError(pParent, "Zufallsparameter erstellen",
+							"Es können keine Zufallsparameter erstellt werden, wenn der Algorithmus läuft.");
+				}
 			}
 		});
 
@@ -352,6 +390,22 @@ public class GUI implements PropertyChangeListener {
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
 				new PreferencesDialog(pParent, _currentTabContent.getController().getProject()).open();
+			}
+		});
+
+		helpMenuItemHelp.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent pE) {
+				new HelpDialog(pParent).open();
+			}
+		});
+
+		helpMenuItemAbout.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent pE) {
+				new AboutDialog(pParent, _currentTabContent.getController().getProject()).open();
 			}
 		});
 	}

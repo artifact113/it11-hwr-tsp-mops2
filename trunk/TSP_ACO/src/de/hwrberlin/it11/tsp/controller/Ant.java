@@ -87,7 +87,7 @@ public class Ant {
 	 */
 	public double getProbabilitySum() {
 		double returnValue = 0;
-		for (Node node : _project.getNodeList()) {
+		for (Node node : _project.getTSPData().getNodeList()) {
 			if (!_visitedNodes.contains(node)) {
 				double pheromone = Math.pow(getCurrentNode().getEdge(node).getPheromone(), _project.getParameter().getPheromonParameter());
 				double local = Math.pow(1 / getCurrentNode().getDistanceToNode(node), _project.getParameter().getLocalInformation());
@@ -105,14 +105,14 @@ public class Ant {
 	 * @return die Node, die als nächstes besucht werden soll
 	 */
 	private Node evaluateNextNode() {
-		if (_visitedNodes.size() == _project.getNodeList().size()) {
+		if (_visitedNodes.size() == _project.getTSPData().getNodeList().size()) {
 			return _visitedNodes.get(0); // Alle Nodes schon einmal besucht? Die Start-Node ist das nächste Ziel
 		}
 		List<Node> nodesToVisit = new ArrayList<Node>();
 		List<Double> probabilities = new ArrayList<Double>();
 		double probabilitySum = 0;
 		double dividerSum = getProbabilitySum();
-		for (Node node : _project.getNodeList()) {
+		for (Node node : _project.getTSPData().getNodeList()) {
 			if (!_visitedNodes.contains(node)) {
 				double pheromone = Math.pow(getCurrentNode().getEdge(node).getPheromone(), _project.getParameter().getPheromonParameter());
 				double local = Math.pow(1 / getCurrentNode().getDistanceToNode(node), _project.getParameter().getLocalInformation());

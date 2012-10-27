@@ -3,6 +3,8 @@
  */
 package de.hwrberlin.it11.tsp.interfaces;
 
+import de.hwrberlin.it11.tsp.constant.IterationMode;
+
 /**
  * Dieser Listener überwacht den Status des Algorithmus.
  * 
@@ -22,5 +24,15 @@ public interface AlgorithmListener {
 	 * Der Algorithmus wurde soeben gestoppt.
 	 */
 	public void algorithmStopped();
+
+
+
+	/**
+	 * Der Iterationsmodus hat sich geändert.
+	 * 
+	 * @param pMode
+	 *            der neue Iterationsmodus
+	 */
+	public void iterationModeChanged(IterationMode pMode);
 
 }

@@ -19,12 +19,6 @@ public class PropertyChangeTypes {
 
 	public static final String PROJECT_TSPDATA = "tspData";
 
-	public static final String PROJECT_NODELIST = "nodeList";
-
-	public static final String PROJECT_NODELIST_ADD = "nodeList_add";
-
-	public static final String PROJECT_NODELIST_REMOVE = "nodeList_remove";
-
 	public static final String PROJECT_STATUSTEXT = "statusText";
 
 	public static final String PROJECT_OPTIMALTOURLENGTH = "optimalTourLength";
@@ -60,6 +54,10 @@ public class PropertyChangeTypes {
 	public static final String TSPDATA_EDGEWEIGHTTYPE = "edgeWeightType";
 
 	public static final String TSPDATA_NODELIST = "nodeList";
+
+	public static final String TSPDATA_NODELIST_ADD = "nodeList_add";
+
+	public static final String TSPDATA_NODELIST_REMOVE = "nodeList_remove";
 
 	// Result
 

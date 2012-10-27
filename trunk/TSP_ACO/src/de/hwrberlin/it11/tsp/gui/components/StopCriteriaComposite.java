@@ -98,10 +98,11 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 		super(pParent, pStyle, pController);
 
 		getController().getProject().addPropertyChangeListener(this);
+		getController().getProject().getTSPData().addPropertyChangeListener(this);
 		getController().addAlgorithmListener(this);
 
 		Composite comp = new Composite(this, SWT.NONE);
-		comp.setLayout(new MigLayout("fill, wrap 3", "[pref!][]"));
+		comp.setLayout(new MigLayout("fill, wrap 3, ins 0", "[pref!][]"));
 		comp.setLayoutData("hmin pref, wmin pref, growx, pushx");
 
 		_rIterationCount = new AntButton(new Button(comp, SWT.RADIO), getController().getProject());
@@ -146,7 +147,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 				String path = new FileDialogFactory().setParent(getShell()).setFilter(FileDialogFilter.OPTTOUR).setStyle(SWT.OPEN).open();
 				if (path != null) {
 					List<Integer> indexList = Persister.loadOptTourFile(new File(path));
-					if (indexList.size() != getController().getProject().getTSPData().getNodeList().size()) {
+					if (indexList.size() - 1 != getController().getProject().getTSPData().getNodeList().size()) {
 						MessageDialog
 								.openError(getShell(), "Ungültige optimale Tour",
 										"Die Liste der Knoten und die Liste der optimalen Tour weisen eine unterschiedliche Länge auf, somit kann die optimale Tour nicht geladen werden.");
@@ -196,14 +197,6 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 			}
 		};
 
-		_rIterationCount.getButton().addSelectionListener(radioGroupListener);
-		_rMaximumTourLength.getButton().addSelectionListener(radioGroupListener);
-		_rOptTourFilePath.getButton().addSelectionListener(radioGroupListener);
-		_rIterationCount.getButton().setSelection(true);
-		_tMaximumTourLength.getText().setEnabled(false);
-		_lAccept.getLabel().setEnabled(false);
-		_bOptTourFilePath.getButton().setEnabled(false);
-
 		_bStart = new AntButton(new Button(comp, SWT.PUSH), getController().getProject());
 		_bStart.getButton().setText("START");
 		_bStart.getButton().setLayoutData("hmin pref, wmin pref, spanx, growx");
@@ -220,6 +213,15 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 				}
 			}
 		});
+
+		_rIterationCount.getButton().addSelectionListener(radioGroupListener);
+		_rMaximumTourLength.getButton().addSelectionListener(radioGroupListener);
+		_rOptTourFilePath.getButton().addSelectionListener(radioGroupListener);
+		_rIterationCount.getButton().setSelection(true);
+		_tMaximumTourLength.getText().setEnabled(false);
+		_lAccept.getLabel().setEnabled(false);
+		_bOptTourFilePath.getButton().setEnabled(false);
+		_bStart.getButton().setEnabled(false);
 
 		_allInputValid = true;
 
@@ -254,10 +256,15 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 				resetBinding();
 			}
 
+			if (PropertyChangeTypes.PROJECT_TSPDATA.equals(propertyName)) {
+				getController().getProject().getTSPData().addPropertyChangeListener(this);
+			}
+
 			// Auf folgende Events die Validität der Lösungsdatei überprüfen:
-			if (PropertyChangeTypes.PROJECT_NODELIST.equals(propertyName) // Knotenliste wurde neu gesetzt
-					|| PropertyChangeTypes.PROJECT_NODELIST_ADD.equals(propertyName) // Ein Knoten wurde hinzugefügt
-					|| PropertyChangeTypes.PROJECT_NODELIST_REMOVE.equals(propertyName)) { // Ein Knoten wurde entfernt
+			if (PropertyChangeTypes.PROJECT_TSPDATA.equals(propertyName) // TSP Daten des Projektes wurden neu gesetzt
+					|| PropertyChangeTypes.TSPDATA_NODELIST.equals(propertyName) // Knotenliste wurde neu gesetzt
+					|| PropertyChangeTypes.TSPDATA_NODELIST_ADD.equals(propertyName) // Ein Knoten wurde hinzugefügt
+					|| PropertyChangeTypes.TSPDATA_NODELIST_REMOVE.equals(propertyName)) { // Ein Knoten wurde entfernt
 				evaluateSolutionAccept();
 				evaluateStartEnabled();
 			}
@@ -287,12 +294,12 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	 */
 	private void evaluateStartEnabled() {
 		boolean enable = _allInputValid && _tIterationCount.isValidInput() && _tMaximumTourLength.isValidInput();
+		AntProject project = getController().getProject();
+		enable = enable && project.getTSPData().getNodeList().size() > 0;
 		if (_rOptTourFilePath.getButton().getSelection()) {
-			AntProject project = getController().getProject();
-
-			if (project.getOptimalTourIndeces() == null || (project.getTSPData().getNodeList().size() != project.getOptimalTourIndeces().size())) {
-				enable = false;
-			}
+			enable = enable
+					&& !(project.getOptimalTourIndeces() == null || (project.getTSPData().getNodeList().size() != project.getOptimalTourIndeces()
+							.size() - 1));
 		}
 		_bStart.getButton().setEnabled(enable);
 	}
@@ -318,26 +325,19 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	@Override
 	public void algorithmStarted() {
 		_buttonState = true;
-		// Dieses Event kommt unter Umständen nicht aus dem UI-Thread, deswegen müssen Operationen am Widget mit Display.syncExec() ausgeführt werden
-		Display.getDefault().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				_bStart.getButton().setText("STOP");
-				_rIterationCount.getButton().setEnabled(false);
-				_rMaximumTourLength.getButton().setEnabled(false);
-				_rOptTourFilePath.getButton().setEnabled(false);
-				if (_rIterationCount.getButton().getSelection()) {
-					_tIterationCount.getText().setEnabled(false);
-				}
-				if (_rMaximumTourLength.getButton().getSelection()) {
-					_tMaximumTourLength.getText().setEnabled(false);
-				}
-				if (_rOptTourFilePath.getButton().getSelection()) {
-					_bOptTourFilePath.getButton().setEnabled(false);
-				}
-			}
-		});
+		_bStart.getButton().setText("STOP");
+		_rIterationCount.getButton().setEnabled(false);
+		_rMaximumTourLength.getButton().setEnabled(false);
+		_rOptTourFilePath.getButton().setEnabled(false);
+		if (_rIterationCount.getButton().getSelection()) {
+			_tIterationCount.getText().setEnabled(false);
+		}
+		if (_rMaximumTourLength.getButton().getSelection()) {
+			_tMaximumTourLength.getText().setEnabled(false);
+		}
+		if (_rOptTourFilePath.getButton().getSelection()) {
+			_bOptTourFilePath.getButton().setEnabled(false);
+		}
 	}
 
 
@@ -365,6 +365,13 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 				}
 			}
 		});
+	}
+
+
+
+	@Override
+	public void iterationModeChanged(IterationMode pMode) {
+		// NO-OP
 	}
 
 }

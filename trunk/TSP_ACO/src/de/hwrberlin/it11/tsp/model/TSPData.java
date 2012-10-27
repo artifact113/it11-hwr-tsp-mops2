@@ -143,4 +143,30 @@ public class TSPData extends APropertyChangeSupport {
 		firePropertyChange(PropertyChangeTypes.TSPDATA_NODELIST, _nodeList, _nodeList = pNodeList);
 	}
 
+
+
+	/**
+	 * Fügt die angegebene Node der Liste an Nodes hinzu.
+	 * 
+	 * @param pNode
+	 *            die hinzuzufügende Node
+	 */
+	public void addNode(Node pNode) {
+		_nodeList.add(pNode);
+		firePropertyChange(PropertyChangeTypes.TSPDATA_NODELIST_ADD, null, _nodeList);
+	}
+
+
+
+	/**
+	 * Entfernt die angegebene Node aus der Liste der Nodes.
+	 * 
+	 * @param pNode
+	 *            die zu entfernende Node
+	 */
+	public void removeNode(Node pNode) {
+		_nodeList.remove(pNode);
+		firePropertyChange(PropertyChangeTypes.TSPDATA_NODELIST_REMOVE, null, _nodeList);
+	}
+
 }

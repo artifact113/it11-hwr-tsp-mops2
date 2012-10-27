@@ -236,6 +236,7 @@ public class Persister {
 					nodeSection = true;
 				}
 			}
+			indexList.add(indexList.get(0));
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();

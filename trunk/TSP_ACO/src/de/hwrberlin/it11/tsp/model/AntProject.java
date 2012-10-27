@@ -25,9 +25,6 @@ public class AntProject extends APropertyChangeSupport {
 	/** Die errechneten Touren */
 	private Result _result;
 
-	/** Die Liste aller Nodes */
-	private List<Node> _nodeList;
-
 	/** Die Liste aller Edges */
 	private List<Edge> _edgeList;
 
@@ -46,7 +43,6 @@ public class AntProject extends APropertyChangeSupport {
 		_parameter = new Parameter();
 		_tspData = new TSPData();
 		_result = new Result();
-		_nodeList = new ArrayList<Node>();
 		_edgeList = new ArrayList<Edge>();
 	}
 
@@ -95,7 +91,6 @@ public class AntProject extends APropertyChangeSupport {
 	 */
 	public void setTSPData(TSPData pTSPData) {
 		firePropertyChange(PropertyChangeTypes.PROJECT_TSPDATA, _tspData, _tspData = pTSPData);
-		setNodeList(pTSPData.getNodeList());
 	}
 
 
@@ -112,59 +107,7 @@ public class AntProject extends APropertyChangeSupport {
 
 
 	/**
-	 * Gibt die Liste der Nodes zurück.
-	 * <p>
-	 * ACHTUNG: Auf diese Liste dürfen keine Methoden aufgerufen werden, die dessen Struktur verändern (add, remove, usw.). Hierzu sollen die addNode
-	 * und removeNode Methoden des AntProject benutzt werden.
-	 * 
-	 * @return the nodeList
-	 */
-	public List<Node> getNodeList() {
-		return _nodeList;
-	}
-
-
-
-	/**
-	 * Setzt die NodeList auf die angegebene NodeList und löst ein PropertyChangeEvent aus. Ein Setzen der NodeList führt zum Initialisieren der
-	 * Egdes.
-	 * 
-	 * @param pNodeList
-	 *            the nodeList to set
-	 * @see AntProject#initEdges()
-	 */
-	public void setNodeList(List<Node> pNodeList) {
-		firePropertyChange(PropertyChangeTypes.PROJECT_NODELIST, _nodeList, _nodeList = pNodeList);
-	}
-
-
-
-	/**
-	 * Fügt die angegebene Node zu der nodeList hinzu und feuert anschließend ein PropertyChangeEvent.
-	 * 
-	 * @param pNode
-	 */
-	public void addNode(Node pNode) {
-		_nodeList.add(pNode);
-		firePropertyChange(PropertyChangeTypes.PROJECT_NODELIST_ADD, null, _nodeList);
-	}
-
-
-
-	/**
-	 * Entfernt die angegebene Node aus der nodeList, entfernt alle PropertyChangeListenerder Node und feuert anschließend ein PropertyChangeEvent.
-	 * 
-	 * @param pNode
-	 */
-	public void removeNode(Node pNode) {
-		_nodeList.remove(pNode);
-		firePropertyChange(PropertyChangeTypes.PROJECT_NODELIST_ADD, null, _nodeList);
-	}
-
-
-
-	/**
-	 * Gibt die Edgeliste zurück.
+	 * /** Gibt die Edgeliste zurück.
 	 * <p>
 	 * ACHTUNG: Auf diese Liste dürfen keine Methoden aufgerufen werden, die dessen Struktur verändern (add, remove, usw.).
 	 * 
@@ -223,21 +166,6 @@ public class AntProject extends APropertyChangeSupport {
 
 
 	/**
-	 * Gibt eine unbenutzte (das heißt eine um 1 größere Nummer als die größte ID-Nummer in der NodeList) ID-Nummer wieder.
-	 * 
-	 * @return eine unbenutzte ID-Nummer
-	 */
-	// public int getUnusedNodeID() {
-	// int id = 0;
-	// for (Node node : _nodeList) {
-	// if (node.getId() > id) {
-	// id = node.getId();
-	// }
-	// }
-	// return id + 1;
-	// }
-
-	/**
 	 * Ermittelt anhand der angegebenen X und Y Koordinaten eine Node. Dabei wird eine Toleranz von 5 Pixeln gewährt.
 	 * 
 	 * @param pX
@@ -247,7 +175,7 @@ public class AntProject extends APropertyChangeSupport {
 	 * @return eine Node, wenn sie in der Nähe der angegebenen Koordinaten liegt, andernfalls null.
 	 */
 	public Node getNodeForCoordinates(int pX, int pY) {
-		for (Node node : _nodeList) {
+		for (Node node : _tspData.getNodeList()) {
 			if ((pX > node.getxCoordinate() - 5 && pX < node.getxCoordinate() + 5)
 					&& (pY > node.getyCoordinate() - 5 && pY < node.getyCoordinate() + 5)) {
 				return node;
@@ -263,11 +191,15 @@ public class AntProject extends APropertyChangeSupport {
 	 * Maps der Nodes
 	 */
 	public void initEdges() {
+		for (Node node : _tspData.getNodeList()) {
+			node.clearEdges();
+		}
 		_edgeList.clear();
-		for (int i = 0; i < _nodeList.size(); i++) {
-			Node node = _nodeList.get(i);
-			for (int j = i; j < _nodeList.size(); j++) {
-				Node otherNode = _nodeList.get(j);
+		List<Node> nodeList = _tspData.getNodeList();
+		for (int i = 0; i < nodeList.size(); i++) {
+			Node node = nodeList.get(i);
+			for (int j = i; j < nodeList.size(); j++) {
+				Node otherNode = nodeList.get(j);
 				if (node != otherNode) {
 					Edge edge = new Edge(_parameter.getInitialPheromonParameter());
 					node.putEdge(otherNode, edge);
@@ -276,20 +208,6 @@ public class AntProject extends APropertyChangeSupport {
 				}
 			}
 		}
-	}
-
-
-
-	/**
-	 * Reinitialisiert die Kanten. Entfernt zunächste alle Kanten aus den Maps der Nodes und initialisiert sie erneut.
-	 * 
-	 * @see AntProject#initEdges()
-	 */
-	public void resetEdges() {
-		for (Node node : _nodeList) {
-			node.clearEdges();
-		}
-		initEdges();
 	}
 
 }

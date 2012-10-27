@@ -63,11 +63,12 @@ public class OutputComposite extends ADataBindableComposite implements PropertyC
 	 */
 	public OutputComposite(Composite pParent, int pStyle, AntController pController) {
 		super(pParent, pStyle, pController);
+
 		getController().getProject().addPropertyChangeListener(this);
 		getController().getProject().getParameter().addPropertyChangeListener(this);
 
 		Composite comp = new Composite(this, SWT.NONE);
-		comp.setLayout(new MigLayout("fill, wrap"));
+		comp.setLayout(new MigLayout("fill, wrap, ins 0"));
 		comp.setLayoutData("hmin pref, wmin pref, growx");
 
 		Group bestTour = new Group(comp, SWT.NONE);
