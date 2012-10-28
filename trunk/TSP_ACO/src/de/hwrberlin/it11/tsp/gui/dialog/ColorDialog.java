@@ -57,71 +57,87 @@ public class ColorDialog extends AAntDialog {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Farbe wählen");
-		shell.setLayout(new MigLayout("fill, wrap 4", "[50!][50!][50!][50!]", "[20!][20!][20!][20!][]"));
+		shell.setLayout(new MigLayout("fill, wrap 4")); // , "[50!][50!][50!][50!]", "[20!][20!][20!][20!][]"
 		shell.setLayoutData("hmin pref, wmin pref");
 
 		AntComposite black = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		black.setBackground(Colors.BLACK);
+		black.getComposite().setLayoutData("height 20!, width 50!");
 		black.getComposite().addMouseListener(new ChosenColorListener(black));
 
 		AntComposite darkGrey = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		darkGrey.setBackground(Colors.DARK_GREY);
+		darkGrey.getComposite().setLayoutData("height 20!, width 50!");
 		darkGrey.getComposite().addMouseListener(new ChosenColorListener(darkGrey));
 
 		AntComposite grey = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		grey.setBackground(Colors.GREY);
+		grey.getComposite().setLayoutData("height 20!, width 50!");
 		grey.getComposite().addMouseListener(new ChosenColorListener(grey));
 
 		AntComposite white = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		white.setBackground(Colors.WHITE);
+		white.getComposite().setLayoutData("height 20!, width 50!");
 		white.getComposite().addMouseListener(new ChosenColorListener(white));
 
 		AntComposite darkBlue = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		darkBlue.setBackground(Colors.DARK_BLUE);
+		darkBlue.getComposite().setLayoutData("height 20!, width 50!");
 		darkBlue.getComposite().addMouseListener(new ChosenColorListener(darkBlue));
 
 		AntComposite blue = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		blue.setBackground(Colors.BLUE);
+		blue.getComposite().setLayoutData("height 20!, width 50!");
 		blue.getComposite().addMouseListener(new ChosenColorListener(blue));
 
 		AntComposite darkCyan = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		darkCyan.setBackground(Colors.DARK_CYAN);
+		darkCyan.getComposite().setLayoutData("height 20!, width 50!");
 		darkCyan.getComposite().addMouseListener(new ChosenColorListener(darkCyan));
 
 		AntComposite cyan = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		cyan.setBackground(Colors.CYAN);
+		cyan.getComposite().setLayoutData("height 20!, width 50!");
 		cyan.getComposite().addMouseListener(new ChosenColorListener(cyan));
 
 		AntComposite darkRed = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		darkRed.setBackground(Colors.DARK_RED);
+		darkRed.getComposite().setLayoutData("height 20!, width 50!");
 		darkRed.getComposite().addMouseListener(new ChosenColorListener(darkRed));
 
 		AntComposite red = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		red.setBackground(Colors.RED);
+		red.getComposite().setLayoutData("height 20!, width 50!");
 		red.getComposite().addMouseListener(new ChosenColorListener(red));
 
 		AntComposite darkMagenta = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		darkMagenta.setBackground(Colors.DARK_MAGENTA);
+		darkMagenta.getComposite().setLayoutData("height 20!, width 50!");
 		darkMagenta.getComposite().addMouseListener(new ChosenColorListener(darkMagenta));
 
 		AntComposite magenta = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		magenta.setBackground(Colors.MAGENTA);
+		magenta.getComposite().setLayoutData("height 20!, width 50!");
 		magenta.getComposite().addMouseListener(new ChosenColorListener(magenta));
 
 		AntComposite darkGreen = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		darkGreen.setBackground(Colors.DARK_GREEN);
+		darkGreen.getComposite().setLayoutData("height 20!, width 50!");
 		darkGreen.getComposite().addMouseListener(new ChosenColorListener(darkGreen));
 
 		AntComposite green = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		green.setBackground(Colors.GREEN);
+		green.getComposite().setLayoutData("height 20!, width 50!");
 		green.getComposite().addMouseListener(new ChosenColorListener(green));
 
 		AntComposite darkYellow = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		darkYellow.setBackground(Colors.DARK_YELLOW);
+		darkYellow.getComposite().setLayoutData("height 20!, width 50!");
 		darkYellow.getComposite().addMouseListener(new ChosenColorListener(darkYellow));
 
 		AntComposite yellow = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
 		yellow.setBackground(Colors.YELLOW);
+		yellow.getComposite().setLayoutData("height 20!, width 50!");
 		yellow.getComposite().addMouseListener(new ChosenColorListener(yellow));
 
 		Composite buttonComp = new Composite(shell, SWT.NONE);
