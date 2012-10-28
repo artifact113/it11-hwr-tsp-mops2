@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import de.hwrberlin.it11.tsp.constant.Images;
 import de.hwrberlin.it11.tsp.constant.Utility;
 import de.hwrberlin.it11.tsp.gui.widgets.AntButton;
 import de.hwrberlin.it11.tsp.gui.widgets.AntText;
@@ -72,6 +73,7 @@ public class NewNodeDialog extends AAntDialog {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Neue Node");
+		shell.setImage(Images.ADD);
 		shell.setLayout(new MigLayout("fill, wrap 2", "[pref!][100!]"));
 		shell.setLayoutData("hmin pref, wmin pref");
 
@@ -82,9 +84,9 @@ public class NewNodeDialog extends AAntDialog {
 		final AntText tXCoordinate = new AntText(new Text(shell, SWT.BORDER), getProject());
 		tXCoordinate.getText().setText(Utility.FORMAT.format(_xCoordinate));
 		tXCoordinate.getText().setLayoutData("hmin pref, wmin 50, growx");
-		tXCoordinate.setTooltipText("Die X Koordinate für den neuen Knoten.");
+		tXCoordinate.setTooltipText("Die X Koordinate für den neuen Knoten. (X >= 0)");
 		tXCoordinate.setInputMode(AntText.DOUBLE_ONLY);
-		tXCoordinate.setNumberRange(0, Double.POSITIVE_INFINITY, false, true);
+		tXCoordinate.setNumberRange(0, Double.POSITIVE_INFINITY, true, true);
 
 		Label lYCoordinate = new Label(shell, SWT.NONE);
 		lYCoordinate.setText("Y Koordinate:");
@@ -93,9 +95,9 @@ public class NewNodeDialog extends AAntDialog {
 		final AntText tYCoordinate = new AntText(new Text(shell, SWT.BORDER), getProject());
 		tYCoordinate.getText().setText(Utility.FORMAT.format(_yCoordinate));
 		tYCoordinate.getText().setLayoutData("hmin pref, wmin 50, growx");
-		tYCoordinate.setTooltipText("Die Y Koordinate für den neuen Knoten.");
+		tYCoordinate.setTooltipText("Die Y Koordinate für den neuen Knoten. (Y >= 0)");
 		tYCoordinate.setInputMode(AntText.DOUBLE_ONLY);
-		tYCoordinate.setNumberRange(0, Double.POSITIVE_INFINITY, false, true);
+		tYCoordinate.setNumberRange(0, Double.POSITIVE_INFINITY, true, true);
 
 		Composite buttonComp = new Composite(shell, SWT.NONE);
 		buttonComp.setLayout(new MigLayout("wrap 2, ins 0", "[50%][50%]"));

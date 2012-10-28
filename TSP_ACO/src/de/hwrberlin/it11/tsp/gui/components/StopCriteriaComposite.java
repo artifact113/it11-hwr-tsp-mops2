@@ -113,7 +113,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 
 		_tIterationCount = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tIterationCount.getText().setLayoutData("hmin pref, wmin 50, spanx 2, growx");
-		_tIterationCount.setTooltipText("Hier können Sie einstellen, wie oft iteriert werden soll.");
+		_tIterationCount.setTooltipText("Hier können Sie einstellen, wie oft iteriert werden soll. (X > 0)");
 		_tIterationCount.setInputMode(AntText.INTEGER_ONLY);
 		_tIterationCount.setNumberRange(1, Double.POSITIVE_INFINITY, false, true);
 		_tIterationCount.addValidInputListener(this);
@@ -126,7 +126,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 
 		_tMaximumTourLength = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tMaximumTourLength.getText().setLayoutData("hmin pref, wmin 50, spanx 2, growx");
-		_tMaximumTourLength.setTooltipText("Hier können Sie einstellen, bei welcher Tourlänge abegebrochen werden soll.");
+		_tMaximumTourLength.setTooltipText("Hier können Sie einstellen, bei welcher Tourlänge abegebrochen werden soll. (X > 0)");
 		_tMaximumTourLength.setInputMode(AntText.DOUBLE_ONLY);
 		_tMaximumTourLength.setNumberRange(0, Double.POSITIVE_INFINITY, false, true);
 		_tMaximumTourLength.addValidInputListener(this);
@@ -295,7 +295,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	private void evaluateStartEnabled() {
 		boolean enable = _allInputValid && _tIterationCount.isValidInput() && _tMaximumTourLength.isValidInput();
 		AntProject project = getController().getProject();
-		enable = enable && project.getTSPData().getNodeList().size() > 0;
+		enable = enable && project.getTSPData().getNodeList().size() > 1;
 		if (_rOptTourFilePath.getButton().getSelection()) {
 			enable = enable
 					&& !(project.getOptimalTourIndeces() == null || (project.getTSPData().getNodeList().size() != project.getOptimalTourIndeces()

@@ -3,12 +3,18 @@
  */
 package de.hwrberlin.it11.tsp.gui.dialog;
 
+import java.io.File;
+import java.net.URISyntaxException;
+
 import net.miginfocom.swt.MigLayout;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
+import de.hwrberlin.it11.tsp.constant.Images;
 
 /**
  * Dieser Dialog zeigt die Hilfe-HTML-Datei an.
@@ -39,17 +45,18 @@ public class HelpDialog extends Dialog {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.RESIZE);
 		shell.setText("Hilfe");
+		shell.setImage(Images.HELP);
 		shell.setLayout(new MigLayout("fill, wrap"));
-		shell.setLayoutData("hmin pref, wmin pref");
+		shell.setLayoutData("hmin 400, wmin 500");
 
-		// Browser browser = new Browser(shell, SWT.NONE);
-		// browser.setLayoutData("hmin pref, wmin pref, hmax 100%-60, wmax 100%-30, grow");
-		// try {
-		// browser.setUrl(new File(getClass().getResource("").toURI()).getAbsolutePath());
-		// }
-		// catch (URISyntaxException e) {
-		// e.printStackTrace();
-		// }
+		Browser browser = new Browser(shell, SWT.NONE);
+		browser.setLayoutData("hmin 400, wmin 800, hmax 100%-60, wmax 100%-30, grow");
+		try {
+			browser.setUrl(new File(getClass().getResource("/html/help.html").toURI()).getAbsolutePath());
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
 		shell.pack();
 		shell.open();

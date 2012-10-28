@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import de.hwrberlin.it11.tsp.constant.Images;
 import de.hwrberlin.it11.tsp.gui.widgets.AntButton;
 import de.hwrberlin.it11.tsp.gui.widgets.AntText;
 import de.hwrberlin.it11.tsp.model.AntProject;
@@ -60,6 +61,7 @@ public class TSPDataDialog extends AAntDialog {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Zufallsprojekt");
+		shell.setImage(Images.PAGE_WHITE_EDIT);
 		shell.setLayout(new MigLayout("fill, wrap 2", "[pref!][300!]"));
 		shell.setLayoutData("hmin pref, wmin pref");
 

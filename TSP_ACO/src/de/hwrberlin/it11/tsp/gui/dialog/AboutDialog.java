@@ -52,6 +52,7 @@ public class AboutDialog extends AAntDialog {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Über");
+		shell.setImage(Images.INFORMATION);
 		shell.setLayout(new MigLayout("fill, wrap"));
 		shell.setLayoutData("hmin pref, wmin pref");
 
