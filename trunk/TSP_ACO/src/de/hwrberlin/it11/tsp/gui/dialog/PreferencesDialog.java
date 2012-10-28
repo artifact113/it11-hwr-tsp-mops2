@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import de.hwrberlin.it11.tsp.constant.Images;
 import de.hwrberlin.it11.tsp.constant.Utility;
 import de.hwrberlin.it11.tsp.gui.widgets.AntButton;
 import de.hwrberlin.it11.tsp.gui.widgets.AntComposite;
@@ -57,6 +58,7 @@ public class PreferencesDialog extends AAntDialog {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Eigenschaften");
+		shell.setImage(Images.COG);
 		shell.setLayout(new MigLayout("fill, wrap 2"));
 		shell.setLayoutData("hmin pref, wmin pref");
 
@@ -78,7 +80,7 @@ public class PreferencesDialog extends AAntDialog {
 		final AntText tRedrawInterval = new AntText(new Text(shell, SWT.BORDER), getProject());
 		tRedrawInterval.getText().setText(Utility.FORMAT.format(preferences.getRedrawInterval()));
 		tRedrawInterval.getText().setLayoutData("hmin pref, wmin pref, grow");
-		tRedrawInterval.setTooltipText("Hier können Sie einstellen, nach wie vielen Iterationen neu gezeichnet werden soll.");
+		tRedrawInterval.setTooltipText("Hier können Sie einstellen, nach wie vielen Iterationen neu gezeichnet werden soll. (X > 0)");
 		tRedrawInterval.setInputMode(AntText.INTEGER_ONLY);
 		tRedrawInterval.setNumberRange(1, Double.POSITIVE_INFINITY, true, true);
 

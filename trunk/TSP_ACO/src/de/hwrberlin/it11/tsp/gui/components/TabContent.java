@@ -56,7 +56,7 @@ public class TabContent extends AAntComposite {
 
 		Label picture = new Label(right, SWT.NONE);
 		picture.setImage(Images.COWBOY);
-		picture.setLayoutData("hmin pref, wmin pref");
+		picture.setLayoutData("hmin pref, wmin pref, align center");
 
 		InputComposite input = new InputComposite(right, SWT.BORDER, getController());
 		input.setLayout(new MigLayout());

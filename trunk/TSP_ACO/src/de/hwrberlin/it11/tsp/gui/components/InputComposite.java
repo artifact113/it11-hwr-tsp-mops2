@@ -85,7 +85,7 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 
 		_tAntCount = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tAntCount.getText().setLayoutData("hmin pref, wmin 50, growx");
-		_tAntCount.setTooltipText("Hier können Sie einstellen, wie viele Ameisen pro Iterationen den Weg suchen sollen.");
+		_tAntCount.setTooltipText("Hier können Sie einstellen, wie viele Ameisen pro Iterationen den Weg suchen sollen. (X > 0)");
 		_tAntCount.setInputMode(AntText.INTEGER_ONLY);
 		_tAntCount.setNumberRange(1, Double.POSITIVE_INFINITY, true, true);
 
@@ -95,7 +95,8 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 
 		_tPheromonParameter = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tPheromonParameter.getText().setLayoutData("hmin pref, wmin 50, growx");
-		_tPheromonParameter.setTooltipText("Hier können Sie einstellen, wie wichtig das Pheromon auf einer Kante bei der Auswahl des Weges ist.");
+		_tPheromonParameter
+				.setTooltipText("Hier können Sie einstellen, wie wichtig das Pheromon auf einer Kante bei der Auswahl des Weges ist. (0 < X <= 5)");
 		_tPheromonParameter.setInputMode(AntText.DOUBLE_ONLY);
 		_tPheromonParameter.setNumberRange(0, 5, false, true);
 
@@ -105,7 +106,7 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 
 		_tLocalInformation = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tLocalInformation.getText().setLayoutData("hmin pref, wmin 50, growx");
-		_tLocalInformation.setTooltipText("Hier können Sie einstellen, wie wichtig kürzere Wege bei der Auswahl des Weges sind.");
+		_tLocalInformation.setTooltipText("Hier können Sie einstellen, wie wichtig kürzere Wege bei der Auswahl des Weges sind. (0 < X <= 5)");
 		_tLocalInformation.setInputMode(AntText.DOUBLE_ONLY);
 		_tLocalInformation.setNumberRange(0, 5, false, true);
 
@@ -115,7 +116,7 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 
 		_tEvaporationParameter = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tEvaporationParameter.getText().setLayoutData("hmin pref, wmin 50, growx");
-		_tEvaporationParameter.setTooltipText("Hier können Sie einstellen, wie viele Pheromone nach einer Iteration verdunsten sollen.");
+		_tEvaporationParameter.setTooltipText("Hier können Sie einstellen, wie viele Pheromone nach einer Iteration verdunsten sollen. (0 < X <= 1)");
 		_tEvaporationParameter.setInputMode(AntText.DOUBLE_ONLY);
 		_tEvaporationParameter.setNumberRange(0, 1, false, true);
 
@@ -126,7 +127,7 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 		_tInitialPheromonParameter = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tInitialPheromonParameter.getText().setLayoutData("hmin pref, wmin 50, growx");
 		_tInitialPheromonParameter
-				.setTooltipText("Hier können Sie einstellen, wie viele Pheromone auf den Kanten beim Start des Suchvorganges liegen sollen.");
+				.setTooltipText("Hier können Sie einstellen, wie viele Pheromone auf den Kanten beim Start des Suchvorganges liegen sollen. (X > 0)");
 		_tInitialPheromonParameter.setInputMode(AntText.DOUBLE_ONLY);
 		_tInitialPheromonParameter.setNumberRange(0, Double.POSITIVE_INFINITY, false, true);
 
@@ -137,7 +138,7 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 		_tPheromonUpdateParameter = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tPheromonUpdateParameter.getText().setLayoutData("hmin pref, wmin 50, growx");
 		_tPheromonUpdateParameter
-				.setTooltipText("Hier können Sie einstellen, wie viele Pheromone eine Ameise auf eine Kante legt, wenn sie darüber gelaufen ist.");
+				.setTooltipText("Hier können Sie einstellen, wie viele Pheromone eine Ameise auf eine Kante legt, wenn sie darüber gelaufen ist. (X > 0)");
 		_tPheromonUpdateParameter.setInputMode(AntText.DOUBLE_ONLY);
 		_tPheromonUpdateParameter.setNumberRange(0, Double.POSITIVE_INFINITY, false, true);
 

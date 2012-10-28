@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import de.hwrberlin.it11.tsp.constant.Images;
 import de.hwrberlin.it11.tsp.constant.Utility;
 import de.hwrberlin.it11.tsp.gui.widgets.AntButton;
 import de.hwrberlin.it11.tsp.gui.widgets.AntText;
@@ -63,6 +64,7 @@ public class RandomProjectDialog extends AAntDialog {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Zufallsprojekt");
+		shell.setImage(Images.CHART_LINE_EDIT);
 		shell.setLayout(new MigLayout("fill, wrap 2", "[pref!][100!]"));
 		shell.setLayoutData("hmin pref, wmin pref");
 
@@ -73,7 +75,7 @@ public class RandomProjectDialog extends AAntDialog {
 		final AntText tNodeCount = new AntText(new Text(shell, SWT.BORDER), getProject());
 		tNodeCount.getText().setText("0");
 		tNodeCount.getText().setLayoutData("hmin pref, wmin 50, growx");
-		tNodeCount.setTooltipText("Tragen Sie hier die Anzahl der Knoten ein. Für einen zufälligen Wert von 1 bis 100 tragen Sie 0 ein.");
+		tNodeCount.setTooltipText("Tragen Sie hier die Anzahl der Knoten ein. Für einen zufälligen Wert von 1 bis 100 tragen Sie 0 ein. (X >= 0)");
 		tNodeCount.setInputMode(AntText.INTEGER_ONLY);
 		tNodeCount.setNumberRange(0, Double.POSITIVE_INFINITY, true, true);
 
@@ -85,7 +87,7 @@ public class RandomProjectDialog extends AAntDialog {
 		tMaxXCoordinate.getText().setText("0");
 		tMaxXCoordinate.getText().setLayoutData("hmin pref, wmin 50, growx");
 		tMaxXCoordinate
-				.setTooltipText("Tragen Sie hier den maximalen Wert der X Koordinate ein, den ein Knoten haben kann. Für einen zufälligen Wert von 1 bis 5000 tragen Sie 0 ein.");
+				.setTooltipText("Tragen Sie hier den maximalen Wert der X Koordinate ein, den ein Knoten haben kann. Für einen zufälligen Wert von 1 bis 5000 tragen Sie 0 ein. (X >= 0)");
 		tMaxXCoordinate.setInputMode(AntText.DOUBLE_ONLY);
 		tMaxXCoordinate.setNumberRange(0, Double.POSITIVE_INFINITY, true, true);
 
@@ -97,7 +99,7 @@ public class RandomProjectDialog extends AAntDialog {
 		tMaxYCoordinate.getText().setText("0");
 		tMaxYCoordinate.getText().setLayoutData("hmin pref, wmin 50, growx");
 		tMaxYCoordinate
-				.setTooltipText("Tragen Sie hier den maximalen Wert der Y Koordinate ein, den ein Knoten haben kann. Für einen zufälligen Wert von 1 bis 5000 tragen Sie 0 ein.");
+				.setTooltipText("Tragen Sie hier den maximalen Wert der Y Koordinate ein, den ein Knoten haben kann. Für einen zufälligen Wert von 1 bis 5000 tragen Sie 0 ein. (X >= 0)");
 		tMaxYCoordinate.setInputMode(AntText.DOUBLE_ONLY);
 		tMaxYCoordinate.setNumberRange(0, Double.POSITIVE_INFINITY, true, true);
 

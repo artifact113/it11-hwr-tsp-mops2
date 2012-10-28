@@ -22,12 +22,18 @@ public class Images {
 	public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
 	/** Titelbild des Programms */
-	public static final Image COWBOY = getScaledImageFromResource("/img/Ameise_Cowboy.png", (int) (SCREEN_SIZE.height / 4.5 / 6 * 5),
-			(int) (SCREEN_SIZE.height / 4.5));
+	public static final Image COWBOY = getScaledImageFromResource("/img/Ameise_Cowboy.png", (int) (SCREEN_SIZE.height / 5.5 / 6 * 5),
+			(int) (SCREEN_SIZE.height / 5.5));
 
 	/** MOPS² Firmenlogo */
 	public static final Image MOPSS = getScaledImageFromResource("/img/Mops.png", (int) (SCREEN_SIZE.height / 3.6 * 1.35),
 			(int) (SCREEN_SIZE.height / 3.6));
+
+	/** Hinzufügen */
+	public static final Image ADD = getImageFromResource("/img/add.png");
+
+	/** Colorswatch */
+	public static final Image COLOR_SWATCH = getImageFromResource("/img/color_swatch.png");
 
 	/** Ordner */
 	public static final Image FOLDER = getImageFromResource("/img/folder.png");

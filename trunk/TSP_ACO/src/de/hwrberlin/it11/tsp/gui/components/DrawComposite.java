@@ -145,6 +145,11 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			public void mouseDoubleClick(MouseEvent pE) {
 				if (pE.button == 1) {
 					if (pE.x - BORDER_WIDTH >= 0 && pE.y - BORDER_WIDTH >= 0 && !getController().isRunning()) {
+						if (_selectedNode != null) {
+							_selectedNode.removePropertyChangeListener(DrawComposite.this);
+							_drag = false;
+							_selectedNode = null;
+						}
 						AntProject project = getController().getProject();
 						double zoomFactor = project.getParameter().getZoomFactor();
 						NewNodeDialog newNodeDialog = new NewNodeDialog(getShell(), project, (pE.x - BORDER_WIDTH) / zoomFactor,
@@ -163,7 +168,7 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 			@Override
 			public void mouseMove(MouseEvent pE) {
 				double zoomFactor = getController().getProject().getParameter().getZoomFactor();
-				if (_drag && !getController().isRunning()) {
+				if (_drag && _selectedNode != null && !getController().isRunning()) {
 					_selectedNode.setxCoordinate(pE.x >= BORDER_WIDTH ? (int) ((pE.x - BORDER_WIDTH) / zoomFactor) : 0);
 					_selectedNode.setyCoordinate(pE.y >= BORDER_WIDTH ? (int) ((pE.y - BORDER_WIDTH) / zoomFactor) : 0);
 				}

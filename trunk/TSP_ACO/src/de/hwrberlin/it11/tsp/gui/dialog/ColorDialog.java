@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import de.hwrberlin.it11.tsp.constant.Colors;
+import de.hwrberlin.it11.tsp.constant.Images;
 import de.hwrberlin.it11.tsp.gui.widgets.AntButton;
 import de.hwrberlin.it11.tsp.gui.widgets.AntComposite;
 import de.hwrberlin.it11.tsp.model.AntProject;
@@ -57,7 +58,8 @@ public class ColorDialog extends AAntDialog {
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Farbe wählen");
-		shell.setLayout(new MigLayout("fill, wrap 4")); // , "[50!][50!][50!][50!]", "[20!][20!][20!][20!][]"
+		shell.setImage(Images.COLOR_SWATCH);
+		shell.setLayout(new MigLayout("fill, wrap 4"));
 		shell.setLayoutData("hmin pref, wmin pref");
 
 		AntComposite black = new AntComposite(new Composite(shell, SWT.BORDER), getProject());
