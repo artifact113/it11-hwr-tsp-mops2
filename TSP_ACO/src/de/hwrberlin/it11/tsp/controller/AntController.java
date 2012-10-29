@@ -122,15 +122,10 @@ public class AntController {
 				Node startNode = nodeList.get(indexList.get(0) - 1);
 				int startNodeIndex = bestTourGlobalCopy.indexOf(startNode);
 				Collections.rotate(bestTourGlobalCopy, startNodeIndex * -1);
-				System.out.println("LIST CHECK");
 
 				for (int i = 0; i < bestTourGlobalCopy.size(); i++) {
 					Node node = bestTourGlobalCopy.get(i);
 					Node otherNode = nodeList.get(indexList.get(i) - 1);
-					System.out.println(i);
-					System.out.println(node);
-					System.out.println(otherNode);
-					System.out.println();
 					if (node != otherNode) {
 						return false;
 					}

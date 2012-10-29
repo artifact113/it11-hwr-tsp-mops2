@@ -4,7 +4,6 @@
 package de.hwrberlin.it11.tsp.gui.dialog;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import net.miginfocom.swt.MigLayout;
 
@@ -48,12 +47,7 @@ public class HelpDialog extends Dialog {
 
 		Browser browser = new Browser(shell, SWT.NONE);
 		browser.setLayoutData("hmin 400, wmin 800, hmax 100%-60, wmax 100%-30, grow");
-		try {
-			browser.setUrl(new File(getClass().getResource("/html/help.html").toURI()).getAbsolutePath());
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		browser.setUrl(new File("AOFHelp\\help.html").getAbsolutePath());
 
 		shell.pack();
 		shell.open();

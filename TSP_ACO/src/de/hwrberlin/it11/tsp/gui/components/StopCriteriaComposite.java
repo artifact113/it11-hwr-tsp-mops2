@@ -337,7 +337,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	 */
 	private void evaluateSolutionAccept() {
 		AntProject project = getController().getProject();
-		if (project.getOptimalTourIndeces() == null || (project.getOptimalTourIndeces().size() != project.getTSPData().getNodeList().size())) {
+		if (project.getOptimalTourIndeces() == null || (project.getOptimalTourIndeces().size() - 1 != project.getTSPData().getNodeList().size())) {
 			_lAccept.getLabel().setImage(Images.CROSS);
 		}
 		else {
