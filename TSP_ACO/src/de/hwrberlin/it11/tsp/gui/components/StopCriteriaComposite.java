@@ -204,8 +204,8 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 		};
 
 		Composite buttonComp = new Composite(comp, SWT.NONE);
-		buttonComp.setLayout(new MigLayout("ins 0", "[50%][50%]"));
-		buttonComp.setLayoutData("hmin pref, wmin pref, spanx, growx");
+		buttonComp.setLayout(new MigLayout("ins 0", "[49%][49%]"));
+		buttonComp.setLayoutData("hmin 0, wmin 0, spanx, growx");
 
 		_bStart = new AntButton(new Button(buttonComp, SWT.PUSH), getController().getProject());
 		_bStart.getButton().setText("START");
@@ -232,6 +232,12 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
+				if (!_buttonPauseState) {
+					getController().pause();
+				}
+				else {
+					getController().resume();
+				}
 			}
 		});
 
@@ -360,6 +366,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 		if (_rOptTourFilePath.getButton().getSelection()) {
 			_bOptTourFilePath.getButton().setEnabled(false);
 		}
+		_bPause.getButton().setEnabled(true);
 	}
 
 
@@ -367,6 +374,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	@Override
 	public void algorithmStopped() {
 		_buttonStartState = false;
+		_buttonPauseState = false;
 		// Dieses Event kommt unter Umständen nicht aus dem UI-Thread, deswegen müssen Operationen am Widget mit Display.syncExec() ausgeführt werden
 		Display.getDefault().syncExec(new Runnable() {
 
@@ -385,6 +393,8 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 				if (_rOptTourFilePath.getButton().getSelection()) {
 					_bOptTourFilePath.getButton().setEnabled(true);
 				}
+				_bPause.getButton().setEnabled(false);
+				_bPause.getButton().setText("PAUSE");
 			}
 		});
 	}
@@ -393,16 +403,16 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 
 	@Override
 	public void algorithmPaused() {
-		// TODO Auto-generated method stub
-
+		_buttonPauseState = true;
+		_bPause.getButton().setText("FORTSETZEN");
 	}
 
 
 
 	@Override
 	public void algorithmResumed() {
-		// TODO Auto-generated method stub
-
+		_buttonPauseState = false;
+		_bPause.getButton().setText("PAUSE");
 	}
 
 

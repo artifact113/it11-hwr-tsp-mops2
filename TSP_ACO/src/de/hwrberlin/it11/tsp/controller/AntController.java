@@ -159,7 +159,6 @@ public class AntController {
 			@Override
 			public void run() {
 				init();
-				long startTime = System.currentTimeMillis();
 				double bestTourLengthGlobal = -1;
 				List<Double> averageLengthGlobalValues = new ArrayList<Double>();
 				Result result = _project.getResult();
@@ -169,72 +168,80 @@ public class AntController {
 						return;
 					}
 
-					// Ameisen erzeugen
-					List<Ant> antList = new ArrayList<Ant>();
-					for (int j = 0; j < _project.getParameter().getAntCount(); j++) {
-						antList.add(new Ant(_project.getTSPData().getNodeList()
-								.get((int) (Math.random() * _project.getTSPData().getNodeList().size())), _project));
-					}
+					long iterationStartTime = System.currentTimeMillis();
 
-					double bestTourLengthIteration = -1;
-					List<Double> averageLengthIterationValues = new ArrayList<Double>();
+					if (!_pause) {
 
-					// Jede Ameise laufen lassen und auf eine neue beste Tour überprüfen
-					for (Ant ant : antList) {
-						while (!ant.isFinished()) {
-							ant.next();
+						// Ameisen erzeugen
+						List<Ant> antList = new ArrayList<Ant>();
+						for (int j = 0; j < _project.getParameter().getAntCount(); j++) {
+							antList.add(new Ant(_project.getTSPData().getNodeList()
+									.get((int) (Math.random() * _project.getTSPData().getNodeList().size())), _project));
 						}
 
-						double travelledDistance = ant.getTravelledDistance();
-						averageLengthIterationValues.add(travelledDistance);
+						double bestTourLengthIteration = -1;
+						List<Double> averageLengthIterationValues = new ArrayList<Double>();
 
-						if (travelledDistance < bestTourLengthIteration || bestTourLengthIteration == -1) {
-							bestTourLengthIteration = travelledDistance;
-							result.setBestTourLengthIteration(travelledDistance);
-							result.setBestTourIteration(ant.getVisitedNodes());
+						// Jede Ameise laufen lassen und auf eine neue beste Tour überprüfen
+						for (Ant ant : antList) {
+							while (!ant.isFinished()) {
+								ant.next();
+							}
 
-							if (bestTourLengthIteration < bestTourLengthGlobal || bestTourLengthGlobal == -1) {
-								bestTourLengthGlobal = bestTourLengthIteration;
-								averageLengthGlobalValues.add(bestTourLengthGlobal);
-								result.setBestTourLengthGlobal(bestTourLengthIteration);
-								result.setBestTourGlobal(result.getBestTourIteration());
+							double travelledDistance = ant.getTravelledDistance();
+							averageLengthIterationValues.add(travelledDistance);
+
+							if (travelledDistance < bestTourLengthIteration || bestTourLengthIteration == -1) {
+								bestTourLengthIteration = travelledDistance;
+								result.setBestTourLengthIteration(travelledDistance);
+								result.setBestTourIteration(ant.getVisitedNodes());
+
+								if (bestTourLengthIteration < bestTourLengthGlobal || bestTourLengthGlobal == -1) {
+									bestTourLengthGlobal = bestTourLengthIteration;
+									averageLengthGlobalValues.add(bestTourLengthGlobal);
+									result.setBestTourLengthGlobal(bestTourLengthIteration);
+									result.setBestTourGlobal(result.getBestTourIteration());
+								}
 							}
 						}
-					}
 
-					// Verdunsten der Pheromone auf den Kanten
-					for (Edge edge : _project.getEdgeList()) {
-						edge.setPheromone((1 - _project.getParameter().getEvaporationParameter()) * edge.getPheromone());
-					}
+						// Verdunsten der Pheromone auf den Kanten
+						for (Edge edge : _project.getEdgeList()) {
+							edge.setPheromone((1 - _project.getParameter().getEvaporationParameter()) * edge.getPheromone());
+						}
 
-					// Jede Ameise platziert Pheromone auf den Kanten, die sie besucht hat
-					for (Ant ant : antList) {
-						for (int j = 0; j < ant.getVisitedNodes().size() - 1; j++) {
-							Node node = ant.getVisitedNodes().get(j);
-							Node otherNode = ant.getVisitedNodes().get(j + 1);
-							Edge edge = node.getEdge(otherNode);
-							edge.setPheromone(edge.getPheromone() + _project.getParameter().getPheromonUpdateParameter() / ant.getTravelledDistance());
+						// Jede Ameise platziert Pheromone auf den Kanten, die sie besucht hat
+						for (Ant ant : antList) {
+							for (int j = 0; j < ant.getVisitedNodes().size() - 1; j++) {
+								Node node = ant.getVisitedNodes().get(j);
+								Node otherNode = ant.getVisitedNodes().get(j + 1);
+								Edge edge = node.getEdge(otherNode);
+								edge.setPheromone(edge.getPheromone() + _project.getParameter().getPheromonUpdateParameter()
+										/ ant.getTravelledDistance());
+							}
+						}
+
+						// Berechnung der Durchschnittswerte der Tourlängen
+						double iterationLengthSum = 0;
+						for (Double iterationLengthValue : averageLengthIterationValues) {
+							iterationLengthSum += iterationLengthValue;
+						}
+						result.setAverageTourLengthIteration(iterationLengthSum / averageLengthIterationValues.size());
+
+						double globalLengthSum = 0;
+						for (Double globalLengthValue : averageLengthGlobalValues) {
+							globalLengthSum += globalLengthValue;
+						}
+						result.setAverageTourLengthGlobal(globalLengthSum / averageLengthGlobalValues.size());
+
+						// Eine Iteration ist vorüber, Event am AntProject feuern
+						if (Thread.currentThread() == _algorithm) {
+							_project.firePropertyChange(PropertyChangeTypes.PROJECT_ITERATIONFINISHED, null, ++_iterationCounter);
 						}
 					}
-
-					// Berechnung der Durchschnittswerte der Tourlängen
-					double iterationLengthSum = 0;
-					for (Double iterationLengthValue : averageLengthIterationValues) {
-						iterationLengthSum += iterationLengthValue;
-					}
-					result.setAverageTourLengthIteration(iterationLengthSum / averageLengthIterationValues.size());
-
-					double globalLengthSum = 0;
-					for (Double globalLengthValue : averageLengthGlobalValues) {
-						globalLengthSum += globalLengthValue;
-					}
-					result.setAverageTourLengthGlobal(globalLengthSum / averageLengthGlobalValues.size());
-
-					result.setElapsedTime(System.currentTimeMillis() - startTime);
-
-					// Eine Iteration ist vorüber, Event am AntProject feuern
-					if (Thread.currentThread() == _algorithm) {
-						_project.firePropertyChange(PropertyChangeTypes.PROJECT_ITERATIONFINISHED, null, ++_iterationCounter);
+					long iterationEndTime = System.currentTimeMillis();
+					if (!_pause) {
+						result.setElapsedTime(result.getElapsedTime() + iterationEndTime - iterationStartTime);
 					}
 				}
 				AntController.this.stop();
@@ -251,6 +258,7 @@ public class AntController {
 	 */
 	public void stop() {
 		_algorithm = null;
+		_pause = false;
 
 		for (AlgorithmListener listener : _listenerList) {
 			listener.algorithmStopped();
