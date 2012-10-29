@@ -3,6 +3,8 @@
  */
 package de.hwrberlin.it11.tsp.model;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 /**
  * Das AntProject ist die Hauptklasse des Datenmodells. Hier werden alle Parameter, Ergebnisse und Daten zum TSP Problem gespeichert.
  */
-public class AntProject extends APropertyChangeSupport {
+public class AntProject extends APropertyChangeSupport implements PropertyChangeListener {
 
 	/** Die momentan beutzten Parameter */
 	private Parameter _parameter;
@@ -87,6 +89,8 @@ public class AntProject extends APropertyChangeSupport {
 	 *            the data to set
 	 */
 	public void setTSPData(TSPData pTSPData) {
+		_result.init();
+		pTSPData.addPropertyChangeListener(this);
 		firePropertyChange(PropertyChangeTypes.PROJECT_TSPDATA, _tspData, _tspData = pTSPData);
 	}
 
@@ -203,6 +207,19 @@ public class AntProject extends APropertyChangeSupport {
 					otherNode.putEdge(node, edge);
 					_edgeList.add(edge);
 				}
+			}
+		}
+	}
+
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent pEvt) {
+		if (pEvt != null) {
+			String propertyName = pEvt.getPropertyName();
+
+			if (PropertyChangeTypes.TSPDATA_NODELIST_ADD.equals(propertyName) || PropertyChangeTypes.TSPDATA_NODELIST_REMOVE.equals(propertyName)) {
+				_result.init();
 			}
 		}
 	}
