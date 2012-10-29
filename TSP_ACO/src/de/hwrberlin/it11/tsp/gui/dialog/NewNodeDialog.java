@@ -27,9 +27,6 @@ import de.hwrberlin.it11.tsp.model.Node;
 
 /**
  * Dialog zum erstellen einer neuen Node.
- * 
- * @author Patrick Szostack
- * 
  */
 public class NewNodeDialog extends AAntDialog {
 

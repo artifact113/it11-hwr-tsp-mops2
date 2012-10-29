@@ -11,9 +11,6 @@ import de.hwrberlin.it11.tsp.constant.FileDialogFilter;
 
 /**
  * Factory zum Zusammenbauen eines FileDialog.
- * 
- * @author Patrick Szostack
- * 
  */
 public class FileDialogFactory {
 

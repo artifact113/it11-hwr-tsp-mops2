@@ -10,9 +10,6 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 
 /**
  * Die Node stellt einen Knoten in dem Netz der zu besuchenden Orte dar.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Node extends APropertyChangeSupport {
 

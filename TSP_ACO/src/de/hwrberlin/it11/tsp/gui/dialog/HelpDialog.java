@@ -18,9 +18,6 @@ import de.hwrberlin.it11.tsp.constant.Images;
 
 /**
  * Dieser Dialog zeigt die Hilfe-HTML-Datei an.
- * 
- * @author Patrick Szostack
- * 
  */
 public class HelpDialog extends Dialog {
 

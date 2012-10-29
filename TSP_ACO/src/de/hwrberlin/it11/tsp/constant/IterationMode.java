@@ -5,9 +5,6 @@ package de.hwrberlin.it11.tsp.constant;
 
 /**
  * Eine Auflistung der verschiedenen Iterationsmodi.
- * 
- * @author Patrick Szostack
- * 
  */
 public enum IterationMode {
 	/** Es wird eine bestimmte Anzahl mal iteriert */

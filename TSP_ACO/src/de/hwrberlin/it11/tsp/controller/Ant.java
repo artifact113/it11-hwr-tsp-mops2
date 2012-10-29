@@ -11,9 +11,6 @@ import de.hwrberlin.it11.tsp.model.Node;
 
 /**
  * Die Ameise läuft alle Edges und Nodes im Netz der zu besuchenden Orte ab und ermittelt die kürzeste Route.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Ant {
 

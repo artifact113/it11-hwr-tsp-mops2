@@ -9,9 +9,6 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Enthält verschiedene Color als Konstanten.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Colors {
 

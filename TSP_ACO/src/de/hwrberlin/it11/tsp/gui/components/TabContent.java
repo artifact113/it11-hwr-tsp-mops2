@@ -17,9 +17,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
  * Der TabContent ist der Inhalt eines Tabs und hat jeweils seinen eigenen AntController, eigenes AntProject und eigene UI.
- * 
- * @author Patrick Szostack
- * 
  */
 public class TabContent extends AAntComposite {
 

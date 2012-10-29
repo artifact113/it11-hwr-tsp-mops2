@@ -9,9 +9,6 @@ import de.hwrberlin.it11.tsp.controller.AntController;
 
 /**
  * Ein abstraktes Composite das sich zusätzlich das Ameisenprojekt merkt.
- * 
- * @author Patrick Szostack
- * 
  */
 public abstract class AAntComposite extends Composite {
 

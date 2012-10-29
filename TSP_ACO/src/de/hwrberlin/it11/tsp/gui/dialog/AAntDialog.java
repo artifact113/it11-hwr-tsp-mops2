@@ -10,9 +10,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
  * Basisklasse für Dialoge.
- * 
- * @author Patrick Szostack
- * 
  */
 public abstract class AAntDialog extends Dialog {
 

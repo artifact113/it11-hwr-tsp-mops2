@@ -45,9 +45,6 @@ import de.hwrberlin.it11.tsp.persistence.Persister;
 
 /**
  * Das StopCriteriaComposite lässt das Abbruchkriterium festlegen und den Algrotihmus starten.
- * 
- * @author Patrick Szostack
- * 
  */
 public class StopCriteriaComposite extends ADataBindableComposite implements PropertyChangeListener, AllInputValidListener, ValidInputListener,
 		AlgorithmListener {

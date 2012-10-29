@@ -27,9 +27,6 @@ import de.hwrberlin.it11.tsp.model.Result;
 
 /**
  * Das OutputComposite stellt die errechneten Touren und den Fortschritt dar.
- * 
- * @author Patrick Szostack
- * 
  */
 public class OutputComposite extends ADataBindableComposite implements PropertyChangeListener, AlgorithmListener {
 

@@ -43,9 +43,6 @@ import de.hwrberlin.it11.tsp.persistence.Persister;
 
 /**
  * Das Hauptfenster des User Interfaces.
- * 
- * @author Patrick Szostack
- * 
  */
 public class GUI implements PropertyChangeListener {
 

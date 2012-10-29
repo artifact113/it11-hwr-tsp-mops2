@@ -11,9 +11,6 @@ import de.hwrberlin.it11.tsp.constant.Utility;
 
 /**
  * UpdateValueStrategy, die einen String in einen int konvertiert.
- * 
- * @author Patrick Szostack
- * 
  */
 public class StringToIntegerUpdateStrategy extends UpdateValueStrategy {
 

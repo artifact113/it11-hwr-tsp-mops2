@@ -24,9 +24,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
  * Dieser Dialog dient zum Auswählen einer Farbe. Als Farben werden dabei alle Basisfarben der Colors Klasse angeboten.
- * 
- * @author Patrick Szostack
- * 
  */
 public class ColorDialog extends AAntDialog {
 

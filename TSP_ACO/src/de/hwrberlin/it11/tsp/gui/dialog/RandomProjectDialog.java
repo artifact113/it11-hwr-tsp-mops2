@@ -30,9 +30,6 @@ import de.hwrberlin.it11.tsp.model.TSPData;
 
 /**
  * Dialog zum generieren eines zufälligen Projektes.
- * 
- * @author Patrick Szostack
- * 
  */
 public class RandomProjectDialog extends AAntDialog {
 

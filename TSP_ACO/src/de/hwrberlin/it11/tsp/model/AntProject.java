@@ -10,9 +10,6 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 
 /**
  * Das AntProject ist die Hauptklasse des Datenmodells. Hier werden alle Parameter, Ergebnisse und Daten zum TSP Problem gespeichert.
- * 
- * @author Patrick Szostack
- * 
  */
 public class AntProject extends APropertyChangeSupport {
 

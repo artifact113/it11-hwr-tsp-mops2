@@ -8,9 +8,6 @@ import java.text.NumberFormat;
 
 /**
  * Diese Klasse stellt einige Utitlity-Konstanten und -Methoden bereit.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Utility {
 

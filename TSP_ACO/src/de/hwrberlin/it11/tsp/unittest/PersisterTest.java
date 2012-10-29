@@ -11,19 +11,19 @@ import junit.framework.TestCase;
 import junit.textui.TestRunner;
 
 /**
- * 
- * 
- * @author Patrick Szostack
- * 
+ * Testet den Persister auf seine Persistenzmethoden.
  */
-public class TSPDataTest extends TestCase {
+public class PersisterTest extends TestCase {
 
-	public TSPDataTest(String pName) {
+	public PersisterTest(String pName) {
 		super(pName);
 	}
 
 
 
+	/**
+	 * Testet das Laden von .tsp Dateien.
+	 */
 	public void testTSPData() {
 		TSPData data = Persister.loadTSPFile(new File("C:\\Ameise\\tsp\\berlin52.tsp"));
 		assertNotNull(data);
@@ -37,7 +37,7 @@ public class TSPDataTest extends TestCase {
 
 
 	public static void main(String[] args) {
-		TestRunner.run(TSPDataTest.class);
+		TestRunner.run(PersisterTest.class);
 	}
 
 }

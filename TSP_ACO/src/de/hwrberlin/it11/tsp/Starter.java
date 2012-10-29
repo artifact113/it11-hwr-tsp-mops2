@@ -7,9 +7,6 @@ import de.hwrberlin.it11.tsp.gui.GUI;
 
 /**
  * Klasse, die die main-Methode enthält und das Programm startet.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Starter {
 

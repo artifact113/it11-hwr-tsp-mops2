@@ -10,9 +10,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
  * Die Composite-Implementierung des AAntControl.
- * 
- * @author Patrick Szostack
- * 
  */
 public class AntComposite extends AAntControl {
 

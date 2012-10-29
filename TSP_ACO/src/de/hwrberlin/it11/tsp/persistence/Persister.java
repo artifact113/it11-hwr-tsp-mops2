@@ -21,9 +21,6 @@ import de.hwrberlin.it11.tsp.model.TSPData;
 
 /**
  * Diese Klasse stellt Methoden zum Öffnen und Speichern von Dateien bereit.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Persister {
 
