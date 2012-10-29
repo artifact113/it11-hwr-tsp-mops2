@@ -25,7 +25,7 @@ public class TSPDataTest extends TestCase {
 
 
 	public void testTSPData() {
-		TSPData data = Persister.loadTSPFile(new File("C:\\Users\\Patrick\\Desktop\\berlin52.tsp"));
+		TSPData data = Persister.loadTSPFile(new File("C:\\Ameise\\tsp\\berlin52.tsp"));
 		assertNotNull(data);
 		assertNotNull(data.getName());
 		assertNotNull(data.getType());
