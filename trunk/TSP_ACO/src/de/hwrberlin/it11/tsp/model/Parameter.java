@@ -244,7 +244,9 @@ public class Parameter extends APropertyChangeSupport {
 	 *            the zoomFactor to set
 	 */
 	public void setZoomFactor(double pZoomFactor) {
-		firePropertyChange(PropertyChangeTypes.PARAMETER_ZOOMFACTOR, _zoomFactor, _zoomFactor = pZoomFactor);
+		if (pZoomFactor >= 0.05 && pZoomFactor <= 3) {
+			firePropertyChange(PropertyChangeTypes.PARAMETER_ZOOMFACTOR, _zoomFactor, _zoomFactor = pZoomFactor);
+		}
 	}
 
 }
