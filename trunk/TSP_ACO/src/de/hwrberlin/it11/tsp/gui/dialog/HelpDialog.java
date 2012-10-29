@@ -43,7 +43,7 @@ public class HelpDialog extends Dialog {
 	 */
 	public void open() {
 		Shell parent = getParent();
-		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.RESIZE);
+		final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE | SWT.MAX);
 		shell.setText("Hilfe");
 		shell.setImage(Images.HELP);
 		shell.setLayout(new MigLayout("fill, wrap"));

@@ -28,6 +28,20 @@ public interface AlgorithmListener {
 
 
 	/**
+	 * Der Algorithmus wurde soeben pausiert.
+	 */
+	public void algorithmPaused();
+
+
+
+	/**
+	 * Der Algorithmus wurde soeben fortgesetzt.
+	 */
+	public void algorithmResumed();
+
+
+
+	/**
 	 * Der Iterationsmodus hat sich geändert.
 	 * 
 	 * @param pMode

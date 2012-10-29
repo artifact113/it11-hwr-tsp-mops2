@@ -175,11 +175,13 @@ public class OutputComposite extends ADataBindableComposite implements PropertyC
 
 					// Auf folgende Events den angezeigten Wert der ProgressBar aktualisieren:
 					if (PropertyChangeTypes.PROJECT_ITERATIONFINISHED.equals(propertyName)) { // Eine Iteration ist vorbei
-						if (!_undeterminedProgress) {
-							_progress.setSelection((Integer) pEvt.getNewValue());
-						}
-						else {
-							_progress.setSelection(_progress.getMaximum() / 2);
+						if (getController().isRunning()) {
+							if (!_undeterminedProgress) {
+								_progress.setSelection((Integer) pEvt.getNewValue());
+							}
+							else {
+								_progress.setSelection(_progress.getMaximum() / 2);
+							}
 						}
 					}
 				}
@@ -215,6 +217,18 @@ public class OutputComposite extends ADataBindableComposite implements PropertyC
 
 
 	@Override
+	public void algorithmPaused() {
+	}
+
+
+
+	@Override
+	public void algorithmResumed() {
+	}
+
+
+
+	@Override
 	public void iterationModeChanged(IterationMode pMode) {
 		if (pMode == IterationMode.COUNT) {
 			_undeterminedProgress = false;
@@ -223,4 +237,5 @@ public class OutputComposite extends ADataBindableComposite implements PropertyC
 			_undeterminedProgress = true;
 		}
 	}
+
 }

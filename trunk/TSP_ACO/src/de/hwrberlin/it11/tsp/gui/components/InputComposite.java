@@ -122,7 +122,7 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 
 		Label lInitialPheromonParameter = new Label(comp, SWT.NONE);
 		lInitialPheromonParameter.setLayoutData("hmin 0, wmin 0");
-		lInitialPheromonParameter.setText("Initialer Pheromonwert:");
+		lInitialPheromonParameter.setText("Initialpheromonwert:");
 
 		_tInitialPheromonParameter = new AntText(new Text(comp, SWT.BORDER), getController().getProject());
 		_tInitialPheromonParameter.getText().setLayoutData("hmin pref, wmin 50, growx");
@@ -244,6 +244,20 @@ public class InputComposite extends ADataBindableComposite implements PropertyCh
 				_tPheromonUpdateParameter.getText().setEnabled(true);
 			}
 		});
+	}
+
+
+
+	@Override
+	public void algorithmPaused() {
+		// NO-OP
+	}
+
+
+
+	@Override
+	public void algorithmResumed() {
+		// NO-OP
 	}
 
 

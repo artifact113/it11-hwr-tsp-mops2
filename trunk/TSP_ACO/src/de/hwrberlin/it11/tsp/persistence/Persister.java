@@ -55,16 +55,16 @@ public class Persister {
 			while (!"EOF".equals(line = reader.readLine())) {
 				try {
 					line = line.trim();
-					if (line.contains("NAME:")) {
+					if (line.matches("^NAME\\s*:.+")) {
 						name = line.split(":")[1].trim();
 					}
-					if (line.contains("TYPE:")) {
+					if (line.matches("^TYPE\\s*:.+")) {
 						type = line.split(":")[1].trim();
 					}
-					if (line.contains("COMMENT:")) {
+					if (line.matches("^COMMENT\\s*:.+")) {
 						comment = line.split(":")[1].trim();
 					}
-					if (line.contains("EDGE_WEIGHT_TYPE:")) {
+					if (line.matches("^EDGE_WEIGHT_TYPE\\s*:.+")) {
 						edgeWeightType = line.split(":")[1].trim();
 					}
 					if (nodeSection) {

@@ -124,7 +124,7 @@ public class Ant {
 		}
 
 		// Java bietet noch keinen Algorithmus für gewichtete Wahrscheinlichkeiten, also müssen wir uns selbst drum kümmern
-		int randomIndex = -1;
+		int randomIndex = 0;
 		double random = Math.random() * probabilitySum;
 		for (int i = 0; i < probabilities.size(); ++i) {
 			random -= probabilities.get(i);

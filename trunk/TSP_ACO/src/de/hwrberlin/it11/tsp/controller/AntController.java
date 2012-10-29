@@ -38,6 +38,9 @@ public class AntController {
 	/** Die Liste an AlgorithmListener */
 	private List<AlgorithmListener> _listenerList;
 
+	/** Pausiert Flag */
+	private boolean _pause;
+
 
 
 	/**
@@ -251,6 +254,32 @@ public class AntController {
 
 		for (AlgorithmListener listener : _listenerList) {
 			listener.algorithmStopped();
+		}
+	}
+
+
+
+	/**
+	 * Pausiert den Algorithmus.
+	 */
+	public void pause() {
+		_pause = true;
+
+		for (AlgorithmListener listener : _listenerList) {
+			listener.algorithmPaused();
+		}
+	}
+
+
+
+	/**
+	 * Setzt den Algorithmus fort.
+	 */
+	public void resume() {
+		_pause = false;
+
+		for (AlgorithmListener listener : _listenerList) {
+			listener.algorithmResumed();
 		}
 	}
 

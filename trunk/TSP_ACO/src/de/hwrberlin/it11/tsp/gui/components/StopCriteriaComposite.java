@@ -77,7 +77,13 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 	private AntButton _bStart;
 
 	/** Status des Start-Buttons - false: ein Klick startet den Algorithmus, true: ein Klick stoppt den Algorithmus */
-	private boolean _buttonState;
+	private boolean _buttonStartState;
+
+	/** Button zum Starten und Stoppen des Algorithmus */
+	private AntButton _bPause;
+
+	/** Status des Pause-Buttons - false: ein Klick setzt den Algorithmus fort, true: ein Klick pausiert den Algorithmus */
+	private boolean _buttonPauseState;
 
 	/** Speichert den Wert des AllInputValidListener */
 	private boolean _allInputValid;
@@ -197,20 +203,35 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 			}
 		};
 
-		_bStart = new AntButton(new Button(comp, SWT.PUSH), getController().getProject());
+		Composite buttonComp = new Composite(comp, SWT.NONE);
+		buttonComp.setLayout(new MigLayout("ins 0", "[50%][50%]"));
+		buttonComp.setLayoutData("hmin pref, wmin pref, spanx, growx");
+
+		_bStart = new AntButton(new Button(buttonComp, SWT.PUSH), getController().getProject());
 		_bStart.getButton().setText("START");
-		_bStart.getButton().setLayoutData("hmin pref, wmin pref, spanx, growx");
+		_bStart.getButton().setLayoutData("hmin pref, wmin pref, growx");
 		_bStart.setTooltipText("Dieser Button startet und stoppt den Suchvorgang.");
 		_bStart.getButton().addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent pE) {
-				if (!_buttonState) {
+				if (!_buttonStartState) {
 					getController().start();
 				}
 				else {
 					getController().stop();
 				}
+			}
+		});
+
+		_bPause = new AntButton(new Button(buttonComp, SWT.PUSH), getController().getProject());
+		_bPause.getButton().setText("PAUSE");
+		_bPause.getButton().setLayoutData("hmin pref, wmin pref, growx");
+		_bPause.setTooltipText("Dieser Button pausiert und setzt den Suchvorgang fort.");
+		_bPause.getButton().addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent pE) {
 			}
 		});
 
@@ -222,6 +243,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 		_lAccept.getLabel().setEnabled(false);
 		_bOptTourFilePath.getButton().setEnabled(false);
 		_bStart.getButton().setEnabled(false);
+		_bPause.getButton().setEnabled(false);
 
 		_allInputValid = true;
 
@@ -324,7 +346,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 
 	@Override
 	public void algorithmStarted() {
-		_buttonState = true;
+		_buttonStartState = true;
 		_bStart.getButton().setText("STOP");
 		_rIterationCount.getButton().setEnabled(false);
 		_rMaximumTourLength.getButton().setEnabled(false);
@@ -344,7 +366,7 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 
 	@Override
 	public void algorithmStopped() {
-		_buttonState = false;
+		_buttonStartState = false;
 		// Dieses Event kommt unter Umständen nicht aus dem UI-Thread, deswegen müssen Operationen am Widget mit Display.syncExec() ausgeführt werden
 		Display.getDefault().syncExec(new Runnable() {
 
@@ -365,6 +387,22 @@ public class StopCriteriaComposite extends ADataBindableComposite implements Pro
 				}
 			}
 		});
+	}
+
+
+
+	@Override
+	public void algorithmPaused() {
+		// TODO Auto-generated method stub
+
+	}
+
+
+
+	@Override
+	public void algorithmResumed() {
+		// TODO Auto-generated method stub
+
 	}
 
 
