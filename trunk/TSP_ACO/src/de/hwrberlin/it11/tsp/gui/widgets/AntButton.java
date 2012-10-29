@@ -9,9 +9,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
  * Die Button-Implemetierung des AAntControl.
- * 
- * @author Patrick Szostack
- * 
  */
 public class AntButton extends AAntControl {
 

@@ -11,9 +11,6 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 /**
  * Die Preferences-Klasse dient zum Speichern der eingestellten Eigenschaften. Eigenschaften gelten für das ganze Programm, nicht nur für ein Projekt,
  * deshalb gibt es nur eine einzige Instanz.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Preferences extends APropertyChangeSupport {
 

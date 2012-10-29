@@ -19,9 +19,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 /**
  * Die Text-Implementierung des AAntControl. Das AntText stellt extra Funktionaltäten für die Spezifizierung des Inputmodus und Beschränkung des
  * Zahlenbereiches bereit.
- * 
- * @author Patrick Szostack
- * 
  */
 public class AntText extends AAntControl {
 

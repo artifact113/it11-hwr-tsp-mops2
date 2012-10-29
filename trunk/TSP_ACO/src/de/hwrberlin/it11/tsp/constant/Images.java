@@ -12,9 +12,6 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Diese Klasse enthält die verwendeten Bilder als Konstanten.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Images {
 

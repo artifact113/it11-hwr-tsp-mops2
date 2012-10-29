@@ -8,9 +8,6 @@ import java.beans.PropertyChangeSupport;
 
 /**
  * Abstrakte Klasse, die als Basisklasse für alle Beans benutzt wird. Bietet alle Grundlagen für den PropertyChangeSupport.
- * 
- * @author Patrick Szostack
- * 
  */
 public abstract class APropertyChangeSupport {
 

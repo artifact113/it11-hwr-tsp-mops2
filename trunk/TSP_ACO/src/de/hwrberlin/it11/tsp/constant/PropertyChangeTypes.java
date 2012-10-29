@@ -5,9 +5,6 @@ package de.hwrberlin.it11.tsp.constant;
 
 /**
  * Diese Klasse hält die Feldernamen der Modellklassen als Konstanten für den PropertyChangeSupport.
- * 
- * @author Patrick Szostack
- * 
  */
 public class PropertyChangeTypes {
 

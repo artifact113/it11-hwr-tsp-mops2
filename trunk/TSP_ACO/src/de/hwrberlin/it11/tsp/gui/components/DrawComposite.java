@@ -42,9 +42,6 @@ import de.hwrberlin.it11.tsp.model.Result;
 
 /**
  * In diesem Composite wird der Fortschritt des Ameisenprojektes gemalt.
- * 
- * @author Patrick Szostack
- * 
  */
 public class DrawComposite extends ADataBindableComposite implements PropertyChangeListener {
 

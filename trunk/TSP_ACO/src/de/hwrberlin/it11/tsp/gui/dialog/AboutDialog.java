@@ -25,9 +25,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
  * Dieser Dialog präsentiert Informationen über MOPS² Productions.
- * 
- * @author Patrick Szostack
- * 
  */
 public class AboutDialog extends AAntDialog {
 

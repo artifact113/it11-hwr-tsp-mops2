@@ -31,9 +31,6 @@ import de.hwrberlin.it11.tsp.model.Parameter;
 
 /**
  * Das InputComposite regelt die Darstellung der Parameter.
- * 
- * @author Patrick Szostack
- * 
  */
 public class InputComposite extends ADataBindableComposite implements PropertyChangeListener, AlgorithmListener {
 

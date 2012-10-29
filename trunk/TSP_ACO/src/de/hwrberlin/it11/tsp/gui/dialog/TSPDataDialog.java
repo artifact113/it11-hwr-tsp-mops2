@@ -26,9 +26,6 @@ import de.hwrberlin.it11.tsp.model.TSPData;
  * Dieser Dialog bietet die Möglichkeit die TSP Daten zu bearbeiten.
  * <p>
  * (NOTIZ: Momentan nur Name und Kommentar, der Rest ist festgesetzt)
- * 
- * @author Patrick Szostack
- * 
  */
 public class TSPDataDialog extends AAntDialog {
 

@@ -10,9 +10,6 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 
 /**
  * Diese Klasse speichert Daten, die in eine .tsp Datei gespeichert oder aus einer .tsp Datei gelesen werden.
- * 
- * @author Patrick Szostack
- * 
  */
 public class TSPData extends APropertyChangeSupport {
 

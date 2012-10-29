@@ -9,25 +9,29 @@ import java.util.List;
 import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 
 /**
- * 
- * 
- * @author Patrick Szostack
- * 
+ * Speichert die Ergebnisse des Algorithmus'.
  */
 public class Result extends APropertyChangeSupport {
 
+	/** Länge der kürzesten gefundenen Tour */
 	private double _bestTourLengthGlobal;
 
+	/** Länge der kürzesten gefundenen Tour der Iteration */
 	private double _bestTourLengthIteration;
 
+	/** Durchschnittliche Länge aller gefundenen kürzesten Touren */
 	private double _averageTourLengthGlobal;
 
+	/** Durchschnittliche Länge aller gefundenen Touren der Iteration */
 	private double _averageTourLengthIteration;
 
+	/** Liste der Knoten der zur Zeit kürzesten Tour */
 	private List<Node> _bestTourGlobal;
 
+	/** Liste der Knoten der zur Zeit kürzesten Tour der Iteration */
 	private List<Node> _bestTourIteration;
 
+	/** Vergangene Zeit seit Start des Algorithmus */
 	private long _elapsedTime;
 
 

@@ -7,9 +7,6 @@ import de.hwrberlin.it11.tsp.constant.IterationMode;
 
 /**
  * Dieser Listener überwacht den Status des Algorithmus.
- * 
- * @author Patrick Szostack
- * 
  */
 public interface AlgorithmListener {
 

@@ -7,9 +7,6 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 
 /**
  * Die Parameter-Klasse dient zur Speicherung aller eingegebenen Parameter.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Parameter extends APropertyChangeSupport {
 

@@ -31,9 +31,6 @@ import de.hwrberlin.it11.tsp.model.Preferences;
 
 /**
  * Dieser Dialog dient zum Anpassen der Eigenschaften.
- * 
- * @author Patrick Szostack
- * 
  */
 public class PreferencesDialog extends AAntDialog {
 

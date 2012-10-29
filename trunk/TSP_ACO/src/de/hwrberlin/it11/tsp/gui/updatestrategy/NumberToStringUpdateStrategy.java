@@ -9,9 +9,6 @@ import de.hwrberlin.it11.tsp.constant.Utility;
 
 /**
  * UpdateValueStrategy, die eine Zahl in einen String konvertiert.
- * 
- * @author Patrick Szostack
- * 
  */
 public class NumberToStringUpdateStrategy extends UpdateValueStrategy {
 

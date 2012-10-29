@@ -7,9 +7,6 @@ import de.hwrberlin.it11.tsp.constant.PropertyChangeTypes;
 
 /**
  * Die Edge stellt eine Kante in dem Netz der zu besuchenden Orte dar.
- * 
- * @author Patrick Szostack
- * 
  */
 public class Edge extends APropertyChangeSupport {
 

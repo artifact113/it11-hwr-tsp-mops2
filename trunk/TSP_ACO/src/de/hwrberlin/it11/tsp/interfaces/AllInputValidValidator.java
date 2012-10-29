@@ -10,9 +10,6 @@ import de.hwrberlin.it11.tsp.gui.widgets.AntText;
 /**
  * Diese Klasse überwacht eine Menge an AntText auf Änderung ihres Validierungszustandes. Es werden alle spezifizierten Listener benachrichtigt, wenn
  * sich der Gesamtvalidierungszustand ändert.
- * 
- * @author Patrick Szostack
- * 
  */
 public class AllInputValidValidator implements ValidInputListener {
 

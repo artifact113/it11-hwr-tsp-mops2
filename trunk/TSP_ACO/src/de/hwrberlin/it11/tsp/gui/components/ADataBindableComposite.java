@@ -13,9 +13,6 @@ import de.hwrberlin.it11.tsp.controller.AntController;
 
 /**
  * Diese Klasse definiert einen DataBindingContext mit dem Databinding durchgeführt werden kann.
- * 
- * @author Patrick Szostack
- * 
  */
 public abstract class ADataBindableComposite extends AAntComposite {
 

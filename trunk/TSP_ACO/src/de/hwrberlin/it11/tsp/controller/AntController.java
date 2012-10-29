@@ -17,9 +17,6 @@ import de.hwrberlin.it11.tsp.model.Result;
 
 /**
  * Verwaltet den Ameisenalgorithmus.
- * 
- * @author Patrick Szostack
- * 
  */
 public class AntController {
 

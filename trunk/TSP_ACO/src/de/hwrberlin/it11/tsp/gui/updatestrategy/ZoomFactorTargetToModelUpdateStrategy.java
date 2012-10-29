@@ -7,9 +7,6 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 
 /**
  * UpdateValueStrategy, die von int nach double konvertiert (indem durch 100 geteilt wird).
- * 
- * @author Patrick Szostack
- * 
  */
 public class ZoomFactorTargetToModelUpdateStrategy extends UpdateValueStrategy {
 

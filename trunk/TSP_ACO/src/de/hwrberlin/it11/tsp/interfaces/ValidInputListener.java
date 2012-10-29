@@ -5,9 +5,6 @@ package de.hwrberlin.it11.tsp.interfaces;
 
 /**
  * Dieser Listener wartet auf Änderungen des Validierungszustandes eines AntText.
- * 
- * @author Patrick Szostack
- * 
  */
 public interface ValidInputListener {
 

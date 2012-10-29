@@ -9,9 +9,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
  * Die Scale-Implementierung des AAntControl.
- * 
- * @author Patrick Szostack
- * 
  */
 public class AntScale extends AAntControl {
 

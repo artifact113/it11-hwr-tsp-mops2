@@ -11,9 +11,6 @@ import de.hwrberlin.it11.tsp.model.AntProject;
 
 /**
  * Diese Klasse wrappt ein SWT Control und stellt einige extra Funktionalitäten bereit.
- * 
- * @author Patrick Szostack
- * 
  */
 public abstract class AAntControl {
 
