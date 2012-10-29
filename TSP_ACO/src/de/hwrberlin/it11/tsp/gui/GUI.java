@@ -12,6 +12,8 @@ import net.miginfocom.swt.MigLayout;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabFolder2Adapter;
+import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -95,6 +97,21 @@ public class GUI implements PropertyChangeListener {
 				// setzen wir den Fokus einfach auf was anderes, wenn der CTabFolder Fokus bekommen würde.
 				_tabFolder.getSelection().getControl().setFocus();
 			}
+		});
+		_tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
+
+			@Override
+			public void close(CTabFolderEvent pEvent) {
+				if (_tabFolder.getItemCount() == 1) {
+					newTab();
+				}
+				Control control = ((CTabItem) pEvent.item).getControl();
+				if (!(control instanceof TabContent)) {
+					throw new IllegalArgumentException("Das Control des CTabItems muss ein TabContent sein.");
+				}
+				((TabContent) control).getController().getProject().getTSPData().removePropertyChangeListener(GUI.this);
+			}
+
 		});
 
 		newTab();
