@@ -113,9 +113,8 @@ public class GUI implements PropertyChangeListener {
 
 		newTab();
 
-		shell.pack();
+		shell.setSize(800, 500);
 		shell.open();
-		shell.setMinimumSize(shell.getSize());
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();

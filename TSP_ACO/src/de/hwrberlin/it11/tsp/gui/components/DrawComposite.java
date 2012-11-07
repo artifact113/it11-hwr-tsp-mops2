@@ -94,14 +94,14 @@ public class DrawComposite extends ADataBindableComposite implements PropertyCha
 		Preferences.getInstance().addPropertyChangeListener(this);
 
 		_scrolledComposite = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
-		_scrolledComposite.setLayoutData("hmin 0, wmin 0, grow, push, growprio 99, shrinkprio 101");
+		_scrolledComposite.setLayoutData("hmin 0, wmin 0, grow, push");
 		_scrolledComposite.setExpandHorizontal(true);
 		_scrolledComposite.setExpandVertical(true);
 
 		_canvas = new Canvas(_scrolledComposite, SWT.DOUBLE_BUFFERED);
 
 		_zoomFactor = new AntScale(new Scale(this, SWT.VERTICAL), getController().getProject());
-		_zoomFactor.getScale().setLayoutData("hmin 0, wmin 0, growy");
+		_zoomFactor.getScale().setLayoutData("hmin 0, wmin pref, growy");
 		_zoomFactor.getScale().setMinimum(5);
 		_zoomFactor.getScale().setMaximum(300);
 		_zoomFactor.setTooltipText("Hier können Sie den Zoom-Faktor einstellen, mit dem die Knoten und Kanten dargestellt werden.");

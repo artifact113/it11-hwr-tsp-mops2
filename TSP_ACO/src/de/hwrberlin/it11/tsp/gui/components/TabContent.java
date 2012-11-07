@@ -41,7 +41,7 @@ public class TabContent extends AAntComposite {
 
 		Composite comp = new Composite(this, SWT.NONE);
 		comp.setLayout(new MigLayout("fill, ins 0", "[][pref!]"));
-		comp.setLayoutData("hmin pref, wmin pref, grow");
+		comp.setLayoutData("hmin pref, wmin pref, grow, hmax 98%, wmax 99%");
 
 		DrawComposite draw = new DrawComposite(comp, SWT.BORDER, getController());
 		draw.setLayout(new MigLayout("ins 0"));

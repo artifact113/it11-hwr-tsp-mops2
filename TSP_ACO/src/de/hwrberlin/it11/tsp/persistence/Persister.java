@@ -52,24 +52,24 @@ public class Persister {
 			while (!"EOF".equals(line = reader.readLine())) {
 				try {
 					line = line.trim();
-					if (line.matches("^NAME\\s*:.+")) {
+					if (line.matches("\\s*NAME\\s*:\\s*.+")) {
 						name = line.split(":")[1].trim();
 					}
-					if (line.matches("^TYPE\\s*:.+")) {
+					if (line.matches("\\s*TYPE\\s*:\\s*.+")) {
 						type = line.split(":")[1].trim();
 					}
-					if (line.matches("^COMMENT\\s*:.+")) {
+					if (line.matches("\\s*COMMENT\\s*:\\s*.+")) {
 						comment = line.split(":")[1].trim();
 					}
-					if (line.matches("^EDGE_WEIGHT_TYPE\\s*:.+")) {
+					if (line.matches("\\s*EDGE_WEIGHT_TYPE\\s*:\\s*.+")) {
 						edgeWeightType = line.split(":")[1].trim();
 					}
 					if (nodeSection) {
 						String[] nodeData = line.split("\\s+");
-						Node node = new Node((int) Double.parseDouble(nodeData[1]), (int) Double.parseDouble(nodeData[2]));
+						Node node = new Node(Double.parseDouble(nodeData[1]), Double.parseDouble(nodeData[2]));
 						nodeList.add(node);
 					}
-					if (line.contains("NODE_COORD_SECTION")) {
+					if (line.matches("\\s*NODE_COORD_SECTION.*")) {
 						nodeSection = true;
 					}
 				}
@@ -127,7 +127,7 @@ public class Persister {
 			writer.write("NODE_COORD_SECTION\r\n");
 			for (int i = 0; i < pData.getNodeList().size(); i++) {
 				Node node = pData.getNodeList().get(i);
-				writer.write((i + 1) + " " + (double) node.getxCoordinate() + " " + (double) node.getyCoordinate() + "\r\n");
+				writer.write((i + 1) + " " + String.valueOf(node.getxCoordinate()) + " " + String.valueOf(node.getyCoordinate()) + "\r\n");
 			}
 			writer.write("EOF");
 		}
@@ -184,6 +184,16 @@ public class Persister {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return parameter;
 	}
